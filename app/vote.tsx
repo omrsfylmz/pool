@@ -1,94 +1,168 @@
-import React, { useState, useEffect } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View, Text } from "react-native";
-import { useRouter } from "expo-router";
-import { VoteHeader } from "../components/ui/VoteHeader";
-import { TimerSection } from "../components/ui/TimerSection";
-import { FoodCard, type FoodOption } from "../components/ui/FoodCard";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AddIdeaButton } from "../components/ui/AddIdeaButton";
+import { FoodCard, type FoodOption } from "../components/ui/FoodCard";
+import { TimerSection } from "../components/ui/TimerSection";
+import { VoteHeader } from "../components/ui/VoteHeader";
 import { colors, typography } from "../constants/theme";
+import { useAuth } from "../contexts/AuthContext";
+import { useRealtimePool } from "../hooks/useRealtimePool";
+import { useRealtimeVotes } from "../hooks/useRealtimeVotes";
+import { castVote, endPool, getFoodOptions, getProfile, getUserVote, type FoodOption as DBFoodOption, type Profile } from "../services/api";
 
 export default function Vote() {
   const router = useRouter();
+  const { poolId } = useLocalSearchParams<{ poolId: string }>();
+  const { user } = useAuth();
+  
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [foodOptions, setFoodOptions] = useState<DBFoodOption[]>([]);
+  const [userVoteId, setUserVoteId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(42);
-  const [seconds, setSeconds] = useState(18);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
 
-  // Sample food options data
-  const [foodOptions, setFoodOptions] = useState<FoodOption[]>([
-    {
-      id: "1",
-      name: "The Classic Burger",
-      description: "Angus beef, cheddar, secret sauce, and thick-cut fries.",
-      voteCount: 12,
-      voters: ["🦊", "🐱", "🐼"],
-      isLeading: true,
-      hasVoted: false,
-    },
-    {
-      id: "2",
-      name: "Pepperoni Pizza",
-      description: "pepperoni and fresh basil.",
-      voteCount: 0,
-      hasVoted: false,
-    },
-    {
-      id: "3",
-      name: "Sushi Platter",
-      description: "Fresh salmon nigiri, tuna rolls, and edamame.",
-      voteCount: 5,
-      voters: ["🐻"],
-      hasVoted: false,
-    },
-  ]);
+  // Real-time subscriptions
+  const { votes, loading: votesLoading } = useRealtimeVotes(poolId || null);
+  const { pool, loading: poolLoading } = useRealtimePool(poolId || null);
 
-  // Timer countdown (simplified - update every second)
+  // Load initial data
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds((prev) => {
-        if (prev > 0) return prev - 1;
-        if (minutes > 0) {
-          setMinutes((prev) => prev - 1);
-          return 59;
+    async function loadData() {
+      if (!user) {
+        router.replace("/");
+        return;
+      }
+
+      if (!poolId) {
+        Alert.alert("Error", "No pool ID provided");
+        router.back();
+        return;
+      }
+
+      try {
+        const [profileData, foodOptionsData, userVoteData] = await Promise.all([
+          getProfile(user.id),
+          getFoodOptions(poolId),
+          getUserVote(poolId),
+        ]);
+        
+        setProfile(profileData);
+        setFoodOptions(foodOptionsData);
+        setUserVoteId(userVoteData?.food_option_id || null);
+      } catch (error) {
+        console.error("Error loading data:", error);
+        Alert.alert("Error", "Failed to load voting data");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, [user, poolId]);
+
+  // Calculate timer from pool end time
+  useEffect(() => {
+    if (!pool) return;
+
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const endTime = new Date(pool.ends_at).getTime();
+      const diff = endTime - now;
+
+      if (diff <= 0) {
+        setHours(0);
+        setMinutes(0);
+        setSeconds(0);
+        // End the pool and navigate to winner page
+        if (pool.status === "active") {
+          endPool(pool.id)
+            .then(() => {
+              // Wait a moment before navigating to show the 0:00:00
+              setTimeout(() => {
+                router.replace(`/winner?poolId=${pool.id}`);
+              }, 2000);
+            })
+            .catch(console.error);
         }
-        if (hours > 0) {
-          setHours((prev) => prev - 1);
-          setMinutes(59);
-          return 59;
-        }
-        return 0;
-      });
-    }, 1000);
+        return;
+      }
+
+      const h = Math.floor(diff / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setHours(h);
+      setMinutes(m);
+      setSeconds(s);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
 
     return () => clearInterval(interval);
-  }, [hours, minutes, seconds]);
+  }, [pool]);
+
+
 
   const handleSearch = () => {
-    // TODO: Implement search functionality
-    console.log("Search pressed");
+    Alert.alert("Search", "Search functionality coming soon!");
   };
 
-  const handleVote = (foodId: string) => {
-    // Update vote state
-    setFoodOptions((prev) =>
-      prev.map((food) => {
-        if (food.id === foodId) {
-          return {
-            ...food,
-            voteCount: food.hasVoted ? food.voteCount - 1 : food.voteCount + 1,
-            hasVoted: !food.hasVoted,
-          };
-        }
-        return food;
-      })
-    );
-    // Navigate to results page
-    router.push("/results");
+  const handleVote = async (foodId: string) => {
+    if (!poolId) return;
+
+    try {
+      await castVote(poolId, foodId);
+      setUserVoteId(foodId);
+    } catch (error: any) {
+      console.error("Error casting vote:", error);
+      Alert.alert("Error", error.message || "Failed to cast vote");
+    }
   };
 
   const handleAddIdea = () => {
-    // TODO: Navigate to new suggestion page
-    console.log("Add idea pressed");
+    if (poolId) {
+      router.push(`/new-suggestion?poolId=${poolId}`);
+    }
   };
+
+  if (loading || poolLoading || votesLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary.yellow} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!profile || !pool) {
+    return null;
+  }
+
+  // Transform food options to include vote data
+  const foodOptionsWithVotes: FoodOption[] = foodOptions.map((option) => {
+    const voteData = votes[option.id];
+    const voteCount = voteData?.count || 0;
+    const voters = voteData?.voters || [];
+    
+    // Find the option with the most votes
+    const maxVotes = Math.max(...Object.values(votes).map(v => v.count || 0), 0);
+    const isLeading = voteCount > 0 && voteCount === maxVotes;
+
+    return {
+      id: option.id,
+      name: option.name,
+      description: option.description || "",
+      voteCount,
+      voters,
+      isLeading,
+      hasVoted: userVoteId === option.id,
+    };
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -96,19 +170,19 @@ export default function Vote() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <VoteHeader userAvatar="🦁" onSearch={handleSearch} />
+        <VoteHeader userAvatar={profile.avatar_animal} onSearch={handleSearch} />
 
         <TimerSection hours={hours} minutes={minutes} seconds={seconds} />
 
         <View style={styles.main}>
           <View style={styles.listHeader}>
-            <Text style={styles.listTitle}>Today&apos;s Options</Text>
+            <Text style={styles.listTitle}>{pool.title}</Text>
             <Text style={styles.listSubtitle}>
-              Select your favorite to win the vote!
+              {pool.description || "Select your favorite to win the vote!"}
             </Text>
           </View>
 
-          {foodOptions.map((food, index) => (
+          {foodOptionsWithVotes.map((food, index) => (
             <View key={food.id} style={styles.foodCardWrapper}>
               <FoodCard food={food} onVote={handleVote} />
               {index === 1 && (
@@ -118,6 +192,13 @@ export default function Vote() {
               )}
             </View>
           ))}
+
+          {foodOptionsWithVotes.length === 0 && (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>No food options yet!</Text>
+              <AddIdeaButton onPress={handleAddIdea} />
+            </View>
+          )}
 
           <Text style={styles.footerHint}>
             Voters are hidden until the timer ends. 🤫
@@ -132,6 +213,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.main,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollContent: {
     paddingBottom: 40,
@@ -167,5 +253,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignItems: "center",
   },
+  emptyState: {
+    alignItems: "center",
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: typography.sizes.md,
+    color: colors.text.grey,
+    marginBottom: 20,
+  },
 });
-

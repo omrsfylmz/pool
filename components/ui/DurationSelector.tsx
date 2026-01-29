@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export type DurationOption = {
   value: number;
-  unit: "min" | "hour";
+  unit: "sec" | "min" | "hour";
   label: string;
 };
 
@@ -15,6 +15,7 @@ interface DurationSelectorProps {
 }
 
 const defaultOptions: DurationOption[] = [
+  { value: 0.5, unit: "sec", label: "30 sec" }, // 30 seconds in minutes
   { value: 5, unit: "min", label: "5 min" },
   { value: 10, unit: "min", label: "10 min" },
   { value: 15, unit: "min", label: "15 min" },
@@ -51,19 +52,11 @@ export const DurationSelector: React.FC<DurationSelectorProps> = ({
             >
               <Text
                 style={[
-                  styles.durationVal,
-                  isActive && styles.durationValActive,
+                  styles.durationLabel,
+                  isActive && styles.durationLabelActive,
                 ]}
               >
-                {option.value}
-              </Text>
-              <Text
-                style={[
-                  styles.durationUnit,
-                  isActive && styles.durationUnitActive,
-                ]}
-              >
-                {option.unit}
+                {option.label}
               </Text>
             </TouchableOpacity>
           );
@@ -100,20 +93,12 @@ const styles = StyleSheet.create({
     borderColor: colors.primary.yellow,
     ...shadows.primaryButton,
   },
-  durationVal: {
+  durationLabel: {
     fontSize: typography.sizes.md,
     fontWeight: typography.weights.bold,
-    marginBottom: 2,
     color: colors.text.dark,
   },
-  durationValActive: {
-    color: colors.background.card,
-  },
-  durationUnit: {
-    fontSize: typography.sizes.xs,
-    color: colors.text.dark,
-  },
-  durationUnitActive: {
+  durationLabelActive: {
     color: colors.background.card,
   },
 });

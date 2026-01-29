@@ -9,11 +9,15 @@ import { MedalCase, type Medal } from "../components/ui/MedalCase";
 import { PastPolls, type Poll } from "../components/ui/PastPolls";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
+import { getActivePool, getPastPolls, type Pool } from "../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<NavItem>("home");
+  const [activePool, setActivePool] = useState<Pool | null>(null);
+  const [pastPolls, setPastPolls] = useState<Pool[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -22,8 +26,33 @@ export default function Dashboard() {
     }
   }, [user, authLoading]);
 
+  // Load pool data
+  useEffect(() => {
+    async function loadPools() {
+      if (!user) return;
+
+      try {
+        const [active, past] = await Promise.all([
+          getActivePool(),
+          getPastPolls(5),
+        ]);
+        
+        setActivePool(active);
+        setPastPolls(past);
+      } catch (error) {
+        console.error("Error loading pools:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (!authLoading) {
+      loadPools();
+    }
+  }, [user, authLoading]);
+
   // Show loading while checking auth
-  if (authLoading) {
+  if (authLoading || loading) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
@@ -37,7 +66,7 @@ export default function Dashboard() {
     return null;
   }
 
-  // Sample data - replace with real data later
+  // Sample medals data - will be replaced with real data later
   const medals: Medal[] = [
     {
       id: "1",
@@ -66,24 +95,20 @@ export default function Dashboard() {
     },
   ];
 
-  const polls: Poll[] = [
-    {
-      id: "1",
-      title: "Tacoville",
-      date: "Yesterday • 12:30 PM",
-      icon: "utensils",
-      iconColor: "taco",
-      avatars: ["🦁", "🐼", "🦊"],
-    },
-    {
-      id: "2",
-      title: "Pizza Palace",
-      date: "Monday • 1:00 PM",
-      icon: "pizza-slice",
-      iconColor: "pizza",
-      avatars: ["🐨", "🦒", "🦁"],
-    },
-  ];
+  // Convert past pools to Poll format
+  const polls: Poll[] = pastPolls.map((pool) => ({
+    id: pool.id,
+    title: pool.title,
+    date: new Date(pool.created_at).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }),
+    icon: "utensils",
+    iconColor: "taco",
+    avatars: ["🦁", "🐼", "🦊"], // Will be replaced with real voter avatars later
+  }));
 
   const handleNotificationPress = () => {
     // TODO: Implement notification handling
@@ -140,6 +165,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.main,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollContent: {
     paddingBottom: 180, // Space for FAB and bottom nav

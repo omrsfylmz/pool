@@ -24,7 +24,18 @@ export async function createPool(
   if (!user) throw new Error("Not authenticated");
 
   const endsAt = new Date();
-  endsAt.setMinutes(endsAt.getMinutes() + durationMinutes);
+  
+  // Handle fractional minutes (e.g., 0.1667 for 10 seconds)
+  if (durationMinutes < 1) {
+    // Convert to seconds and add
+    const seconds = Math.round(durationMinutes * 60);
+    endsAt.setSeconds(endsAt.getSeconds() + seconds);
+  } else {
+    endsAt.setMinutes(endsAt.getMinutes() + durationMinutes);
+  }
+
+  // Store as integer (round up fractional minutes to 1)
+  const storageDuration = durationMinutes < 1 ? 1 : Math.round(durationMinutes);
 
   const { data, error } = await supabase
     .from("pools")
@@ -32,7 +43,7 @@ export async function createPool(
       creator_id: user.id,
       title,
       description,
-      voting_duration_minutes: durationMinutes,
+      voting_duration_minutes: storageDuration,
       ends_at: endsAt.toISOString(),
       status: "active",
     })
@@ -225,6 +236,16 @@ export async function getUserVote(poolId: string) {
 
   if (error && error.code !== "PGRST116") throw error;
   return data as Vote | null;
+}
+
+export async function getVotesForPool(poolId: string) {
+  const { data, error } = await supabase
+    .from("votes")
+    .select("*")
+    .eq("pool_id", poolId);
+
+  if (error) throw error;
+  return data as Vote[];
 }
 
 // ============================================
