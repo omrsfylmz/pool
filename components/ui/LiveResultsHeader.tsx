@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { typography, colors } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 interface LiveResultsHeaderProps {
   title?: string;
@@ -41,7 +41,7 @@ export const LiveResultsHeader: React.FC<LiveResultsHeaderProps> = ({
         activeOpacity={0.7}
         style={styles.iconButton}
       >
-        <FontAwesome5 name="circle-info" size={20} color={colors.text.dark} />
+        <FontAwesome5 name="info-circle" size={20} color={colors.text.dark} />
       </TouchableOpacity>
     </View>
   );

@@ -1,7 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { AddIdeaButton } from "../components/ui/AddIdeaButton";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FoodCard, type FoodOption } from "../components/ui/FoodCard";
 import { TimerSection } from "../components/ui/TimerSection";
 import { VoteHeader } from "../components/ui/VoteHeader";
@@ -182,21 +181,15 @@ export default function Vote() {
             </Text>
           </View>
 
-          {foodOptionsWithVotes.map((food, index) => (
+          {foodOptionsWithVotes.map((food) => (
             <View key={food.id} style={styles.foodCardWrapper}>
               <FoodCard food={food} onVote={handleVote} />
-              {index === 1 && (
-                <View style={styles.addIdeaWrapper}>
-                  <AddIdeaButton onPress={handleAddIdea} />
-                </View>
-              )}
             </View>
           ))}
 
           {foodOptionsWithVotes.length === 0 && (
             <View style={styles.emptyState}>
               <Text style={styles.emptyText}>No food options yet!</Text>
-              <AddIdeaButton onPress={handleAddIdea} />
             </View>
           )}
 
@@ -205,6 +198,17 @@ export default function Vote() {
           </Text>
         </View>
       </ScrollView>
+      
+      {/* Floating Add Idea Button */}
+      <View style={styles.floatingButtonContainer}>
+        <TouchableOpacity 
+          style={styles.floatingButton}
+          onPress={handleAddIdea}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.floatingButtonText}>+ Add Your Idea</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -261,5 +265,34 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.md,
     color: colors.text.grey,
     marginBottom: 20,
+  },
+  floatingButtonContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 10,
+    backgroundColor: "transparent",
+    pointerEvents: "box-none",
+  },
+  floatingButton: {
+    backgroundColor: colors.primary.yellow,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  floatingButtonText: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
   },
 });

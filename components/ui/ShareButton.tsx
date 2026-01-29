@@ -1,7 +1,7 @@
-import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, borderRadius, shadows, typography } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { colors, shadows, typography } from "../../constants/theme";
 
 interface ShareButtonProps {
   onPress?: () => void;
@@ -22,7 +22,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <FontAwesome5 name="share-nodes" size={16} color={colors.text.dark} />
+      <FontAwesome5 name="share-alt" size={16} color={colors.text.dark} />
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );

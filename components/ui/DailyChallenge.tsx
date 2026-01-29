@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 interface DailyChallengeProps {
   title: string;
@@ -43,7 +43,7 @@ export const DailyChallenge: React.FC<DailyChallengeProps> = ({
         {nextReward && (
           <View style={styles.challengeInfo}>
             <FontAwesome5
-              name="circle-info"
+              name="info-circle"
               size={12}
               color={colors.text.muted}
             />

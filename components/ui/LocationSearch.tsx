@@ -1,7 +1,7 @@
-import React from "react";
-import { View, StyleSheet, TextInput } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, borderRadius } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, TextInput, View } from "react-native";
+import { borderRadius, colors } from "../../constants/theme";
 
 interface LocationSearchProps {
   value?: string;
@@ -22,7 +22,7 @@ export const LocationSearch: React.FC<LocationSearchProps> = ({
     <View style={styles.inputGroup}>
       <View style={styles.inputIconLeft}>
         <FontAwesome5
-          name="location-dot"
+          name="map-marker-alt"
           size={18}
           color={colors.primary.yellow}
         />

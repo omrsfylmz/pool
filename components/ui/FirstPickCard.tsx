@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import React from "react";
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from "react-native";
+import { colors, shadows, typography } from "../../constants/theme";
 
 interface FirstPickCardProps {
   title: string;
@@ -34,7 +34,7 @@ export const FirstPickCard: React.FC<FirstPickCardProps> = ({
           <Text style={styles.foodTitle}>{title}</Text>
           <View style={styles.foodMeta}>
             <FontAwesome5
-              name="location-dot"
+              name="map-marker-alt"
               size={10}
               color={colors.text.disabled}
             />
