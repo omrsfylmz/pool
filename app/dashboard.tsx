@@ -70,6 +70,14 @@ export default function Dashboard() {
     router.push("/create-pool");
   };
 
+  const handleTabChange = (tab: NavItem) => {
+    setActiveTab(tab);
+    if (tab === "profile") {
+      router.push("/profile");
+    }
+    // Home tab is already active
+  };
+
   const handleViewAll = () => {
     // TODO: Implement view all polls navigation
     console.log("View all pressed");
@@ -99,7 +107,7 @@ export default function Dashboard() {
       </ScrollView>
 
       <FloatingActionButton onPress={handleFabPress} />
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
     </SafeAreaView>
   );
 }

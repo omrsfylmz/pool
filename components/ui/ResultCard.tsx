@@ -1,0 +1,257 @@
+import React from "react";
+import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+
+export interface ResultItem {
+  id: string;
+  name: string;
+  rank: number;
+  voteCount: number;
+  popularity: number; // percentage
+  imageUri?: string | ImageSourcePropType;
+  voters?: string[]; // Array of emoji avatars
+  isWinner?: boolean;
+}
+
+interface ResultCardProps {
+  result: ResultItem;
+}
+
+/**
+ * ResultCard Component
+ * Card displaying food option results with rank, votes, and progress bar
+ */
+export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
+  const defaultImage = require("../../assets/images/react-logo.png");
+  const maxAvatars = 4;
+  const visibleVoters = result.voters?.slice(0, maxAvatars) || [];
+  const remainingCount =
+    (result.voters?.length || 0) - visibleVoters.length;
+
+  return (
+    <View
+      style={[
+        styles.card,
+        result.isWinner && styles.winnerCard,
+      ]}
+    >
+      <View style={styles.cardTop}>
+        <Image
+          source={result.imageUri || defaultImage}
+          style={styles.foodThumb}
+          resizeMode="cover"
+        />
+        <View style={styles.cardInfo}>
+          <View style={styles.infoHeader}>
+            <View style={styles.rankTitle}>
+              <Text
+                style={[
+                  styles.rankNum,
+                  result.isWinner ? styles.rankNumGold : styles.rankNumGrey,
+                ]}
+              >
+                #{result.rank}
+              </Text>
+              <Text style={styles.foodName}>{result.name}</Text>
+            </View>
+            <View style={styles.voteStat}>
+              {result.isWinner && (
+                <FontAwesome5
+                  name="trophy"
+                  size={14}
+                  color={colors.primary.yellow}
+                  style={styles.trophyIcon}
+                />
+              )}
+              <Text style={styles.voteNum}>{result.voteCount}</Text>
+              <Text style={styles.voteLabel}>Votes</Text>
+            </View>
+          </View>
+          {result.voters && result.voters.length > 0 && (
+            <View style={styles.avatarRow}>
+              {visibleVoters.map((avatar, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.miniAvatar,
+                    index > 0 && styles.avatarOverlap,
+                  ]}
+                >
+                  <Text style={styles.miniAvatarEmoji}>{avatar}</Text>
+                </View>
+              ))}
+              {remainingCount > 0 && (
+                <Text style={styles.moreCount}>+{remainingCount}</Text>
+              )}
+            </View>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.progressSection}>
+        <View style={styles.popLabelRow}>
+          <Text style={styles.popLabel}>Popularity</Text>
+          <Text
+            style={[
+              styles.popPercent,
+              !result.isWinner && styles.popPercentGrey,
+            ]}
+          >
+            {result.popularity}%
+          </Text>
+        </View>
+        <View style={styles.barBg}>
+          <View
+            style={[
+              styles.barFill,
+              {
+                width: `${result.popularity}%`,
+                backgroundColor: result.isWinner
+                  ? colors.primary.yellow
+                  : colors.text.disabled,
+              },
+            ]}
+          />
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.background.card,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    ...shadows.card,
+  },
+  winnerCard: {
+    borderWidth: 2,
+    borderColor: colors.primary.yellow,
+  },
+  cardTop: {
+    flexDirection: "row",
+    gap: 15,
+    marginBottom: 15,
+  },
+  foodThumb: {
+    width: 60,
+    height: 60,
+    borderRadius: borderRadius.sm,
+  },
+  cardInfo: {
+    flex: 1,
+  },
+  infoHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  rankTitle: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    flex: 1,
+  },
+  rankNum: {
+    fontWeight: typography.weights.bold,
+  },
+  rankNumGold: {
+    color: colors.primary.yellowDark,
+  },
+  rankNumGrey: {
+    color: colors.text.muted,
+  },
+  foodName: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+  },
+  voteStat: {
+    alignItems: "flex-end",
+  },
+  trophyIcon: {
+    marginBottom: 2,
+  },
+  voteNum: {
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+  },
+  voteLabel: {
+    fontSize: 10,
+    color: colors.text.grey,
+    fontWeight: typography.weights.bold,
+    textTransform: "uppercase",
+  },
+  avatarRow: {
+    flexDirection: "row",
+    marginTop: 6,
+    alignItems: "center",
+  },
+  miniAvatar: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: colors.background.light,
+    borderWidth: 1,
+    borderColor: colors.background.card,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  },
+  avatarOverlap: {
+    marginLeft: -6,
+  },
+  miniAvatarEmoji: {
+    fontSize: 12,
+  },
+  moreCount: {
+    marginLeft: 10,
+    fontSize: 11,
+    color: colors.text.grey,
+    fontWeight: typography.weights.medium,
+  },
+  progressSection: {
+    gap: 5,
+  },
+  popLabelRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    fontSize: 11,
+    fontWeight: typography.weights.bold,
+    color: colors.text.grey,
+    textTransform: "uppercase",
+  },
+  popLabel: {
+    fontSize: 11,
+    fontWeight: typography.weights.bold,
+    color: colors.text.grey,
+    textTransform: "uppercase",
+  },
+  popPercent: {
+    fontSize: 11,
+    fontWeight: typography.weights.bold,
+    color: colors.primary.yellow,
+    textTransform: "uppercase",
+  },
+  popPercentGrey: {
+    color: colors.text.grey,
+  },
+  barBg: {
+    width: "100%",
+    height: 6,
+    backgroundColor: colors.background.light,
+    borderRadius: 3,
+    overflow: "hidden",
+  },
+  barFill: {
+    height: "100%",
+    borderRadius: 3,
+  },
+});
+

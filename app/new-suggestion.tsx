@@ -50,8 +50,8 @@ export default function NewSuggestion() {
       location: selectedLocation,
       note,
     });
-    // Navigate back to dashboard or show success
-    router.back();
+    // Navigate to share pool page
+    router.push("/share-pool");
   };
 
   const isFormValid = suggestion.trim().length > 0;

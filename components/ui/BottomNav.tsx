@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { colors, typography } from "../../constants/theme";
 
-export type NavItem = "home" | "activity" | "profile";
+export type NavItem = "home" | "profile";
 
 interface BottomNavProps {
   activeTab: NavItem;
@@ -18,8 +18,7 @@ interface NavItemConfig {
 
 const navItems: NavItemConfig[] = [
   { id: "home", label: "Home", icon: "home" },
-  { id: "activity", label: "Activity", icon: "chart-line" },
-  { id: "profile", label: "Profile", icon: "user-circle" },
+  { id: "profile", label: "Profile", icon: "user" },
 ];
 
 /**

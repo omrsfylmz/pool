@@ -40,6 +40,14 @@ export const colors = {
     borderYellow: "#fcefc7",
     textYellow: "#dfa01e",
   },
+  pill: {
+    lightYellow: "#fff8e1",
+    borderYellow: "#fcefc7",
+  },
+  slack: {
+    purple: "#4a154b",
+    purpleHover: "#3b113c",
+  },
 } as const;
 
 export const spacing = {
