@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated, Image } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React, { useEffect, useRef } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
-import * as SplashScreen from "expo-splash-screen";
 
 interface SplashScreenProps {
   onFinish?: () => void;
@@ -130,6 +129,8 @@ export const CustomSplashScreen: React.FC<SplashScreenProps> = ({
                         inputRange: [0, 1],
                         outputRange: [0, -8],
                       }),
+                    },
+                    {
                       scale: dotAnims[index].interpolate({
                         inputRange: [0, 1],
                         outputRange: [1, 1.2],
