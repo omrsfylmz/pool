@@ -1,29 +1,53 @@
-import React, { useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View, Text } from "react-native";
 import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
+import { BottomNav, type NavItem } from "../components/ui/BottomNav";
+import { ChartCard, type ChartData } from "../components/ui/ChartCard";
+import { EditProfileButton } from "../components/ui/EditProfileButton";
+import { LogoutButton } from "../components/ui/LogoutButton";
+import { MenuItem } from "../components/ui/MenuItem";
 import { ProfileHeader } from "../components/ui/ProfileHeader";
 import { ProfileInfo } from "../components/ui/ProfileInfo";
-import { EditProfileButton } from "../components/ui/EditProfileButton";
-import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
-import { ChartCard, type ChartData } from "../components/ui/ChartCard";
-import { MenuItem } from "../components/ui/MenuItem";
-import { LogoutButton } from "../components/ui/LogoutButton";
-import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { colors, typography } from "../constants/theme";
+import { useAuth } from "../contexts/AuthContext";
+import { getProfile, type Profile } from "../services/api";
 
 export default function Profile() {
   const router = useRouter();
+  const { user, loading: authLoading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<NavItem>("profile");
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Sample user data
-  const userData = {
-    name: "Alex Johnson",
-    email: "alex.j@officecorp.com",
-    avatarUri: undefined, // Can be set to actual image URI
-    isVerified: true,
-  };
+  // Fetch user profile data
+  useEffect(() => {
+    async function loadProfile() {
+      // Wait for auth to finish loading
+      if (authLoading) {
+        return;
+      }
 
-  // Sample badges
+      // If no user after auth loaded, redirect to login
+      if (!user) {
+        router.replace("/");
+        return;
+      }
+
+      try {
+        const profileData = await getProfile(user.id);
+        setProfile(profileData);
+      } catch (error) {
+        console.error("Error loading profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProfile();
+  }, [user, authLoading]);
+
+  // Sample badges (will be replaced with real data later)
   const badges: Badge[] = [
     {
       id: "1",
@@ -51,7 +75,7 @@ export default function Profile() {
     },
   ];
 
-  // Sample chart data
+  // Sample chart data (will be replaced with real data later)
   const chartData: ChartData[] = [
     { label: "Fast Food", percentage: 45, color: colors.primary.yellow },
     { label: "Healthy", percentage: 30, color: "#fcd072" },
@@ -78,11 +102,9 @@ export default function Profile() {
     console.log("Privacy pressed");
   };
 
-  const handleLogout = () => {
-    // TODO: Implement logout
-    console.log("Logout pressed");
-    // Could navigate back to login
-    // router.replace("/");
+  const handleLogout = async () => {
+    await signOut();
+    router.replace("/");
   };
 
   const handleTabChange = (tab: NavItem) => {
@@ -92,6 +114,20 @@ export default function Profile() {
     }
     // Profile tab is already active
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary.yellow} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!profile) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -103,10 +139,10 @@ export default function Profile() {
 
         <View style={styles.main}>
           <ProfileInfo
-            userName={userData.name}
-            userEmail={userData.email}
-            avatarUri={userData.avatarUri}
-            isVerified={userData.isVerified}
+            userName={profile.full_name || profile.avatar_name}
+            userEmail={profile.email}
+            avatarAnimal={profile.avatar_animal}
+            isVerified={true}
           />
 
           <EditProfileButton onPress={handleEditProfile} />
@@ -143,6 +179,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.main,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollContent: {
     paddingBottom: 90, // Space for bottom nav

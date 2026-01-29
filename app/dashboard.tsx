@@ -1,17 +1,41 @@
-import React, { useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
-import { DashboardHeader } from "../components/ui/DashboardHeader";
-import { MedalCase, type Medal } from "../components/ui/MedalCase";
-import { DailyChallenge } from "../components/ui/DailyChallenge";
-import { PastPolls, type Poll } from "../components/ui/PastPolls";
-import { FloatingActionButton } from "../components/ui/FloatingActionButton";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
+import { DailyChallenge } from "../components/ui/DailyChallenge";
+import { DashboardHeader } from "../components/ui/DashboardHeader";
+import { FloatingActionButton } from "../components/ui/FloatingActionButton";
+import { MedalCase, type Medal } from "../components/ui/MedalCase";
+import { PastPolls, type Poll } from "../components/ui/PastPolls";
 import { colors } from "../constants/theme";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Dashboard() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<NavItem>("home");
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/");
+    }
+  }, [user, authLoading]);
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary.yellow} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   // Sample data - replace with real data later
   const medals: Medal[] = [

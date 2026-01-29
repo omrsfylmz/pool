@@ -1,12 +1,13 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, shadows } from "../../constants/theme";
+import React from "react";
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from "react-native";
+import { colors, shadows, typography } from "../../constants/theme";
 
 interface ProfileInfoProps {
   userName: string;
   userEmail: string;
   avatarUri?: string | ImageSourcePropType;
+  avatarAnimal?: string; // Animal emoji like 🦁, 🐼, etc.
   isVerified?: boolean;
 }
 
@@ -18,6 +19,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   userName,
   userEmail,
   avatarUri,
+  avatarAnimal,
   isVerified = true,
 }) => {
   const defaultImage = require("../../assets/images/react-logo.png");
@@ -25,11 +27,17 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.avatarWrapper}>
-        <Image
-          source={avatarUri || defaultImage}
-          style={styles.avatarImg}
-          resizeMode="cover"
-        />
+        {avatarAnimal ? (
+          <View style={styles.avatarEmoji}>
+            <Text style={styles.emojiText}>{avatarAnimal}</Text>
+          </View>
+        ) : (
+          <Image
+            source={avatarUri || defaultImage}
+            style={styles.avatarImg}
+            resizeMode="cover"
+          />
+        )}
         {isVerified && (
           <View style={styles.verifiedBadge}>
             <FontAwesome5 name="check" size={12} color={colors.background.card} />
@@ -61,6 +69,20 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: colors.background.card,
     ...shadows.button,
+  },
+  avatarEmoji: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.primary.yellowLight,
+    borderWidth: 4,
+    borderColor: colors.background.card,
+    alignItems: "center",
+    justifyContent: "center",
+    ...shadows.button,
+  },
+  emojiText: {
+    fontSize: 40,
   },
   verifiedBadge: {
     position: "absolute",
