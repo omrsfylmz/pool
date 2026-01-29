@@ -1,10 +1,9 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Share, StyleSheet, TouchableOpacity, View } from "react-native";
 import { FirstPickCard } from "../components/ui/FirstPickCard";
 import { HeroCard } from "../components/ui/HeroCard";
 import { IdentityFooter } from "../components/ui/IdentityFooter";
-import { QRCodeArea } from "../components/ui/QRCodeArea";
 import { ShareButton } from "../components/ui/ShareButton";
 import { SharePoolHeader } from "../components/ui/SharePoolHeader";
 import { StatusPill } from "../components/ui/StatusPill";
@@ -54,10 +53,28 @@ export default function SharePool() {
     router.back();
   };
 
-  const handleShare = () => {
+  const handleAddFirstOption = () => {
     // Navigate to new suggestion page to add food options
     if (poolId) {
       router.push(`/new-suggestion?poolId=${poolId}`);
+    }
+  };
+
+  const handleSharePool = async () => {
+    if (!poolId || !pool) return;
+
+    try {
+      // Generate shareable link
+      const shareUrl = `https://yourapp.com/join-pool?poolId=${poolId}`;
+      const message = `🍽️ Join my lunch pool: "${pool.title}"!\n\nClick here to vote: ${shareUrl}`;
+
+      await Share.share({
+        message,
+        title: `Join ${pool.title}`,
+      });
+    } catch (error: any) {
+      console.error("Error sharing pool:", error);
+      Alert.alert("Error", "Failed to share pool");
     }
   };
 
@@ -89,15 +106,19 @@ export default function SharePool() {
             successTag="Success! Your Pool is Live"
           />
 
-          <FirstPickCard
-            title="Add Your First Option"
-            location="Click below to add food suggestions"
-            distance=""
-          />
+          <TouchableOpacity 
+            onPress={handleAddFirstOption}
+            activeOpacity={0.8}
+            style={styles.firstPickWrapper}
+          >
+            <FirstPickCard
+              title="Add Your First Option"
+              location="Click here to add food suggestions"
+              distance="👆"
+            />
+          </TouchableOpacity>
 
-          <ShareButton onPress={handleShare} />
-
-          <QRCodeArea />
+          <ShareButton onPress={handleSharePool} />
 
           <StatusPill />
 
@@ -116,6 +137,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background.main,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   scrollContent: {
     flexGrow: 1,
   },
@@ -124,6 +150,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 30,
     alignItems: "center",
+  },
+  firstPickWrapper: {
+    width: "100%",
   },
 });
 
