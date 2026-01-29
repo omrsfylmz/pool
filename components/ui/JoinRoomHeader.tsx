@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { typography, colors } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 interface JoinRoomHeaderProps {
   onClose?: () => void;
@@ -19,11 +19,12 @@ export const JoinRoomHeader: React.FC<JoinRoomHeaderProps> = ({
       <TouchableOpacity
         onPress={onClose}
         activeOpacity={0.7}
-        style={styles.closeButton}
+        style={styles.backButton}
       >
-        <FontAwesome5 name="times" size={24} color={colors.text.dark} />
+        <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Join Room</Text>
+      <View style={styles.placeholder} />
     </View>
   );
 };
@@ -36,9 +37,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
   },
-  closeButton: {
-    position: "absolute",
-    left: 24,
+  backButton: {
     padding: 5,
   },
   headerTitle: {
@@ -47,6 +46,10 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.lg,
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
+    marginRight: 25,
+  },
+  placeholder: {
+    width: 30,
   },
 });
 

@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { typography, colors } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 interface SharePoolHeaderProps {
   onBack?: () => void;
@@ -21,7 +21,7 @@ export const SharePoolHeader: React.FC<SharePoolHeaderProps> = ({
         activeOpacity={0.7}
         style={styles.backButton}
       >
-        <FontAwesome5 name="arrow-left" size={20} color={colors.text.dark} />
+        <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Share Your Pool</Text>
       <View style={styles.placeholder} />

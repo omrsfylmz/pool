@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { typography, colors } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 interface CreatePoolHeaderProps {
   onClose?: () => void;
@@ -23,7 +23,7 @@ export const CreatePoolHeader: React.FC<CreatePoolHeaderProps> = ({
         activeOpacity={0.7}
         style={styles.iconButton}
       >
-        <FontAwesome5 name="times" size={20} color={colors.text.dark} />
+        <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Create Lunch Pool</Text>
       <TouchableOpacity

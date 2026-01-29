@@ -22,8 +22,8 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <FontAwesome5 name="share-alt" size={16} color={colors.text.dark} />
       <Text style={styles.buttonText}>{text}</Text>
+      <FontAwesome5 name="chevron-right" size={16} color={colors.text.dark} />
     </TouchableOpacity>
   );
 };

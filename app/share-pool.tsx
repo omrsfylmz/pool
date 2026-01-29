@@ -1,13 +1,13 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Share, StyleSheet, TouchableOpacity, View } from "react-native";
-import { FirstPickCard } from "../components/ui/FirstPickCard";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { HeroCard } from "../components/ui/HeroCard";
 import { IdentityFooter } from "../components/ui/IdentityFooter";
 import { ShareButton } from "../components/ui/ShareButton";
 import { SharePoolHeader } from "../components/ui/SharePoolHeader";
 import { StatusPill } from "../components/ui/StatusPill";
-import { colors } from "../constants/theme";
+import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
 import { getProfile, type Pool } from "../services/api";
@@ -109,13 +109,15 @@ export default function SharePool() {
           <TouchableOpacity 
             onPress={handleAddFirstOption}
             activeOpacity={0.8}
-            style={styles.firstPickWrapper}
+            style={styles.addOptionButton}
           >
-            <FirstPickCard
-              title="Add Your First Option"
-              location="Click here to add food suggestions"
-              distance="👆"
-            />
+            <View style={styles.addOptionContent}>
+              <View style={styles.addOptionTextContainer}>
+                <Text style={styles.addOptionTitle}>Add Your First Option</Text>
+                <Text style={styles.addOptionSubtitle}>Click here to add food suggestions</Text>
+              </View>
+              <FontAwesome5 name="chevron-right" size={24} color={colors.primary.yellow} />
+            </View>
           </TouchableOpacity>
 
           <ShareButton onPress={handleSharePool} />
@@ -151,8 +153,33 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     alignItems: "center",
   },
-  firstPickWrapper: {
+  addOptionButton: {
     width: "100%",
+    borderWidth: 2,
+    borderColor: colors.primary.yellow,
+    borderRadius: 16,
+    borderStyle: "dashed",
+    backgroundColor: colors.background.card,
+    padding: 20,
+    marginBottom: 20,
+  },
+  addOptionContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  addOptionTextContainer: {
+    flex: 1,
+  },
+  addOptionTitle: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+    marginBottom: 4,
+  },
+  addOptionSubtitle: {
+    fontSize: typography.sizes.sm,
+    color: colors.text.grey,
   },
 });
 
