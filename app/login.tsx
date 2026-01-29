@@ -2,7 +2,7 @@ import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    KeyboardAvoidingView,
+    Alert, KeyboardAvoidingView,
     Platform,
     SafeAreaView,
     ScrollView,
@@ -10,37 +10,61 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from "react-native";
 import { borderRadius, colors, spacing, typography } from "../constants/theme";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const router = useRouter();
+  const { signIn, signInWithGoogle, signInWithApple } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    // TODO: Implement login logic
-    console.log("Logging in:", { email, password });
-    router.push("/dashboard");
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await signIn(email, password);
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Login Error", error.message);
+    } else {
+      router.push("/dashboard");
+    }
   };
 
-  const handleGoogleLogin = () => {
-    // TODO: Implement Google login
-    console.log("Google login");
-    router.push("/dashboard");
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    const { error } = await signInWithGoogle();
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Google Login Error", error.message);
+    }
   };
 
-  const handleAppleLogin = () => {
-    // TODO: Implement Apple login
-    console.log("Apple login");
-    router.push("/dashboard");
+  const handleAppleLogin = async () => {
+    setLoading(true);
+    const { error } = await signInWithApple();
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Apple Login Error", error.message);
+    }
   };
 
   const handleForgotPassword = () => {
-    // TODO: Implement forgot password flow
-    console.log("Forgot password");
+    Alert.alert(
+      "Forgot Password",
+      "Password reset functionality will be implemented soon."
+    );
   };
 
   return (
@@ -136,11 +160,14 @@ export default function Login() {
 
               {/* Login Button */}
               <TouchableOpacity
-                style={styles.loginButton}
+                style={[styles.loginButton, loading && styles.loginButtonDisabled]}
                 onPress={handleLogin}
                 activeOpacity={0.8}
+                disabled={loading}
               >
-                <Text style={styles.loginButtonText}>Log In</Text>
+                <Text style={styles.loginButtonText}>
+                  {loading ? "Logging In..." : "Log In"}
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -314,6 +341,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 15,
     elevation: 5,
+  },
+  loginButtonDisabled: {
+    opacity: 0.6,
   },
   loginButtonText: {
     fontSize: typography.sizes.md,

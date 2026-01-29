@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    KeyboardAvoidingView,
+    Alert, KeyboardAvoidingView,
     Platform,
     SafeAreaView,
     ScrollView,
@@ -10,33 +10,64 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from "react-native";
 import { borderRadius, colors, spacing, typography } from "../constants/theme";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function SignUp() {
   const router = useRouter();
+  const { signUp, signInWithGoogle, signInWithApple } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleCreateAccount = () => {
-    // TODO: Implement account creation logic
-    console.log("Creating account:", { fullName, email, password });
-    router.push("/dashboard");
+  const handleCreateAccount = async () => {
+    if (!fullName.trim() || !email.trim() || !password.trim()) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
+    if (password.length < 8) {
+      Alert.alert("Error", "Password must be at least 8 characters");
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await signUp(email, password, fullName);
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Sign Up Error", error.message);
+    } else {
+      Alert.alert(
+        "Success!",
+        "Account created successfully. Please check your email to verify your account.",
+        [{ text: "OK", onPress: () => router.push("/dashboard") }]
+      );
+    }
   };
 
-  const handleGoogleSignUp = () => {
-    // TODO: Implement Google sign up
-    console.log("Google sign up");
-    router.push("/dashboard");
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    const { error } = await signInWithGoogle();
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Google Sign Up Error", error.message);
+    }
   };
 
-  const handleAppleSignUp = () => {
-    // TODO: Implement Apple sign up
-    console.log("Apple sign up");
-    router.push("/dashboard");
+  const handleAppleSignUp = async () => {
+    setLoading(true);
+    const { error } = await signInWithApple();
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Apple Sign Up Error", error.message);
+    }
   };
 
   return (
@@ -123,11 +154,14 @@ export default function SignUp() {
 
               {/* Submit Button */}
               <TouchableOpacity
-                style={styles.submitButton}
+                style={[styles.submitButton, loading && styles.submitButtonDisabled]}
                 onPress={handleCreateAccount}
                 activeOpacity={0.8}
+                disabled={loading}
               >
-                <Text style={styles.submitButtonText}>Create Account</Text>
+                <Text style={styles.submitButtonText}>
+                  {loading ? "Creating Account..." : "Create Account"}
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -274,6 +308,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 15,
     elevation: 5,
+  },
+  submitButtonDisabled: {
+    opacity: 0.6,
   },
   submitButtonText: {
     fontSize: typography.sizes.md,
