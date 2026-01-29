@@ -14,13 +14,13 @@ export default function Index() {
   };
 
   const handleCreateAccount = () => {
-    // Navigate to dashboard (account creation will be implemented later)
-    router.push("/dashboard");
+    // Navigate to sign up page
+    router.push("/signup");
   };
 
   const handleLogIn = () => {
-    // Navigate to dashboard (login will be implemented later)
-    router.push("/dashboard");
+    // Navigate to login page
+    router.push("/login");
   };
 
   return (
