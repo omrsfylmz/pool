@@ -62,8 +62,8 @@ export default function CreatePool() {
     try {
       const pool = await createPool(poolTitle, poolDescription, votingDuration);
       
-      // Navigate to new suggestion page with pool ID
-      router.push(`/new-suggestion?poolId=${pool.id}`);
+      // Navigate to share pool page with pool ID
+      router.push(`/share-pool?poolId=${pool.id}`);
     } catch (error: any) {
       console.error("Error creating pool:", error);
       Alert.alert("Error", error.message || "Failed to create pool");

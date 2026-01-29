@@ -1,40 +1,79 @@
-import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
-import { useRouter } from "expo-router";
-import { SharePoolHeader } from "../components/ui/SharePoolHeader";
-import { HeroCard } from "../components/ui/HeroCard";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { FirstPickCard } from "../components/ui/FirstPickCard";
-import { ShareButton } from "../components/ui/ShareButton";
-import { QRCodeArea } from "../components/ui/QRCodeArea";
-import { StatusPill } from "../components/ui/StatusPill";
+import { HeroCard } from "../components/ui/HeroCard";
 import { IdentityFooter } from "../components/ui/IdentityFooter";
+import { QRCodeArea } from "../components/ui/QRCodeArea";
+import { ShareButton } from "../components/ui/ShareButton";
+import { SharePoolHeader } from "../components/ui/SharePoolHeader";
+import { StatusPill } from "../components/ui/StatusPill";
 import { colors } from "../constants/theme";
+import { useAuth } from "../contexts/AuthContext";
+import { supabase } from "../lib/supabase";
+import { getProfile, type Pool } from "../services/api";
 
 export default function SharePool() {
   const router = useRouter();
+  const { poolId } = useLocalSearchParams<{ poolId: string }>();
+  const { user } = useAuth();
+  
+  const [pool, setPool] = useState<Pool | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Sample data - replace with actual pool data
-  const poolData = {
-    name: "Friday Team Lunch",
-    firstPick: {
-      title: "Artisan Tacos",
-      location: "Mexican Cuisine",
-      distance: "0.4 mi",
-    },
-    identity: {
-      emoji: "🦊",
-      name: "The Clever Fox",
-    },
-  };
+  useEffect(() => {
+    async function loadData() {
+      if (!user || !poolId) {
+        router.replace("/");
+        return;
+      }
+
+      try {
+        const [poolData, profileData] = await Promise.all([
+          supabase.from("pools").select("*").eq("id", poolId).single(),
+          getProfile(user.id),
+        ]);
+
+        if (poolData.error) throw poolData.error;
+        
+        setPool(poolData.data as Pool);
+        setProfile(profileData);
+      } catch (error) {
+        console.error("Error loading pool:", error);
+        Alert.alert("Error", "Failed to load pool data");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, [user, poolId]);
 
   const handleBack = () => {
     router.back();
   };
 
   const handleShare = () => {
-    // Navigate to vote page
-    router.push("/vote");
+    // Navigate to new suggestion page to add food options
+    if (poolId) {
+      router.push(`/new-suggestion?poolId=${poolId}`);
+    }
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary.yellow} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!pool || !profile) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,14 +85,14 @@ export default function SharePool() {
 
         <View style={styles.main}>
           <HeroCard
-            poolName={poolData.name}
+            poolName={pool.title}
             successTag="Success! Your Pool is Live"
           />
 
           <FirstPickCard
-            title={poolData.firstPick.title}
-            location={poolData.firstPick.location}
-            distance={poolData.firstPick.distance}
+            title="Add Your First Option"
+            location="Click below to add food suggestions"
+            distance=""
           />
 
           <ShareButton onPress={handleShare} />
@@ -63,8 +102,8 @@ export default function SharePool() {
           <StatusPill />
 
           <IdentityFooter
-            emoji={poolData.identity.emoji}
-            identityName={poolData.identity.name}
+            emoji={profile.avatar_animal}
+            identityName={profile.avatar_name}
           />
         </View>
       </ScrollView>
