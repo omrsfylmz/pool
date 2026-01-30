@@ -92,6 +92,7 @@ export default function Results() {
     popularity: poolData.totalVotes > 0 
       ? Math.round((result.voteCount / poolData.totalVotes) * 100)
       : 0,
+    icon: result.icon, // Pass the food icon
     voters: [], // We can add voter avatars later if needed
     isWinner: result.isWinner,
   }));

@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import React from "react";
+import { ImageSourcePropType, StyleSheet, Text, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export interface ResultItem {
   id: string;
@@ -9,6 +9,7 @@ export interface ResultItem {
   rank: number;
   voteCount: number;
   popularity: number; // percentage
+  icon?: string; // FontAwesome5 icon name
   imageUri?: string | ImageSourcePropType;
   voters?: string[]; // Array of emoji avatars
   isWinner?: boolean;
@@ -23,11 +24,18 @@ interface ResultCardProps {
  * Card displaying food option results with rank, votes, and progress bar
  */
 export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
-  const defaultImage = require("../../assets/images/react-logo.png");
   const maxAvatars = 4;
   const visibleVoters = result.voters?.slice(0, maxAvatars) || [];
   const remainingCount =
     (result.voters?.length || 0) - visibleVoters.length;
+
+  // Determine progress bar color based on popularity
+  const getProgressColor = (popularity: number) => {
+    if (popularity >= 80) return "#4CAF50"; // Green
+    if (popularity >= 50) return colors.primary.yellow; // Yellow
+    if (popularity >= 20) return "#FF9800"; // Orange
+    return "#F44336"; // Red
+  };
 
   return (
     <View
@@ -37,11 +45,14 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
       ]}
     >
       <View style={styles.cardTop}>
-        <Image
-          source={result.imageUri || defaultImage}
-          style={styles.foodThumb}
-          resizeMode="cover"
-        />
+        {/* Food Icon */}
+        <View style={styles.iconContainer}>
+          <FontAwesome5
+            name={result.icon || "utensils"}
+            size={28}
+            color={colors.primary.yellow}
+          />
+        </View>
         <View style={styles.cardInfo}>
           <View style={styles.infoHeader}>
             <View style={styles.rankTitle}>
@@ -107,9 +118,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
               styles.barFill,
               {
                 width: `${result.popularity}%`,
-                backgroundColor: result.isWinner
-                  ? colors.primary.yellow
-                  : colors.text.disabled,
+                backgroundColor: getProgressColor(result.popularity),
               },
             ]}
           />
@@ -136,10 +145,13 @@ const styles = StyleSheet.create({
     gap: 15,
     marginBottom: 15,
   },
-  foodThumb: {
+  iconContainer: {
     width: 60,
     height: 60,
     borderRadius: borderRadius.sm,
+    backgroundColor: colors.primary.yellowLight,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardInfo: {
     flex: 1,
