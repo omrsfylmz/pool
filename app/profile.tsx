@@ -1,10 +1,12 @@
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { ChartCard, type ChartData } from "../components/ui/ChartCard";
 import { EditProfileButton } from "../components/ui/EditProfileButton";
+import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
 import { LogoutButton } from "../components/ui/LogoutButton";
 import { MenuItem } from "../components/ui/MenuItem";
 import { PasswordUpdateModal } from "../components/ui/PasswordUpdateModal";
@@ -17,12 +19,14 @@ import { getProfile, type Profile } from "../services/api";
 
 export default function Profile() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { user, loading: authLoading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<NavItem>("profile");
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
 
   // Fetch user profile data
   useEffect(() => {
@@ -104,6 +108,10 @@ export default function Profile() {
     setShowPrivacyModal(true);
   };
 
+  const handleLanguage = () => {
+    setShowLanguageModal(true);
+  };
+
   const handleLogout = async () => {
     await signOut();
     router.replace("/");
@@ -151,24 +159,29 @@ export default function Profile() {
 
           <BadgesSection badges={badges} earnedCount={6} totalCount={12} />
 
-          <Text style={styles.sectionTitle}>Your Plate This Week</Text>
+          <Text style={styles.sectionTitle}>{t('profile.plateThisWeek')}</Text>
           <View style={styles.chartSpacer} />
           <ChartCard total={5} data={chartData} />
 
-          <Text style={styles.sectionLabel}>ACCOUNT & PRIVACY</Text>
+          <Text style={styles.sectionLabel}>{t('profile.accountPrivacy')}</Text>
 
           <MenuItem
+            icon="globe"
+            text={t('profile.language')}
+            onPress={handleLanguage}
+          />
+          <MenuItem
             icon="lock"
-            text="Security & Password"
+            text={t('profile.security')}
             onPress={handleSecurity}
           />
           <MenuItem
             icon="shield-alt"
-            text="Privacy Policy"
+            text={t('profile.privacy')}
             onPress={handlePrivacy}
           />
 
-          <LogoutButton onPress={handleLogout} />
+          <LogoutButton onPress={handleLogout} text={t('profile.logout')} />
         </View>
       </ScrollView>
 
@@ -184,6 +197,12 @@ export default function Profile() {
       <PrivacyPolicyModal
         visible={showPrivacyModal}
         onClose={() => setShowPrivacyModal(false)}
+      />
+
+      {/* Language Selector Modal */}
+      <LanguageSelectorModal
+        visible={showLanguageModal}
+        onClose={() => setShowLanguageModal(false)}
       />
     </SafeAreaView>
   );

@@ -1,0 +1,22 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "error": "Error",
+    "success": "Success"
+  },
+  "profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "language": "Language",
+    "security": "Security & Password",
+    "privacy": "Privacy Policy",
+    "logout": "Log Out",
+    "selectLanguage": "Select Language",
+    "english": "English",
+    "turkish": "Turkish",
+    "accountPrivacy": "ACCOUNT & PRIVACY",
+    "plateThisWeek": "Your Plate This Week"
+  }
+}

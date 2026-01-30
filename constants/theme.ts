@@ -48,6 +48,12 @@ export const colors = {
     purple: "#4a154b",
     purpleHover: "#3b113c",
   },
+  status: {
+    error: "#e02424",
+    success: "#34d399",
+    warning: "#fbbf24",
+    info: "#60a5fa",
+  },
 } as const;
 
 export const spacing = {

@@ -1,0 +1,22 @@
+{
+  "common": {
+    "loading": "Yükleniyor...",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "error": "Hata",
+    "success": "Başarılı"
+  },
+  "profile": {
+    "title": "Profil",
+    "settings": "Ayarlar",
+    "language": "Dil",
+    "security": "Güvenlik ve Şifre",
+    "privacy": "Gizlilik Politikası",
+    "logout": "Çıkış Yap",
+    "selectLanguage": "Dil Seçin",
+    "english": "İngilizce",
+    "turkish": "Türkçe",
+    "accountPrivacy": "HESAP & GİZLİLİK",
+    "plateThisWeek": "Bu Haftaki Tabağın"
+  }
+}
