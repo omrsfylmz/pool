@@ -8,6 +8,7 @@ import { EditProfileButton } from "../components/ui/EditProfileButton";
 import { LogoutButton } from "../components/ui/LogoutButton";
 import { MenuItem } from "../components/ui/MenuItem";
 import { PasswordUpdateModal } from "../components/ui/PasswordUpdateModal";
+import { PrivacyPolicyModal } from "../components/ui/PrivacyPolicyModal";
 import { ProfileHeader } from "../components/ui/ProfileHeader";
 import { ProfileInfo } from "../components/ui/ProfileInfo";
 import { colors, typography } from "../constants/theme";
@@ -21,6 +22,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   // Fetch user profile data
   useEffect(() => {
@@ -99,8 +101,7 @@ export default function Profile() {
   };
 
   const handlePrivacy = () => {
-    // TODO: Implement privacy policy
-    console.log("Privacy pressed");
+    setShowPrivacyModal(true);
   };
 
   const handleLogout = async () => {
@@ -177,6 +178,12 @@ export default function Profile() {
       <PasswordUpdateModal
         visible={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
+      />
+
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal
+        visible={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
       />
     </SafeAreaView>
   );
