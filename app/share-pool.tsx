@@ -64,8 +64,8 @@ export default function SharePool() {
     if (!poolId || !pool) return;
 
     try {
-      // Generate shareable link
-      const shareUrl = `https://yourapp.com/join-pool?poolId=${poolId}`;
+      // Generate shareable deep link
+      const shareUrl = `firstexpo://vote?poolId=${poolId}`;
       const message = `🍽️ Join my lunch pool: "${pool.title}"!\n\nClick here to vote: ${shareUrl}`;
 
       await Share.share({
