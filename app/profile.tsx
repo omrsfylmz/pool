@@ -7,6 +7,7 @@ import { ChartCard, type ChartData } from "../components/ui/ChartCard";
 import { EditProfileButton } from "../components/ui/EditProfileButton";
 import { LogoutButton } from "../components/ui/LogoutButton";
 import { MenuItem } from "../components/ui/MenuItem";
+import { PasswordUpdateModal } from "../components/ui/PasswordUpdateModal";
 import { ProfileHeader } from "../components/ui/ProfileHeader";
 import { ProfileInfo } from "../components/ui/ProfileInfo";
 import { colors, typography } from "../constants/theme";
@@ -19,6 +20,7 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState<NavItem>("profile");
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   // Fetch user profile data
   useEffect(() => {
@@ -93,8 +95,7 @@ export default function Profile() {
   };
 
   const handleSecurity = () => {
-    // TODO: Implement security settings
-    console.log("Security pressed");
+    setShowPasswordModal(true);
   };
 
   const handlePrivacy = () => {
@@ -171,6 +172,12 @@ export default function Profile() {
       </ScrollView>
 
       <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+
+      {/* Password Update Modal */}
+      <PasswordUpdateModal
+        visible={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+      />
     </SafeAreaView>
   );
 }
