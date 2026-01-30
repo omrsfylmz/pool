@@ -1,12 +1,13 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType, TouchableOpacity } from "react-native";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export interface FoodOption {
   id: string;
   name: string;
   description: string;
-  imageUri?: string | ImageSourcePropType;
+  imageUri?: string;
   voteCount: number;
   voters?: string[]; // Array of emoji avatars
   isLeading?: boolean;
@@ -23,16 +24,17 @@ interface FoodCardProps {
  * Card displaying a food option with image, votes, and vote button
  */
 export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
-  const defaultImage = require("../../assets/images/react-logo.png");
-
   return (
     <View style={styles.card}>
       <View style={styles.foodImgContainer}>
-        <Image
-          source={food.imageUri || defaultImage}
-          style={styles.foodImg}
-          resizeMode="cover"
-        />
+        {/* Food Icon */}
+        <View style={styles.iconBackground}>
+          <FontAwesome5 
+            name="utensils" 
+            size={48} 
+            color={colors.primary.yellow} 
+          />
+        </View>
         {food.isLeading && (
           <View style={styles.badgeLeading}>
             <Text style={styles.badgeText}>Leading</Text>
@@ -109,6 +111,25 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 180,
     position: "relative",
+    backgroundColor: colors.primary.yellowLight,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconBackground: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: colors.background.card,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: colors.primary.yellow,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 5,
   },
   foodImg: {
     width: "100%",
