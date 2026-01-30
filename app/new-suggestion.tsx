@@ -1,13 +1,15 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FOOD_ICONS, IconPickerModal } from "../components/ui/IconPickerModal";
 import { IdentityBanner } from "../components/ui/IdentityBanner";
 import { NewSuggestionHeader } from "../components/ui/NewSuggestionHeader";
 import { NoteTextarea } from "../components/ui/NoteTextarea";
 import { PreviousSuggestions, type PreviousSuggestion } from "../components/ui/PreviousSuggestions";
 import { SubmitSuggestionButton } from "../components/ui/SubmitSuggestionButton";
 import { SuggestionInput } from "../components/ui/SuggestionInput";
-import { colors } from "../constants/theme";
+import { borderRadius, colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { addFoodOption, getFoodOptions, getProfile, type FoodOption, type Profile } from "../services/api";
 
@@ -19,6 +21,8 @@ export default function NewSuggestion() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [suggestion, setSuggestion] = useState("");
   const [note, setNote] = useState("");
+  const [selectedIcon, setSelectedIcon] = useState("utensils");
+  const [showIconPicker, setShowIconPicker] = useState(false);
   const [existingSuggestions, setExistingSuggestions] = useState<FoodOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -77,7 +81,7 @@ export default function NewSuggestion() {
 
     setSubmitting(true);
     try {
-      await addFoodOption(poolId, suggestion.trim(), note.trim());
+      await addFoodOption(poolId, suggestion.trim(), note.trim(), selectedIcon);
       
       Alert.alert(
         "Success!",
@@ -88,6 +92,7 @@ export default function NewSuggestion() {
             onPress: () => {
               setSuggestion("");
               setNote("");
+              setSelectedIcon("utensils");
               // Reload suggestions
               getFoodOptions(poolId).then(setExistingSuggestions);
             },
@@ -149,6 +154,30 @@ export default function NewSuggestion() {
           label="What are you craving?"
         />
 
+        {/* Icon Picker */}
+        <View style={styles.iconSection}>
+          <Text style={styles.iconLabel}>Icon (Optional)</Text>
+          <TouchableOpacity
+            style={styles.iconPickerButton}
+            onPress={() => setShowIconPicker(true)}
+            activeOpacity={0.8}
+          >
+            <View style={styles.iconPreview}>
+              <View style={styles.iconCircle}>
+                <FontAwesome5
+                  name={selectedIcon}
+                  size={24}
+                  color={colors.primary.yellow}
+                />
+              </View>
+              <Text style={styles.iconName}>
+                {FOOD_ICONS.find(i => i.name === selectedIcon)?.label || 'Utensils'}
+              </Text>
+            </View>
+            <FontAwesome5 name="chevron-right" size={16} color={colors.text.grey} />
+          </TouchableOpacity>
+        </View>
+
         {previousSuggestions.length > 0 && (
           <PreviousSuggestions
             suggestions={previousSuggestions}
@@ -164,6 +193,14 @@ export default function NewSuggestion() {
         <SubmitSuggestionButton
           onPress={handleSubmit}
           disabled={!isFormValid || submitting}
+        />
+
+        {/* Icon Picker Modal */}
+        <IconPickerModal
+          visible={showIconPicker}
+          selectedIcon={selectedIcon}
+          onSelect={setSelectedIcon}
+          onClose={() => setShowIconPicker(false)}
         />
       </ScrollView>
     </SafeAreaView>
@@ -184,5 +221,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 10,
     paddingBottom: 30,
+  },
+  iconSection: {
+    marginBottom: 20,
+  },
+  iconLabel: {
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+    marginBottom: 8,
+  },
+  iconPickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.background.card,
+    borderRadius: borderRadius.md,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.border.light,
+  },
+  iconPreview: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.primary.yellowLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconName: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.medium,
+    color: colors.text.dark,
   },
 });

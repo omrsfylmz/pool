@@ -151,13 +151,15 @@ export interface FoodOption {
   creator_id: string;
   name: string;
   description: string | null;
+  icon?: string;
   created_at: string;
 }
 
 export async function addFoodOption(
   poolId: string,
   name: string,
-  description: string
+  description: string,
+  icon?: string
 ) {
   const user = (await supabase.auth.getUser()).data.user;
   if (!user) throw new Error("Not authenticated");
@@ -169,6 +171,7 @@ export async function addFoodOption(
       creator_id: user.id,
       name,
       description,
+      icon: icon || 'utensils',
     })
     .select()
     .single();

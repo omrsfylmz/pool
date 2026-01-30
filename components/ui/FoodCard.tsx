@@ -8,6 +8,7 @@ export interface FoodOption {
   name: string;
   description: string;
   imageUri?: string;
+  icon?: string;
   voteCount: number;
   voters?: string[]; // Array of emoji avatars
   isLeading?: boolean;
@@ -30,7 +31,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
         {/* Food Icon */}
         <View style={styles.iconBackground}>
           <FontAwesome5 
-            name="utensils" 
+            name={food.icon || 'utensils'} 
             size={48} 
             color={colors.primary.yellow} 
           />
