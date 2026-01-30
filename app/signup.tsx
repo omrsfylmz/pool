@@ -17,7 +17,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function SignUp() {
   const router = useRouter();
-  const { signUp, signInWithGoogle, signInWithApple } = useAuth();
+  const { signUp } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,25 +50,7 @@ export default function SignUp() {
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    setLoading(true);
-    const { error } = await signInWithGoogle();
-    setLoading(false);
 
-    if (error) {
-      Alert.alert("Google Sign Up Error", error.message);
-    }
-  };
-
-  const handleAppleSignUp = async () => {
-    setLoading(true);
-    const { error } = await signInWithApple();
-    setLoading(false);
-
-    if (error) {
-      Alert.alert("Apple Sign Up Error", error.message);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -165,30 +147,7 @@ export default function SignUp() {
               </TouchableOpacity>
             </View>
 
-            {/* Divider */}
-            <View style={styles.dividerContainer}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>Or sign up with</Text>
-              <View style={styles.dividerLine} />
-            </View>
 
-            {/* Social Buttons */}
-            <View style={styles.socialRow}>
-              <TouchableOpacity
-                style={styles.socialButton}
-                onPress={handleGoogleSignUp}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="logo-google" size={24} color="#DB4437" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.socialButton}
-                onPress={handleAppleSignUp}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="logo-apple" size={24} color="#000" />
-              </TouchableOpacity>
-            </View>
 
             {/* Footer */}
             <View style={styles.footer}>

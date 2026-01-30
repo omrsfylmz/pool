@@ -17,7 +17,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const router = useRouter();
-  const { signIn, signInWithGoogle, signInWithApple } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -40,25 +40,7 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setLoading(true);
-    const { error } = await signInWithGoogle();
-    setLoading(false);
 
-    if (error) {
-      Alert.alert("Google Login Error", error.message);
-    }
-  };
-
-  const handleAppleLogin = async () => {
-    setLoading(true);
-    const { error } = await signInWithApple();
-    setLoading(false);
-
-    if (error) {
-      Alert.alert("Apple Login Error", error.message);
-    }
-  };
 
   const handleForgotPassword = () => {
     Alert.alert(
@@ -171,30 +153,6 @@ export default function Login() {
               </TouchableOpacity>
             </View>
 
-            {/* Divider */}
-            <View style={styles.dividerContainer}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or continue with</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            {/* Social Buttons */}
-            <View style={styles.socialRow}>
-              <TouchableOpacity
-                style={styles.socialButton}
-                onPress={handleGoogleLogin}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="logo-google" size={20} color="#DB4437" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.socialButton}
-                onPress={handleAppleLogin}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="logo-apple" size={20} color="#000" />
-              </TouchableOpacity>
-            </View>
 
             {/* Watermark (optional decorative element) */}
             <View style={styles.watermark}>

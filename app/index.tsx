@@ -17,11 +17,6 @@ export default function Index() {
     }
   }, [user, loading]);
 
-  const handleGoogleSignUp = () => {
-    // Navigate to dashboard (Google auth will be implemented later)
-    router.push("/dashboard");
-  };
-
   const handleCreateAccount = () => {
     // Navigate to sign up page
     router.push("/signup");
@@ -51,7 +46,6 @@ export default function Index() {
       >
         <Header />
         <LoginContent
-          onGoogleSignUp={handleGoogleSignUp}
           onCreateAccount={handleCreateAccount}
           onLogIn={handleLogIn}
         />

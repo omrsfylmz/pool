@@ -1,13 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { IconCard } from "./IconCard";
-import { GoogleButton } from "./GoogleButton";
-import { PrimaryButton } from "./PrimaryButton";
-import { FooterLink } from "./FooterLink";
+import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
+import { IconCard } from "./IconCard";
+import { PrimaryButton } from "./PrimaryButton";
 
 interface LoginContentProps {
-  onGoogleSignUp?: () => void;
   onCreateAccount?: () => void;
   onLogIn?: () => void;
 }
@@ -17,7 +14,6 @@ interface LoginContentProps {
  * Main content area for the login page
  */
 export const LoginContent: React.FC<LoginContentProps> = ({
-  onGoogleSignUp,
   onCreateAccount,
   onLogIn,
 }) => {
@@ -30,10 +26,8 @@ export const LoginContent: React.FC<LoginContentProps> = ({
         Vote with your team, stay{"\n"}anonymous.
       </Text>
 
-      <GoogleButton onPress={onGoogleSignUp} />
+      <PrimaryButton text="Log In" onPress={onLogIn} />
       <PrimaryButton text="Create Account" onPress={onCreateAccount} />
-
-      <FooterLink linkText="Log In" onPress={onLogIn} />
     </View>
   );
 };
