@@ -6,9 +6,10 @@ import { TimerSection } from "../components/ui/TimerSection";
 import { VoteHeader } from "../components/ui/VoteHeader";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
+import { useRealtimeFoodOptions } from "../hooks/useRealtimeFoodOptions";
 import { useRealtimePool } from "../hooks/useRealtimePool";
 import { useRealtimeVotes } from "../hooks/useRealtimeVotes";
-import { castVote, endPool, getFoodOptions, getProfile, getUserVote, type FoodOption as DBFoodOption, type Profile } from "../services/api";
+import { castVote, endPool, getProfile, getUserVote, type Profile } from "../services/api";
 
 export default function Vote() {
   const router = useRouter();
@@ -16,7 +17,6 @@ export default function Vote() {
   const { user } = useAuth();
   
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [foodOptions, setFoodOptions] = useState<DBFoodOption[]>([]);
   const [userVoteId, setUserVoteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [hours, setHours] = useState(0);
@@ -26,6 +26,7 @@ export default function Vote() {
   // Real-time subscriptions
   const { votes, loading: votesLoading } = useRealtimeVotes(poolId || null);
   const { pool, loading: poolLoading } = useRealtimePool(poolId || null);
+  const { foodOptions, loading: foodOptionsLoading } = useRealtimeFoodOptions(poolId || null);
 
   // Load initial data
   useEffect(() => {
@@ -42,14 +43,12 @@ export default function Vote() {
       }
 
       try {
-        const [profileData, foodOptionsData, userVoteData] = await Promise.all([
+        const [profileData, userVoteData] = await Promise.all([
           getProfile(user.id),
-          getFoodOptions(poolId),
           getUserVote(poolId),
         ]);
         
         setProfile(profileData);
-        setFoodOptions(foodOptionsData);
         setUserVoteId(userVoteData?.food_option_id || null);
       } catch (error) {
         console.error("Error loading data:", error);
