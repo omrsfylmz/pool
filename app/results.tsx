@@ -1,49 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
-import { useRouter } from "expo-router";
-import { LiveResultsHeader } from "../components/ui/LiveResultsHeader";
-import { TimerCard } from "../components/ui/TimerCard";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ResultCard, type ResultItem } from "../components/ui/ResultCard";
-import { NotificationBox } from "../components/ui/NotificationBox";
-import { ViewAllButton } from "../components/ui/ViewAllButton";
-import { colors } from "../constants/theme";
+import { TimerCard } from "../components/ui/TimerCard";
+import { borderRadius, colors, typography } from "../constants/theme";
+import { getPoolResults, type PoolResult } from "../services/api";
 
 export default function Results() {
   const router = useRouter();
+  const { poolId } = useLocalSearchParams<{ poolId: string }>();
+  const [poolData, setPoolData] = useState<PoolResult | null>(null);
+  const [loading, setLoading] = useState(true);
   const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(30);
+  const [seconds, setSeconds] = useState(0);
 
-  // Sample results data - sorted by vote count
-  const [results] = useState<ResultItem[]>([
-    {
-      id: "1",
-      name: "Thai Spice",
-      rank: 1,
-      voteCount: 12,
-      popularity: 92,
-      voters: ["🐘", "🦊", "🐼", "🦁", "🐨", "🦒", "🐻", "🐰", "🦝", "🐸", "🐙", "🐷"],
-      isWinner: true,
-    },
-    {
-      id: "2",
-      name: "Pizza Palace",
-      rank: 2,
-      voteCount: 8,
-      popularity: 65,
-      voters: ["🐸", "🐙", "🐷", "🐨", "🦒", "🐻", "🐰", "🦝"],
-    },
-    {
-      id: "3",
-      name: "Salad Station",
-      rank: 3,
-      voteCount: 3,
-      popularity: 22,
-      voters: ["🐷", "🐨", "🦒"],
-    },
-  ]);
+  // Load pool results
+  useEffect(() => {
+    async function loadResults() {
+      if (!poolId) {
+        router.back();
+        return;
+      }
+
+      try {
+        const data = await getPoolResults(poolId);
+        setPoolData(data);
+
+        // Calculate remaining time if pool is still active
+        if (data.pool.status === "active") {
+          const endTime = new Date(data.pool.ends_at).getTime();
+          const now = Date.now();
+          const remainingMs = endTime - now;
+
+          if (remainingMs > 0) {
+            const totalSeconds = Math.floor(remainingMs / 1000);
+            setMinutes(Math.floor(totalSeconds / 60));
+            setSeconds(totalSeconds % 60);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading pool results:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadResults();
+  }, [poolId]);
 
   // Timer countdown - navigate to breakdown when finished
   useEffect(() => {
+    if (!poolData || poolData.pool.status === "ended") return;
+
     const interval = setInterval(() => {
       setSeconds((prev) => {
         if (prev > 0) return prev - 1;
@@ -58,21 +67,36 @@ export default function Results() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [minutes, seconds, router]);
+  }, [minutes, seconds, poolData, router]);
 
-  const handleBack = () => {
-    router.back();
-  };
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary.yellow} />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
-  const handleInfo = () => {
-    // TODO: Implement info modal
-    console.log("Info pressed");
-  };
+  if (!poolData) {
+    return null;
+  }
 
-  const handleViewAll = () => {
-    // TODO: Implement view all functionality
-    console.log("View all pressed");
-  };
+  // Convert pool results to ResultItem format
+  const results: ResultItem[] = poolData.results.map((result) => ({
+    id: result.id,
+    name: result.name,
+    rank: result.rank,
+    voteCount: result.voteCount,
+    popularity: poolData.totalVotes > 0 
+      ? Math.round((result.voteCount / poolData.totalVotes) * 100)
+      : 0,
+    voters: [], // We can add voter avatars later if needed
+    isWinner: result.isWinner,
+  }));
+
+  const isEnded = poolData.pool.status === "ended";
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,25 +104,54 @@ export default function Results() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <LiveResultsHeader
-          onBack={handleBack}
-          onInfo={handleInfo}
-        />
+        {/* Simple Header */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+          >
+            <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
+          </TouchableOpacity>
+          <View style={styles.headerContent}>
+            <Text style={styles.headerTitle}>{poolData.pool.title}</Text>
+            <Text style={styles.headerSubtitle}>
+              {isEnded ? "Final Results" : "Live Results"}
+            </Text>
+          </View>
+          <View style={styles.headerSpacer} />
+        </View>
 
         <View style={styles.main}>
-          <TimerCard minutes={minutes} seconds={seconds} />
+          {!isEnded && (
+            <TimerCard minutes={minutes} seconds={seconds} />
+          )}
 
           {results.map((result) => (
             <ResultCard key={result.id} result={result} />
           ))}
 
-          <NotificationBox />
-
-          <ViewAllButton
-            onPress={handleViewAll}
-            text="View All"
-            count={12}
-          />
+          {/* Custom notification based on pool status */}
+          <View style={styles.notificationBox}>
+            <View style={styles.notificationIcon}>
+              <FontAwesome5 
+                name={isEnded ? "check-circle" : "info-circle"} 
+                size={20} 
+                color={colors.primary.yellow} 
+              />
+            </View>
+            <View style={styles.notificationContent}>
+              <Text style={styles.notificationTitle}>
+                {isEnded ? "Pool Completed" : "Still Undecided?"}
+              </Text>
+              <Text style={styles.notificationText}>
+                {isEnded 
+                  ? `This pool has ended with ${poolData.totalVotes} total ${poolData.totalVotes === 1 ? 'vote' : 'votes'}. The winner has been determined!`
+                  : "Don't worry! You can change your vote anytime before the timer runs out."
+                }
+              </Text>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -110,11 +163,77 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background.main,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   scrollContent: {
     paddingBottom: 40,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border.light,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerContent: {
+    flex: 1,
+    alignItems: "center",
+  },
+  headerTitle: {
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+  },
+  headerSubtitle: {
+    fontSize: typography.sizes.xs,
+    color: colors.text.grey,
+    marginTop: 2,
+  },
+  headerSpacer: {
+    width: 40,
   },
   main: {
     paddingHorizontal: 20,
   },
+  notificationBox: {
+    flexDirection: "row",
+    backgroundColor: colors.primary.yellowLight,
+    borderRadius: borderRadius.md,
+    padding: 16,
+    marginTop: 20,
+    gap: 12,
+  },
+  notificationIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FFF",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notificationContent: {
+    flex: 1,
+  },
+  notificationTitle: {
+    fontSize: typography.sizes.sm,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+    marginBottom: 4,
+  },
+  notificationText: {
+    fontSize: typography.sizes.xs,
+    color: colors.text.grey,
+    lineHeight: 18,
+  },
 });
-

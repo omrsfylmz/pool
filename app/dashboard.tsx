@@ -105,8 +105,7 @@ export default function Dashboard() {
   };
 
   const handleViewAll = () => {
-    // TODO: Implement view all polls navigation
-    console.log("View all pressed");
+    router.push("/past-pools");
   };
 
   return (

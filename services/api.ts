@@ -498,6 +498,79 @@ export async function getVotesForPool(poolId: string) {
   return data as Vote[];
 }
 
+// Get pool results with vote counts and food options
+export interface PoolResult {
+  pool: Pool;
+  results: Array<{
+    id: string;
+    name: string;
+    description: string | null;
+    icon: string;
+    voteCount: number;
+    rank: number;
+    isWinner: boolean;
+  }>;
+  totalVotes: number;
+}
+
+export async function getPoolResults(poolId: string): Promise<PoolResult> {
+  // Get pool details
+  const { data: pool, error: poolError } = await supabase
+    .from("pools")
+    .select("*")
+    .eq("id", poolId)
+    .single();
+
+  if (poolError) throw poolError;
+
+  // Get food options with vote counts
+  const { data: foodOptions, error: foodError } = await supabase
+    .from("food_options")
+    .select("*")
+    .eq("pool_id", poolId);
+
+  if (foodError) throw foodError;
+
+  // Get all votes for this pool
+  const { data: votes, error: votesError } = await supabase
+    .from("votes")
+    .select("food_option_id")
+    .eq("pool_id", poolId);
+
+  if (votesError) throw votesError;
+
+  // Count votes per option
+  const voteCounts: Record<string, number> = {};
+  votes?.forEach((vote) => {
+    voteCounts[vote.food_option_id] = (voteCounts[vote.food_option_id] || 0) + 1;
+  });
+
+  // Build results array
+  const results = foodOptions.map((option) => ({
+    id: option.id,
+    name: option.name,
+    description: option.description,
+    icon: option.icon,
+    voteCount: voteCounts[option.id] || 0,
+    rank: 0, // Will be set after sorting
+    isWinner: pool.winner_id === option.id,
+  }));
+
+  // Sort by vote count (descending)
+  results.sort((a, b) => b.voteCount - a.voteCount);
+
+  // Assign ranks
+  results.forEach((result, index) => {
+    result.rank = index + 1;
+  });
+
+  return {
+    pool: pool as Pool,
+    results,
+    totalVotes: votes?.length || 0,
+  };
+}
+
 // ============================================
 // PROFILE OPERATIONS
 // ============================================
