@@ -1,6 +1,7 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { DailyChallenge } from "../components/ui/DailyChallenge";
 import { DashboardHeader } from "../components/ui/DashboardHeader";
@@ -140,6 +141,16 @@ export default function Dashboard() {
       >
         <DashboardHeader onNotificationPress={handleNotificationPress} />
 
+        {/* Join Pool Button */}
+        <TouchableOpacity
+          style={styles.joinPoolButton}
+          onPress={() => router.push('/join-room')}
+          activeOpacity={0.8}
+        >
+          <FontAwesome5 name="sign-in-alt" size={16} color={colors.text.dark} />
+          <Text style={styles.joinPoolButtonText}>Join Pool with Code</Text>
+        </TouchableOpacity>
+
         <MedalCase medals={medals} earnedCount={1} />
 
         <DailyChallenge
@@ -173,6 +184,27 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 180, // Space for FAB and bottom nav
+  },
+  joinPoolButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: colors.background.card,
+    marginHorizontal: 24,
+    marginTop: 16,
+    marginBottom: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: colors.primary.yellow,
+    borderStyle: 'dashed',
+  },
+  joinPoolButtonText: {
+    fontSize: 14,
+    fontWeight: '600' as any,
+    color: colors.text.dark,
   },
   bottomSpacer: {
     height: 20,

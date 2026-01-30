@@ -64,9 +64,8 @@ export default function SharePool() {
     if (!poolId || !pool) return;
 
     try {
-      // Generate shareable deep link
-      const shareUrl = `firstexpo://vote?poolId=${poolId}`;
-      const message = `🍽️ Join my lunch pool: "${pool.title}"!\n\nClick here to vote: ${shareUrl}`;
+      // Generate shareable message with join code
+      const message = `🍽️ Join my lunch pool: "${pool.title}"!\n\n📱 Join Code: ${pool.join_code}\n\nOpen the app, tap "Join Pool", and enter this code to vote!`;
 
       await Share.share({
         message,
@@ -105,6 +104,15 @@ export default function SharePool() {
             poolName={pool.title}
             successTag="Success! Your Pool is Live"
           />
+
+          {/* Join Code Display */}
+          <View style={styles.joinCodeContainer}>
+            <Text style={styles.joinCodeLabel}>Pool Join Code</Text>
+            <View style={styles.joinCodeBox}>
+              <Text style={styles.joinCodeText}>{pool.join_code}</Text>
+            </View>
+            <Text style={styles.joinCodeHint}>Share this code with others to join</Text>
+          </View>
 
           <TouchableOpacity 
             onPress={handleAddFirstOption}
@@ -152,6 +160,39 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 30,
     alignItems: "center",
+  },
+  joinCodeContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 25,
+    paddingVertical: 20,
+    backgroundColor: colors.background.card,
+    borderRadius: 16,
+  },
+  joinCodeLabel: {
+    fontSize: typography.sizes.sm,
+    color: colors.text.grey,
+    marginBottom: 8,
+  },
+  joinCodeBox: {
+    backgroundColor: colors.primary.yellowLight,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: colors.primary.yellow,
+    borderStyle: 'dashed',
+  },
+  joinCodeText: {
+    fontSize: 32,
+    fontWeight: typography.weights.bold as any,
+    color: colors.text.dark,
+    letterSpacing: 4,
+  },
+  joinCodeHint: {
+    fontSize: typography.sizes.sm,
+    color: colors.text.muted,
+    marginTop: 8,
   },
   addOptionButton: {
     width: "100%",

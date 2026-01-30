@@ -13,6 +13,17 @@ export interface Pool {
   ends_at: string;
   status: "active" | "ended";
   created_at: string;
+  join_code: string;
+}
+
+// Helper function to generate unique 6-character join code
+function generateJoinCode(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
 }
 
 export async function createPool(
@@ -37,6 +48,25 @@ export async function createPool(
   // Store as integer (round up fractional minutes to 1)
   const storageDuration = durationMinutes < 1 ? 1 : Math.round(durationMinutes);
 
+  // Generate unique join code
+  let joinCode = generateJoinCode();
+  let isUnique = false;
+  
+  // Ensure code is unique (retry if collision)
+  while (!isUnique) {
+    const { data: existing } = await supabase
+      .from('pools')
+      .select('id')
+      .eq('join_code', joinCode)
+      .single();
+    
+    if (!existing) {
+      isUnique = true;
+    } else {
+      joinCode = generateJoinCode();
+    }
+  }
+
   const { data, error } = await supabase
     .from("pools")
     .insert({
@@ -46,6 +76,7 @@ export async function createPool(
       voting_duration_minutes: storageDuration,
       ends_at: endsAt.toISOString(),
       status: "active",
+      join_code: joinCode,
     })
     .select()
     .single();
@@ -65,6 +96,28 @@ export async function getActivePool() {
 
   if (error && error.code !== "PGRST116") throw error; // PGRST116 = no rows
   return data as Pool | null;
+}
+
+/**
+ * Find a pool by its join code
+ */
+export async function getPoolByJoinCode(joinCode: string): Promise<Pool | null> {
+  const { data, error } = await supabase
+    .from('pools')
+    .select('*')
+    .eq('join_code', joinCode.toUpperCase())
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      // No rows returned
+      return null;
+    }
+    console.error('Error finding pool by join code:', error);
+    throw error;
+  }
+
+  return data as Pool;
 }
 
 export async function getPastPolls(limit: number = 10) {
