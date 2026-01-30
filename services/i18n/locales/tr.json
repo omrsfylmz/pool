@@ -14,33 +14,26 @@
     "taglineSubtitle": "Ekibinle oyla,\nanonim kal."
   },
   "dashboard": {
-    "title": "Yemek Havuzu",
-    "joinPool": "Kod ile Havuza Katıl",
+    "title": "Yemek Oylaması",
+    "joinPool": "Kod ile Oylamaya Katıl",
     "pastPolls": "Geçmiş Oylamalar",
     "viewAll": "Hepsini Gör"
   },
   "join": {
-    "title": "Havuza Katıl",
-    "subtitle": "Öğle yemeği havuzuna katılmak için\n6 haneli kodu girin",
+    "title": "Oylamaya Katıl",
+    "subtitle": "Öğle yemeği oylamasına katılmak için\n6 haneli kodu girin",
     "label": "Katılım Kodu",
-    "button": "Havuza Katıl",
-    "help": "Katılım kodunu havuz oluşturucudan isteyin",
+    "button": "Oylamaya Katıl",
+    "help": "Katılım kodunu oylama oluşturucudan isteyin",
     "errors": {
       "invalid": "Geçersiz Kod",
       "invalidLength": "Katılım kodu 6 karakter olmalıdır",
-      "notFound": "Havuz Bulunamadı",
-      "notFoundMessage": "Bu kodla eşleşen havuz bulunamadı.",
-      "failed": "Havuza katılınamadı"
+      "notFound": "Oylama Bulunamadı",
+      "notFoundMessage": "Bu kodla eşleşen oylama bulunamadı.",
+      "failed": "Oylamaya katılınamadı"
     }
   },
-  "results": {
-    "final": "Sonuçlar",
-    "live": "Canlı Sonuçlar",
-    "completed": "Havuz Tamamlandı",
-    "undecided": "Kararsız mısın?",
-    "endedMessage": "Bu havuz {{count}} oyla tamamlandı. Kazanan belli oldu!",
-    "activeMessage": "Endişelenme! Süre bitmeden oyunu değiştirebilirsin."
-  },
+
   "pastPools": {
     "title": "Geçmiş Oylamalar",
     "emptyTitle": "Geçmiş Oylama Yok",
@@ -66,24 +59,24 @@
     "plateThisWeek": "Bu Haftaki Tabağın"
   },
   "createPool": {
-    "title": "Öğle Yemeği Havuzu Oluştur",
+    "title": "Öğle Yemeği Oylaması Oluştur",
     "button": "Oylamayı Başlat",
     "help": {
-      "title": "Havuz Oluştur",
-      "message": "Ekibinizle öğle yemeğine karar vermek için bir oylama havuzu oluşturun! Bir başlık, açıklama ve oylamanın ne kadar süreceğini belirleyin."
+      "title": "Oylama Oluştur",
+      "message": "Ekibinizle öğle yemeğine karar vermek için bir oylama oluşturun! Bir başlık, açıklama ve oylamanın ne kadar süreceğini belirleyin."
     },
     "errors": {
-      "missingTitle": "Lütfen bir havuz başlığı girin",
-      "creationFailed": "Havuz oluşturulamadı",
+      "missingTitle": "Lütfen bir oylama başlığı girin",
+      "creationFailed": "Oylama oluşturulamadı",
       "loadProfileFailed": "Profil yüklenemedi"
     },
     "identityPrefix": "Görünen ismin: ",
     "details": {
-      "title": "Havuz Detayları",
+      "title": "Oylama Detayları",
       "subtitle": "Öğle yemeği parametrelerini ayarla."
     },
     "form": {
-      "titleLabel": "Havuz Başlığı",
+      "titleLabel": "Oylama Başlığı",
       "titlePlaceholder": "örn., Cuma Ziyafeti 🍕",
       "descriptionLabel": "Açıklama",
       "descriptionPlaceholder": "İsteğe bağlı: örn., Sadece yürüme mesafesi olsun!",
@@ -96,7 +89,7 @@
       "search": "Arama özelliği yakında!"
     },
     "errors": {
-      "noPoolId": "Havuz ID eksik",
+      "noPoolId": "Oylama ID eksik",
       "loadFailed": "Oylama verileri yüklenemedi"
     },
     "subtitle": {
@@ -108,7 +101,7 @@
   },
   "newSuggestion": {
     "errors": {
-      "noPoolId": "Havuz ID eksik",
+      "noPoolId": "Oylama ID eksik",
       "loadFailed": "Veriler yüklenemedi",
       "missingSuggestion": "Lütfen bir öneri girin"
     },
@@ -125,12 +118,12 @@
     "iconLabel": "İkon (İsteğe bağlı)"
   },
   "sharePool": {
-    "successTag": "Başarılı! Havuzun Yayında",
-    "joinCodeLabel": "Havuz Katılım Kodu",
+    "successTag": "Başarılı! Oylaman Yayında",
+    "joinCodeLabel": "Oylama Katılım Kodu",
     "shareHint": "Katılmaları için bu kodu diğerleriyle paylaş",
     "addOptionTitle": "İlk Seçeneğini Ekle",
     "addOptionSubtitle": "Yemek önerisi eklemek için tıkla",
-    "shareMessage": "🍽️ Yemek havuzuma katıl: \"{{title}}\"!\n\n📱 Katılım Kodu: {{code}}\n\nUygulamayı aç, \"Havuza Katıl\"a bas ve oy vermek için bu kodu gir!"
+    "shareMessage": "🍽️ Yemek oylamama katıl: \"{{title}}\"!\n\n📱 Katılım Kodu: {{code}}\n\nUygulamayı aç, \"Oylamaya Katıl\"a bas ve oy vermek için bu kodu gir!"
   },
   "winner": {
     "calculating": "Sonuçlar hesaplanıyor...",
@@ -156,16 +149,16 @@
   "headers": {
     "voteTitle": "Oy Ver & Yemek Öner",
     "voteSubtitle": "Anonim Ofis Oylaması",
-    "sharePool": "Havuzunu Paylaş",
+    "sharePool": "Oylamanı Paylaş",
     "newSuggestion": "Yeni Öneri",
     "resultsBreakdown": "Sonuç Detayı"
   },
   "results": {
     "final": "Sonuçlar",
     "live": "Canlı Sonuçlar",
-    "completed": "Havuz Tamamlandı",
+    "completed": "Oylama Tamamlandı",
     "undecided": "Kararsız mısın?",
-    "endedMessage": "Bu havuz {{count}} oyla tamamlandı. Kazanan belli oldu!",
+    "endedMessage": "Bu oylama {{count}} oyla tamamlandı. Kazanan belli oldu!",
     "activeMessage": "Endişelenme! Süre bitmeden oyunu değiştirebilirsin.",
     "breakdown": {
       "title": "Oy Dağılımı",
@@ -175,6 +168,6 @@
     }
   },
   "shareButton": {
-    "defaultText": "Havuz Linkini Paylaş"
+    "defaultText": "Oylama Linkini Paylaş"
   }
 }

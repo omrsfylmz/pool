@@ -33,14 +33,7 @@
       "failed": "Failed to join pool"
     }
   },
-  "results": {
-    "final": "Final Results",
-    "live": "Live Results",
-    "completed": "Pool Completed",
-    "undecided": "Still Undecided?",
-    "endedMessage": "This pool has ended with {{count}} total votes. The winner has been determined!",
-    "activeMessage": "Don't worry! You can change your vote anytime before the timer runs out."
-  },
+
   "pastPools": {
     "title": "Past Pools",
     "emptyTitle": "No Past Pools",
