@@ -155,6 +155,7 @@ export default function Vote() {
       id: option.id,
       name: option.name,
       description: option.description || "",
+      icon: option.icon,
       voteCount,
       voters,
       isLeading,
