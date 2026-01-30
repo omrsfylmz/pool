@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 interface TimerCardProps {
   minutes: number;
@@ -15,19 +16,22 @@ interface TimerCardProps {
 export const TimerCard: React.FC<TimerCardProps> = ({
   minutes,
   seconds,
-  label = "Voting Ends In",
+  label,
 }) => {
+  const { t } = useTranslation();
+  const displayLabel = label || t('timer.endsIn');
+
   const formatTime = (value: number) => {
     return value.toString().padStart(2, "0");
   };
 
   return (
     <View style={styles.card}>
-      <Text style={styles.timerLabel}>{label}</Text>
+      <Text style={styles.timerLabel}>{displayLabel}</Text>
       <View style={styles.timerDisplay}>
         <View style={[styles.timeBox, styles.minutesBox]}>
           <Text style={styles.timeVal}>{formatTime(minutes)}</Text>
-          <Text style={styles.timeUnit}>Minutes</Text>
+          <Text style={styles.timeUnit}>{t('timer.minLabel')}</Text>
         </View>
         <Text style={styles.timerColon}>:</Text>
         <View style={[styles.timeBox, styles.secondsBox]}>
@@ -35,7 +39,7 @@ export const TimerCard: React.FC<TimerCardProps> = ({
             {formatTime(seconds)}
           </Text>
           <Text style={[styles.timeUnit, styles.secondsTimeUnit]}>
-            Seconds
+            {t('timer.secLabel')}
           </Text>
         </View>
       </View>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 import { IconCard } from "./IconCard";
@@ -17,17 +18,18 @@ export const LoginContent: React.FC<LoginContentProps> = ({
   onCreateAccount,
   onLogIn,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <IconCard />
 
-      <Text style={styles.title}>What&apos;s for Lunch?</Text>
+      <Text style={styles.title}>{t('auth.taglineTitle')}</Text>
       <Text style={styles.subtitle}>
-        Vote with your team, stay{"\n"}anonymous.
+        {t('auth.taglineSubtitle')}
       </Text>
 
-      <PrimaryButton text="Log In" onPress={onLogIn} />
-      <PrimaryButton text="Create Account" onPress={onCreateAccount} />
+      <PrimaryButton text={t('auth.login')} onPress={onLogIn} />
+      <PrimaryButton text={t('auth.createAccount')} onPress={onCreateAccount} />
     </View>
   );
 };

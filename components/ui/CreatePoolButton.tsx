@@ -1,7 +1,8 @@
-import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, borderRadius, shadows, typography } from "../../constants/theme";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { colors, shadows, typography } from "../../constants/theme";
 
 interface CreatePoolButtonProps {
   onPress?: () => void;
@@ -15,9 +16,12 @@ interface CreatePoolButtonProps {
  */
 export const CreatePoolButton: React.FC<CreatePoolButtonProps> = ({
   onPress,
-  text = "Start Voting",
+  text,
   disabled = false,
 }) => {
+  const { t } = useTranslation();
+  const buttonText = text || t('createPool.button');
+
   return (
     <TouchableOpacity
       style={[styles.button, disabled && styles.buttonDisabled]}
@@ -25,7 +29,7 @@ export const CreatePoolButton: React.FC<CreatePoolButtonProps> = ({
       activeOpacity={0.8}
       disabled={disabled}
     >
-      <Text style={styles.buttonText}>{text}</Text>
+      <Text style={styles.buttonText}>{buttonText}</Text>
       <FontAwesome5 name="rocket" size={16} color={colors.background.card} />
     </TouchableOpacity>
   );

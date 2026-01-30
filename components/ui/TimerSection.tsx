@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, View } from "react-native";
+import { borderRadius, colors, typography } from "../../constants/theme";
 
 interface TimerSectionProps {
   hours?: number;
@@ -17,6 +18,8 @@ export const TimerSection: React.FC<TimerSectionProps> = ({
   minutes = 42,
   seconds = 18,
 }) => {
+  const { t } = useTranslation();
+
   const formatTime = (value: number) => {
     return value.toString().padStart(2, "0");
   };
@@ -27,21 +30,21 @@ export const TimerSection: React.FC<TimerSectionProps> = ({
         <View style={styles.timeBlock}>
           <Text style={styles.timeText}>{formatTime(hours)}</Text>
         </View>
-        <Text style={styles.timeLabel}>HRS</Text>
+        <Text style={styles.timeLabel}>{t('timer.hrs')}</Text>
       </View>
       <Text style={styles.timerColon}>:</Text>
       <View style={styles.timerBox}>
         <View style={styles.timeBlock}>
           <Text style={styles.timeText}>{formatTime(minutes)}</Text>
         </View>
-        <Text style={styles.timeLabel}>MIN</Text>
+        <Text style={styles.timeLabel}>{t('timer.min')}</Text>
       </View>
       <Text style={styles.timerColon}>:</Text>
       <View style={styles.timerBox}>
         <View style={styles.timeBlock}>
           <Text style={styles.timeText}>{formatTime(seconds)}</Text>
         </View>
-        <Text style={styles.timeLabel}>SEC</Text>
+        <Text style={styles.timeLabel}>{t('timer.sec')}</Text>
       </View>
     </View>
   );

@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
@@ -16,6 +17,7 @@ export const CreatePoolHeader: React.FC<CreatePoolHeaderProps> = ({
   onClose,
   onHelp,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -25,7 +27,7 @@ export const CreatePoolHeader: React.FC<CreatePoolHeaderProps> = ({
       >
         <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
       </TouchableOpacity>
-      <Text style={styles.headerTitle}>Create Lunch Pool</Text>
+      <Text style={styles.headerTitle}>{t('createPool.title')}</Text>
       <TouchableOpacity
         onPress={onHelp}
         activeOpacity={0.7}

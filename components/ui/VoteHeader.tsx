@@ -1,6 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
 interface VoteHeaderProps {
@@ -16,14 +17,15 @@ export const VoteHeader: React.FC<VoteHeaderProps> = ({
   userAvatar = "🦁",
   onSearch,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.header}>
       <View style={styles.userAvatar}>
         <Text style={styles.avatarEmoji}>{userAvatar}</Text>
       </View>
       <View style={styles.headerCenter}>
-        <Text style={styles.headerTitle}>Vote & Suggest Food</Text>
-        <Text style={styles.headerSubtitle}>Anonymous Office Poll</Text>
+        <Text style={styles.headerTitle}>{t('headers.voteTitle')}</Text>
+        <Text style={styles.headerSubtitle}>{t('headers.voteSubtitle')}</Text>
       </View>
       <TouchableOpacity
         onPress={onSearch}

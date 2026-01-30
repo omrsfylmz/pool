@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { colors, shadows, typography } from "../../constants/theme";
 
@@ -14,15 +15,18 @@ interface ShareButtonProps {
  */
 export const ShareButton: React.FC<ShareButtonProps> = ({
   onPress,
-  text = "Share Pool Link",
+  text,
 }) => {
+  const { t } = useTranslation();
+  const buttonText = text || t('shareButton.defaultText');
+
   return (
     <TouchableOpacity
       style={styles.button}
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <Text style={styles.buttonText}>{text}</Text>
+      <Text style={styles.buttonText}>{buttonText}</Text>
       <FontAwesome5 name="chevron-right" size={16} color={colors.text.dark} />
     </TouchableOpacity>
   );

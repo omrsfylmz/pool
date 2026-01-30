@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FOOD_ICONS, IconPickerModal } from "../components/ui/IconPickerModal";
 import { IdentityBanner } from "../components/ui/IdentityBanner";
@@ -15,6 +16,7 @@ import { addFoodOption, getFoodOptions, getProfile, type FoodOption, type Profil
 
 export default function NewSuggestion() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   const { user } = useAuth();
   
@@ -36,7 +38,7 @@ export default function NewSuggestion() {
       }
 
       if (!poolId) {
-        Alert.alert("Error", "No pool ID provided");
+        Alert.alert(t('common.error'), t('newSuggestion.errors.noPoolId'));
         router.back();
         return;
       }
@@ -51,7 +53,7 @@ export default function NewSuggestion() {
         setExistingSuggestions(foodOptions);
       } catch (error) {
         console.error("Error loading data:", error);
-        Alert.alert("Error", "Failed to load data");
+        Alert.alert(t('common.error'), t('newSuggestion.errors.loadFailed'));
       } finally {
         setLoading(false);
       }
@@ -70,12 +72,12 @@ export default function NewSuggestion() {
 
   const handleSubmit = async () => {
     if (!suggestion.trim()) {
-      Alert.alert("Error", "Please enter a suggestion");
+      Alert.alert(t('common.error'), t('newSuggestion.errors.missingSuggestion'));
       return;
     }
 
     if (!poolId) {
-      Alert.alert("Error", "No pool ID");
+      Alert.alert(t('common.error'), t('newSuggestion.errors.noPoolId'));
       return;
     }
 
@@ -84,11 +86,11 @@ export default function NewSuggestion() {
       await addFoodOption(poolId, suggestion.trim(), note.trim(), selectedIcon);
       
       Alert.alert(
-        "Success!",
-        "Your suggestion has been added. Add another or go to voting.",
+        t('newSuggestion.success.title'),
+        t('newSuggestion.success.message'),
         [
           {
-            text: "Add Another",
+            text: t('newSuggestion.buttons.addAnother'),
             onPress: () => {
               setSuggestion("");
               setNote("");
@@ -98,14 +100,14 @@ export default function NewSuggestion() {
             },
           },
           {
-            text: "Go to Vote",
+            text: t('newSuggestion.buttons.goToVote'),
             onPress: () => router.push(`/vote?poolId=${poolId}`),
           },
         ]
       );
     } catch (error: any) {
       console.error("Error adding suggestion:", error);
-      Alert.alert("Error", error.message || "Failed to add suggestion");
+      Alert.alert(t('common.error'), error.message || "Failed to add suggestion");
     } finally {
       setSubmitting(false);
     }
@@ -145,18 +147,18 @@ export default function NewSuggestion() {
         <IdentityBanner
           identityName={profile.avatar_name.replace("Anonymous ", "")}
           identityEmoji={profile.avatar_animal}
-          message={`${profile.avatar_animal} What's for lunch today?`}
+          message={`${profile.avatar_animal} ${t('newSuggestion.identityMessage')}`}
         />
 
         <SuggestionInput
           value={suggestion}
           onChangeText={setSuggestion}
-          label="What are you craving?"
+          label={t('newSuggestion.inputLabel')}
         />
 
         {/* Icon Picker */}
         <View style={styles.iconSection}>
-          <Text style={styles.iconLabel}>Icon (Optional)</Text>
+          <Text style={styles.iconLabel}>{t('newSuggestion.iconLabel')}</Text>
           <TouchableOpacity
             style={styles.iconPickerButton}
             onPress={() => setShowIconPicker(true)}

@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -18,6 +19,7 @@ import { getPoolByJoinCode } from "../services/api";
 
 export default function JoinRoom() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [joinCode, setJoinCode] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +31,7 @@ export default function JoinRoom() {
     const code = joinCode.trim().toUpperCase();
 
     if (code.length !== 6) {
-      Alert.alert("Invalid Code", "Join code must be 6 characters");
+      Alert.alert(t('join.errors.invalid'), t('join.errors.invalidLength'));
       return;
     }
 
@@ -40,8 +42,8 @@ export default function JoinRoom() {
 
       if (!pool) {
         Alert.alert(
-          "Pool Not Found",
-          "No pool found with this join code. Please check and try again."
+          t('join.errors.notFound'),
+          t('join.errors.notFoundMessage')
         );
         return;
       }
@@ -50,7 +52,7 @@ export default function JoinRoom() {
       router.push(`/vote?poolId=${pool.id}`);
     } catch (error) {
       console.error("Error joining pool:", error);
-      Alert.alert("Error", "Failed to join pool. Please try again.");
+      Alert.alert(t('common.error'), t('join.errors.failed'));
     } finally {
       setLoading(false);
     }
@@ -76,14 +78,14 @@ export default function JoinRoom() {
           </View>
 
           {/* Title */}
-          <Text style={styles.title}>Join a Pool</Text>
+          <Text style={styles.title}>{t('join.title')}</Text>
           <Text style={styles.subtitle}>
-            Enter the 6-digit code to join a lunch pool
+            {t('join.subtitle')}
           </Text>
 
           {/* Join Code Input */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Join Code</Text>
+            <Text style={styles.inputLabel}>{t('join.label')}</Text>
             <TextInput
               style={styles.input}
               placeholder="ABC123"
@@ -116,7 +118,7 @@ export default function JoinRoom() {
                   size={18}
                   color={colors.text.dark}
                 />
-                <Text style={styles.joinButtonText}>Join Pool</Text>
+                <Text style={styles.joinButtonText}>{t('join.button')}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -129,7 +131,7 @@ export default function JoinRoom() {
               color={colors.text.grey}
             />
             <Text style={styles.helpText}>
-              Ask the pool creator for the join code
+              {t('join.help')}
             </Text>
           </View>
         </View>

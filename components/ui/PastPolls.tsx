@@ -1,7 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export interface Poll {
   id: string;
@@ -22,6 +23,7 @@ interface PastPollsProps {
  * Displays a list of past poll cards
  */
 export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll }) => {
+  const { t } = useTranslation();
   const getIconStyle = (color: "taco" | "pizza") => {
     return color === "taco"
       ? { backgroundColor: colors.accent.taco, color: colors.accent.tacoDark }
@@ -31,9 +33,9 @@ export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll }) => {
   return (
     <View style={styles.container}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Past Polls</Text>
+        <Text style={styles.sectionTitle}>{t('dashboard.pastPolls')}</Text>
         <TouchableOpacity onPress={onViewAll} activeOpacity={0.7}>
-          <Text style={styles.viewAll}>View all</Text>
+          <Text style={styles.viewAll}>{t('dashboard.viewAll')}</Text>
         </TouchableOpacity>
       </View>
 

@@ -1,7 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { typography, colors, shadows } from "../../constants/theme";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, shadows, typography } from "../../constants/theme";
 
 interface ResultsBreakdownHeaderProps {
   onClose?: () => void;
@@ -14,6 +15,7 @@ interface ResultsBreakdownHeaderProps {
 export const ResultsBreakdownHeader: React.FC<ResultsBreakdownHeaderProps> = ({
   onClose,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -23,7 +25,7 @@ export const ResultsBreakdownHeader: React.FC<ResultsBreakdownHeaderProps> = ({
       >
         <FontAwesome5 name="times" size={20} color={colors.text.dark} />
       </TouchableOpacity>
-      <Text style={styles.headerTitle}>Results Breakdown</Text>
+      <Text style={styles.headerTitle}>{t('headers.resultsBreakdown')}</Text>
     </View>
   );
 };

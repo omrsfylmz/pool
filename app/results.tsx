@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ResultCard, type ResultItem } from "../components/ui/ResultCard";
 import { TimerCard } from "../components/ui/TimerCard";
@@ -9,6 +10,7 @@ import { getPoolResults, type PoolResult } from "../services/api";
 
 export default function Results() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   const [poolData, setPoolData] = useState<PoolResult | null>(null);
   const [loading, setLoading] = useState(true);
@@ -117,7 +119,7 @@ export default function Results() {
           <View style={styles.headerContent}>
             <Text style={styles.headerTitle}>{poolData.pool.title}</Text>
             <Text style={styles.headerSubtitle}>
-              {isEnded ? "Final Results" : "Live Results"}
+              {isEnded ? t('results.final') : t('results.live')}
             </Text>
           </View>
           <View style={styles.headerSpacer} />
@@ -143,12 +145,12 @@ export default function Results() {
             </View>
             <View style={styles.notificationContent}>
               <Text style={styles.notificationTitle}>
-                {isEnded ? "Pool Completed" : "Still Undecided?"}
+                {isEnded ? t('results.completed') : t('results.undecided')}
               </Text>
               <Text style={styles.notificationText}>
                 {isEnded 
-                  ? `This pool has ended with ${poolData.totalVotes} total ${poolData.totalVotes === 1 ? 'vote' : 'votes'}. The winner has been determined!`
-                  : "Don't worry! You can change your vote anytime before the timer runs out."
+                  ? t('results.endedMessage', { count: poolData.totalVotes })
+                  : t('results.activeMessage')
                 }
               </Text>
             </View>

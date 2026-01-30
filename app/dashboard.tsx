@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { DashboardHeader } from "../components/ui/DashboardHeader";
@@ -13,6 +14,7 @@ import { getActivePool, getPastPolls, getUserAchievements, getUserMedals, type A
 
 export default function Dashboard() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<NavItem>("home");
   const [activePool, setActivePool] = useState<Pool | null>(null);
@@ -123,7 +125,7 @@ export default function Dashboard() {
           activeOpacity={0.8}
         >
           <FontAwesome5 name="sign-in-alt" size={16} color={colors.text.dark} />
-          <Text style={styles.joinPoolButtonText}>Join Pool with Code</Text>
+          <Text style={styles.joinPoolButtonText}>{t('dashboard.joinPool')}</Text>
         </TouchableOpacity>
 
         <MedalDisplay medals={medals} achievements={achievements} />

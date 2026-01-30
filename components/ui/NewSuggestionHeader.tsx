@@ -1,7 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { typography, colors } from "../../constants/theme";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 interface NewSuggestionHeaderProps {
   onBack?: () => void;
@@ -14,6 +15,7 @@ interface NewSuggestionHeaderProps {
 export const NewSuggestionHeader: React.FC<NewSuggestionHeaderProps> = ({
   onBack,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -23,7 +25,7 @@ export const NewSuggestionHeader: React.FC<NewSuggestionHeaderProps> = ({
       >
         <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
       </TouchableOpacity>
-      <Text style={styles.headerTitle}>New Suggestion</Text>
+      <Text style={styles.headerTitle}>{t('headers.newSuggestion')}</Text>
       <View style={styles.placeholder} />
     </View>
   );

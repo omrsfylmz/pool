@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { CreatePoolButton } from "../components/ui/CreatePoolButton";
 import { CreatePoolHeader } from "../components/ui/CreatePoolHeader";
@@ -11,6 +12,7 @@ import { createPool, getProfile, type Profile } from "../services/api";
 
 export default function CreatePool() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [poolTitle, setPoolTitle] = useState("");
@@ -32,7 +34,7 @@ export default function CreatePool() {
         setProfile(profileData);
       } catch (error) {
         console.error("Error loading profile:", error);
-        Alert.alert("Error", "Failed to load profile");
+        Alert.alert(t('common.error'), t('createPool.errors.loadProfileFailed'));
       } finally {
         setLoading(false);
       }
@@ -47,14 +49,14 @@ export default function CreatePool() {
 
   const handleHelp = () => {
     Alert.alert(
-      "Create a Pool",
-      "Create a voting pool for your team to decide on lunch! Set a title, description, and how long voting should last."
+      t('createPool.help.title'),
+      t('createPool.help.message')
     );
   };
 
   const handleStartVoting = async () => {
     if (!poolTitle.trim()) {
-      Alert.alert("Error", "Please enter a pool title");
+      Alert.alert(t('common.error'), t('createPool.errors.missingTitle'));
       return;
     }
 
@@ -66,7 +68,7 @@ export default function CreatePool() {
       router.push(`/share-pool?poolId=${pool.id}`);
     } catch (error: any) {
       console.error("Error creating pool:", error);
-      Alert.alert("Error", error.message || "Failed to create pool");
+      Alert.alert(t('common.error'), error.message || t('createPool.errors.creationFailed'));
     } finally {
       setCreating(false);
     }

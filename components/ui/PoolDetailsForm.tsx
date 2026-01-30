@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { borderRadius, colors, typography } from "../../constants/theme";
 import { DurationSelector } from "./DurationSelector";
-import { colors, typography, borderRadius } from "../../constants/theme";
 
 interface PoolDetailsFormProps {
   onTitleChange?: (title: string) => void;
@@ -26,19 +27,20 @@ export const PoolDetailsForm: React.FC<PoolDetailsFormProps> = ({
 }) => {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Pool Details</Text>
+      <Text style={styles.sectionTitle}>{t('createPool.details.title')}</Text>
       <Text style={styles.sectionSubtitle}>
-        Set up your lunch hunt parameters.
+        {t('createPool.details.subtitle')}
       </Text>
 
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Pool Title</Text>
+        <Text style={styles.label}>{t('createPool.form.titleLabel')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="e.g., Friday Feast 🍕"
+          placeholder={t('createPool.form.titlePlaceholder')}
           placeholderTextColor={colors.text.muted}
           value={title}
           onChangeText={(text) => {
@@ -49,10 +51,10 @@ export const PoolDetailsForm: React.FC<PoolDetailsFormProps> = ({
       </View>
 
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Description</Text>
+        <Text style={styles.label}>{t('createPool.form.descriptionLabel')}</Text>
         <TextInput
           style={[styles.input, styles.textArea]}
-          placeholder="Optional: e.g., Walking distance only please!"
+          placeholder={t('createPool.form.descriptionPlaceholder')}
           placeholderTextColor={colors.text.muted}
           multiline
           numberOfLines={4}
@@ -65,9 +67,9 @@ export const PoolDetailsForm: React.FC<PoolDetailsFormProps> = ({
       </View>
 
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Voting Duration</Text>
+        <Text style={styles.label}>{t('createPool.form.durationLabel')}</Text>
         <Text style={styles.inputSubLabel}>
-          How long should the hunger games last?
+          {t('createPool.form.durationSubLabel')}
         </Text>
         <DurationSelector
           selectedValue={initialDuration}

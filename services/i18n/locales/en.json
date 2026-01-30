@@ -4,7 +4,53 @@
     "cancel": "Cancel",
     "save": "Save",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "appTitle": "Lunch Vote"
+  },
+  "auth": {
+    "login": "Log In",
+    "createAccount": "Create Account",
+    "taglineTitle": "What's for Lunch?",
+    "taglineSubtitle": "Vote with your team, stay\nanonymous."
+  },
+  "dashboard": {
+    "title": "Lunch Pool",
+    "joinPool": "Join Pool with Code",
+    "pastPolls": "Past Polls",
+    "viewAll": "View all"
+  },
+  "join": {
+    "title": "Join a Pool",
+    "subtitle": "Enter the 6-digit code to join a lunch pool",
+    "label": "Join Code",
+    "button": "Join Pool",
+    "help": "Ask the pool creator for the join code",
+    "errors": {
+      "invalid": "Invalid Code",
+      "invalidLength": "Join code must be 6 characters",
+      "notFound": "Pool Not Found",
+      "notFoundMessage": "No pool found with this join code.",
+      "failed": "Failed to join pool"
+    }
+  },
+  "results": {
+    "final": "Final Results",
+    "live": "Live Results",
+    "completed": "Pool Completed",
+    "undecided": "Still Undecided?",
+    "endedMessage": "This pool has ended with {{count}} total votes. The winner has been determined!",
+    "activeMessage": "Don't worry! You can change your vote anytime before the timer runs out."
+  },
+  "pastPools": {
+    "title": "Past Pools",
+    "emptyTitle": "No Past Pools",
+    "emptyText": "Pools you've participated in will appear here",
+    "ended": "Ended",
+    "code": "Code: "
+  },
+  "nav": {
+    "home": "Home",
+    "profile": "Profile"
   },
   "profile": {
     "title": "Profile",
@@ -18,5 +64,117 @@
     "turkish": "Turkish",
     "accountPrivacy": "ACCOUNT & PRIVACY",
     "plateThisWeek": "Your Plate This Week"
+  },
+  "createPool": {
+    "title": "Create Lunch Pool",
+    "button": "Start Voting",
+    "help": {
+      "title": "Create a Pool",
+      "message": "Create a voting pool for your team to decide on lunch! Set a title, description, and how long voting should last."
+    },
+    "errors": {
+      "missingTitle": "Please enter a pool title",
+      "creationFailed": "Failed to create pool",
+      "loadProfileFailed": "Failed to load profile"
+    },
+    "identityPrefix": "You'll be the ",
+    "details": {
+      "title": "Pool Details",
+      "subtitle": "Set up your lunch hunt parameters."
+    },
+    "form": {
+      "titleLabel": "Pool Title",
+      "titlePlaceholder": "e.g., Friday Feast 🍕",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Optional: e.g., Walking distance only please!",
+      "durationLabel": "Voting Duration",
+      "durationSubLabel": "How long should the hunger games last?"
+    }
+  },
+  "vote": {
+    "alerts": {
+      "search": "Search functionality coming soon!"
+    },
+    "errors": {
+      "noPoolId": "No pool ID provided",
+      "loadFailed": "Failed to load voting data"
+    },
+    "subtitle": {
+      "default": "Select your favorite to win the vote!"
+    },
+    "emptyState": "No food options yet!",
+    "footerHint": "Voters are hidden until the timer ends. 🤫",
+    "addIdeaButton": "+ Add Your Idea"
+  },
+  "newSuggestion": {
+    "errors": {
+      "noPoolId": "No pool ID provided",
+      "loadFailed": "Failed to load data",
+      "missingSuggestion": "Please enter a suggestion"
+    },
+    "success": {
+      "title": "Success!",
+      "message": "Your suggestion has been added. Add another or go to voting."
+    },
+    "buttons": {
+      "addAnother": "Add Another",
+      "goToVote": "Go to Vote"
+    },
+    "identityMessage": "What's for lunch today?",
+    "inputLabel": "What are you craving?",
+    "iconLabel": "Icon (Optional)"
+  },
+  "sharePool": {
+    "successTag": "Success! Your Pool is Live",
+    "joinCodeLabel": "Pool Join Code",
+    "shareHint": "Share this code with others to join",
+    "addOptionTitle": "Add Your First Option",
+    "addOptionSubtitle": "Click here to add food suggestions",
+    "shareMessage": "🍽️ Join my lunch pool: \"{{title}}\"!\n\n📱 Join Code: {{code}}\n\nOpen the app, tap \"Join Pool\", and enter this code to vote!"
+  },
+  "winner": {
+    "calculating": "Calculating results...",
+    "headerTitle": "🎉 Voting Ended!",
+    "headerSubtitle": "Here are the results",
+    "winnerLabel": "Winner",
+    "votes": "votes",
+    "noWinner": {
+      "title": "No votes were cast!",
+      "subtitle": "Better luck next time"
+    },
+    "allOptions": "All Options",
+    "backButton": "Back to Dashboard"
+  },
+  "timer": {
+    "endsIn": "Voting Ends In",
+    "minLabel": "Minutes",
+    "secLabel": "Seconds",
+    "hrs": "HRS",
+    "min": "MIN",
+    "sec": "SEC"
+  },
+  "headers": {
+    "voteTitle": "Vote & Suggest Food",
+    "voteSubtitle": "Anonymous Office Poll",
+    "sharePool": "Share Your Pool",
+    "newSuggestion": "New Suggestion",
+    "resultsBreakdown": "Results Breakdown"
+  },
+  "results": {
+    "final": "Final Results",
+    "live": "Live Results",
+    "completed": "Pool Completed",
+    "undecided": "Still Undecided?",
+    "endedMessage": "This pool has ended with {{count}} total votes. The winner has been determined!",
+    "activeMessage": "Don't worry! You can change your vote anytime before the timer runs out.",
+    "breakdown": {
+      "title": "Vote Breakdown",
+      "totalVotes": "Votes total",
+      "votesAllCaps": "VOTES",
+      "viewAllVoters": "View all voters"
+    }
+  },
+  "shareButton": {
+    "defaultText": "Share Pool Link"
   }
 }

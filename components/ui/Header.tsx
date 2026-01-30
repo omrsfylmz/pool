@@ -1,6 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
 interface HeaderProps {
@@ -14,10 +15,11 @@ interface HeaderProps {
  * Displays the app header with logo icon and title
  */
 export const Header: React.FC<HeaderProps> = ({
-  title = "Lunch Vote",
+  title,
   iconName = "utensils",
   iconSize = 24,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.header}>
       <FontAwesome5
@@ -26,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
         color={colors.primary.yellow}
         style={styles.logoIcon}
       />
-      <Text style={styles.headerTitle}>{title}</Text>
+      <Text style={styles.headerTitle}>{title || t('common.appTitle')}</Text>
     </View>
   );
 };

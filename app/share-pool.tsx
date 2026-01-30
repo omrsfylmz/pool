@@ -1,6 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Share, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { HeroCard } from "../components/ui/HeroCard";
 import { IdentityFooter } from "../components/ui/IdentityFooter";
@@ -14,6 +15,7 @@ import { getProfile, type Pool } from "../services/api";
 
 export default function SharePool() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   const { user } = useAuth();
   
@@ -40,7 +42,7 @@ export default function SharePool() {
         setProfile(profileData);
       } catch (error) {
         console.error("Error loading pool:", error);
-        Alert.alert("Error", "Failed to load pool data");
+        Alert.alert(t('common.error'), t('sharePool.errors.loadFailed'));
       } finally {
         setLoading(false);
       }
@@ -65,7 +67,7 @@ export default function SharePool() {
 
     try {
       // Generate shareable message with join code
-      const message = `🍽️ Join my lunch pool: "${pool.title}"!\n\n📱 Join Code: ${pool.join_code}\n\nOpen the app, tap "Join Pool", and enter this code to vote!`;
+      const message = t('sharePool.shareMessage', { title: pool.title, code: pool.join_code });
 
       await Share.share({
         message,
@@ -73,7 +75,7 @@ export default function SharePool() {
       });
     } catch (error: any) {
       console.error("Error sharing pool:", error);
-      Alert.alert("Error", "Failed to share pool");
+      Alert.alert(t('common.error'), t('sharePool.errors.shareFailed'));
     }
   };
 
@@ -102,16 +104,16 @@ export default function SharePool() {
         <View style={styles.main}>
           <HeroCard
             poolName={pool.title}
-            successTag="Success! Your Pool is Live"
+            successTag={t('sharePool.successTag')}
           />
 
           {/* Join Code Display */}
           <View style={styles.joinCodeContainer}>
-            <Text style={styles.joinCodeLabel}>Pool Join Code</Text>
+            <Text style={styles.joinCodeLabel}>{t('sharePool.joinCodeLabel')}</Text>
             <View style={styles.joinCodeBox}>
               <Text style={styles.joinCodeText}>{pool.join_code}</Text>
             </View>
-            <Text style={styles.joinCodeHint}>Share this code with others to join</Text>
+            <Text style={styles.joinCodeHint}>{t('sharePool.shareHint')}</Text>
           </View>
 
           <TouchableOpacity 
@@ -121,8 +123,8 @@ export default function SharePool() {
           >
             <View style={styles.addOptionContent}>
               <View style={styles.addOptionTextContainer}>
-                <Text style={styles.addOptionTitle}>Add Your First Option</Text>
-                <Text style={styles.addOptionSubtitle}>Click here to add food suggestions</Text>
+                <Text style={styles.addOptionTitle}>{t('sharePool.addOptionTitle')}</Text>
+                <Text style={styles.addOptionSubtitle}>{t('sharePool.addOptionSubtitle')}</Text>
               </View>
               <FontAwesome5 name="chevron-right" size={24} color={colors.primary.yellow} />
             </View>

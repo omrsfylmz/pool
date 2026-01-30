@@ -1,7 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography } from "../../constants/theme";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors } from "../../constants/theme";
 
 export type NavItem = "home" | "profile";
 
@@ -17,8 +18,8 @@ interface NavItemConfig {
 }
 
 const navItems: NavItemConfig[] = [
-  { id: "home", label: "Home", icon: "home" },
-  { id: "profile", label: "Profile", icon: "user" },
+  { id: "home", label: "nav.home", icon: "home" },
+  { id: "profile", label: "nav.profile", icon: "user" },
 ];
 
 /**
@@ -29,6 +30,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onTabChange,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.bottomNav}>
       {navItems.map((item) => {
@@ -51,7 +53,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                 isActive && styles.navLabelActive,
               ]}
             >
-              {item.label}
+              {t(item.label)}
             </Text>
           </TouchableOpacity>
         );

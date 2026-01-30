@@ -1,6 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
 interface IdentitySectionProps {
@@ -14,13 +15,14 @@ interface IdentitySectionProps {
 export const IdentitySection: React.FC<IdentitySectionProps> = ({
   identityName = "Anonymous Lion",
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <View style={styles.avatarCircle}>
         <FontAwesome5 name="paw" size={36} color={colors.primary.yellow} />
       </View>
       <Text style={styles.identityText}>
-        You&apos;ll be the{" "}
+        {t('createPool.identityPrefix')}{" "}
         <Text style={styles.identityName}>{identityName}</Text>
       </Text>
     </View>

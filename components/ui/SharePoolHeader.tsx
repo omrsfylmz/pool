@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
@@ -14,6 +15,7 @@ interface SharePoolHeaderProps {
 export const SharePoolHeader: React.FC<SharePoolHeaderProps> = ({
   onBack,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -23,7 +25,7 @@ export const SharePoolHeader: React.FC<SharePoolHeaderProps> = ({
       >
         <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
       </TouchableOpacity>
-      <Text style={styles.headerTitle}>Share Your Pool</Text>
+      <Text style={styles.headerTitle}>{t('headers.sharePool')}</Text>
       <View style={styles.placeholder} />
     </View>
   );

@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { borderRadius, colors, typography } from "../constants/theme";
 import { getFoodOptions, getVotesForPool, type FoodOption } from "../services/api";
@@ -13,6 +14,7 @@ interface WinnerData {
 
 export default function Winner() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   
   const [winner, setWinner] = useState<WinnerData | null>(null);
@@ -71,9 +73,11 @@ export default function Winner() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Calculating results...</Text>
+          <Text style={styles.loadingText}>{t('winner.calculating')}</Text>
         </View>
+      </SafeAreaView>
       </SafeAreaView>
     );
   }
@@ -83,8 +87,8 @@ export default function Winner() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>🎉 Voting Ended!</Text>
-          <Text style={styles.headerSubtitle}>Here are the results</Text>
+          <Text style={styles.headerTitle}>{t('winner.headerTitle')}</Text>
+          <Text style={styles.headerSubtitle}>{t('winner.headerSubtitle')}</Text>
         </View>
 
         {/* Winner Section */}
@@ -93,28 +97,28 @@ export default function Winner() {
             <View style={styles.crownContainer}>
               <Text style={styles.crownEmoji}>👑</Text>
             </View>
-            <Text style={styles.winnerLabel}>Winner</Text>
+            <Text style={styles.winnerLabel}>{t('winner.winnerLabel')}</Text>
             <Text style={styles.winnerName}>{winner.foodOption.name}</Text>
             {winner.foodOption.description && (
               <Text style={styles.winnerDescription}>{winner.foodOption.description}</Text>
             )}
             <View style={styles.voteCountBadge}>
               <Ionicons name="heart" size={20} color={colors.primary.yellow} />
-              <Text style={styles.voteCountText}>{winner.voteCount} votes</Text>
+              <Text style={styles.voteCountText}>{winner.voteCount} {t('winner.votes')}</Text>
             </View>
           </View>
         ) : (
           <View style={styles.noWinnerSection}>
             <Text style={styles.noWinnerEmoji}>🤷</Text>
-            <Text style={styles.noWinnerText}>No votes were cast!</Text>
-            <Text style={styles.noWinnerSubtext}>Better luck next time</Text>
+            <Text style={styles.noWinnerText}>{t('winner.noWinner.title')}</Text>
+            <Text style={styles.noWinnerSubtext}>{t('winner.noWinner.subtitle')}</Text>
           </View>
         )}
 
         {/* All Results */}
         {allOptions.length > 0 && (
           <View style={styles.resultsSection}>
-            <Text style={styles.resultsTitle}>All Options</Text>
+            <Text style={styles.resultsTitle}>{t('winner.allOptions')}</Text>
             {allOptions.map((option, index) => (
               <View key={option.id} style={styles.resultCard}>
                 <View style={styles.resultRank}>
@@ -122,7 +126,7 @@ export default function Winner() {
                 </View>
                 <View style={styles.resultInfo}>
                   <Text style={styles.resultName}>{option.name}</Text>
-                  <Text style={styles.resultVotes}>{option.voteCount} votes</Text>
+                  <Text style={styles.resultVotes}>{option.voteCount} {t('winner.votes')}</Text>
                 </View>
                 <View style={styles.resultBar}>
                   <View 
@@ -147,7 +151,7 @@ export default function Winner() {
           onPress={handleBackToDashboard}
           activeOpacity={0.8}
         >
-          <Text style={styles.backButtonText}>Back to Dashboard</Text>
+          <Text style={styles.backButtonText}>{t('winner.backButton')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

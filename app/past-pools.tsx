@@ -1,14 +1,15 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { borderRadius, colors, shadows, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
@@ -16,6 +17,7 @@ import { getPastPolls, type Pool } from "../services/api";
 
 export default function PastPools() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [pools, setPools] = useState<Pool[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +61,7 @@ export default function PastPools() {
         >
           <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Past Pools</Text>
+        <Text style={styles.headerTitle}>{t('pastPools.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -70,9 +72,9 @@ export default function PastPools() {
         {pools.length === 0 ? (
           <View style={styles.emptyState}>
             <FontAwesome5 name="history" size={64} color={colors.text.grey} />
-            <Text style={styles.emptyTitle}>No Past Pools</Text>
+            <Text style={styles.emptyTitle}>{t('pastPools.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Pools you've participated in will appear here
+              {t('pastPools.emptyText')}
             </Text>
           </View>
         ) : (
@@ -124,11 +126,11 @@ export default function PastPools() {
                     <FontAwesome5
                       name="check-circle"
                       size={12}
-                      color={colors.primary.green}
+                      color={colors.status.success}
                     />
-                    <Text style={styles.statusText}>Ended</Text>
+                    <Text style={styles.statusText}>{t('pastPools.ended')}</Text>
                   </View>
-                  <Text style={styles.poolCode}>Code: {pool.join_code}</Text>
+                  <Text style={styles.poolCode}>{t('pastPools.code')}{pool.join_code}</Text>
                 </View>
               </TouchableOpacity>
             ))}

@@ -1,6 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
 interface DashboardHeaderProps {
@@ -14,13 +15,14 @@ interface DashboardHeaderProps {
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onNotificationPress,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.header}>
       <View style={styles.headerLeft}>
         <View style={styles.logoCircle}>
           <FontAwesome5 name="paw" size={20} color={colors.primary.yellow} />
         </View>
-        <Text style={styles.appTitle}>Lunch Pool</Text>
+        <Text style={styles.appTitle}>{t('dashboard.title')}</Text>
       </View>
       <TouchableOpacity onPress={onNotificationPress} activeOpacity={0.7}>
         <FontAwesome5 name="bell" size={20} color={colors.text.dark} />

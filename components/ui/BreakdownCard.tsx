@@ -1,7 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export interface BreakdownItem {
   id: string;
@@ -36,6 +37,7 @@ export const BreakdownCard: React.FC<BreakdownCardProps> = ({
   voters = [],
   onViewAllVoters,
 }) => {
+  const { t } = useTranslation();
   const maxAvatars = 3;
   const visibleVoters = voters.slice(0, maxAvatars);
   const remainingCount = voters.length - visibleVoters.length;
@@ -43,8 +45,8 @@ export const BreakdownCard: React.FC<BreakdownCardProps> = ({
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Text style={styles.breakdownTitle}>Vote Breakdown</Text>
-        <Text style={styles.voteTotal}>{totalVotes} Votes total</Text>
+        <Text style={styles.breakdownTitle}>{t('results.breakdown.title')}</Text>
+        <Text style={styles.voteTotal}>{totalVotes} {t('results.breakdown.totalVotes')}</Text>
       </View>
 
       {items.map((item, index) => (
@@ -59,7 +61,7 @@ export const BreakdownCard: React.FC<BreakdownCardProps> = ({
                 item.isWinner && styles.voteNumberWinner,
               ]}
             >
-              {item.votes} VOTES
+              {item.votes} {t('results.breakdown.votesAllCaps')}
             </Text>
           </View>
           <View style={styles.progressBg}>
@@ -109,7 +111,7 @@ export const BreakdownCard: React.FC<BreakdownCardProps> = ({
             )}
           </View>
           <TouchableOpacity onPress={onViewAllVoters} activeOpacity={0.7}>
-            <Text style={styles.viewAllLink}>View all voters</Text>
+            <Text style={styles.viewAllLink}>{t('results.breakdown.viewAllVoters')}</Text>
           </TouchableOpacity>
         </View>
       )}

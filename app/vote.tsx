@@ -1,5 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FoodCard, type FoodOption } from "../components/ui/FoodCard";
 import { TimerSection } from "../components/ui/TimerSection";
@@ -13,6 +14,7 @@ import { castVote, endPool, getProfile, getUserVote, type Profile } from "../ser
 
 export default function Vote() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   const { user } = useAuth();
   
@@ -37,7 +39,7 @@ export default function Vote() {
       }
 
       if (!poolId) {
-        Alert.alert("Error", "No pool ID provided");
+        Alert.alert(t('common.error'), t('vote.errors.noPoolId'));
         router.back();
         return;
       }
@@ -52,7 +54,7 @@ export default function Vote() {
         setUserVoteId(userVoteData?.food_option_id || null);
       } catch (error) {
         console.error("Error loading data:", error);
-        Alert.alert("Error", "Failed to load voting data");
+        Alert.alert(t('common.error'), t('vote.errors.loadFailed'));
       } finally {
         setLoading(false);
       }
@@ -106,7 +108,7 @@ export default function Vote() {
 
 
   const handleSearch = () => {
-    Alert.alert("Search", "Search functionality coming soon!");
+    Alert.alert("Search", t('vote.alerts.search'));
   };
 
   const handleVote = async (foodId: string) => {
@@ -117,7 +119,7 @@ export default function Vote() {
       setUserVoteId(foodId);
     } catch (error: any) {
       console.error("Error casting vote:", error);
-      Alert.alert("Error", error.message || "Failed to cast vote");
+      Alert.alert(t('common.error'), error.message || "Failed to cast vote");
     }
   };
 
@@ -177,7 +179,7 @@ export default function Vote() {
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>{pool.title}</Text>
             <Text style={styles.listSubtitle}>
-              {pool.description || "Select your favorite to win the vote!"}
+              {pool.description || t('vote.subtitle.default')}
             </Text>
           </View>
 
@@ -189,12 +191,12 @@ export default function Vote() {
 
           {foodOptionsWithVotes.length === 0 && (
             <View style={styles.emptyState}>
-              <Text style={styles.emptyText}>No food options yet!</Text>
+              <Text style={styles.emptyText}>{t('vote.emptyState')}</Text>
             </View>
           )}
 
           <Text style={styles.footerHint}>
-            Voters are hidden until the timer ends. 🤫
+            {t('vote.footerHint')}
           </Text>
         </View>
       </ScrollView>
@@ -206,7 +208,7 @@ export default function Vote() {
           onPress={handleAddIdea}
           activeOpacity={0.8}
         >
-          <Text style={styles.floatingButtonText}>+ Add Your Idea</Text>
+          <Text style={styles.floatingButtonText}>{t('vote.addIdeaButton')}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
