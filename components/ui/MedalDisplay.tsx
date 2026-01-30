@@ -2,18 +2,21 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
-import { FoodMedal } from "../../services/api";
+import { AchievementMedal, FoodMedal } from "../../services/api";
 
 interface MedalDisplayProps {
   medals: FoodMedal[];
+  achievements?: AchievementMedal[];
 }
 
 /**
  * MedalDisplay Component
- * Shows user's food medals earned from past pool wins
+ * Shows user's food medals earned from past pool wins and achievement medals
  */
-export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals }) => {
-  if (medals.length === 0) {
+export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals, achievements = [] }) => {
+  const totalMedals = medals.length + achievements.length;
+  
+  if (totalMedals === 0) {
     return (
       <View style={styles.emptyState}>
         <Text style={styles.emptyIcon}>🏆</Text>
@@ -74,9 +77,59 @@ export const MedalDisplay: React.FC<MedalDisplayProps> = ({ medals }) => {
           </View>
         ))}
       </ScrollView>
+
+      {/* Achievement Medals Section */}
+      {achievements.length > 0 && (
+        <>
+          <View style={styles.achievementHeader}>
+            <Text style={styles.achievementTitle}>Achievements 🎖️</Text>
+          </View>
+          
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.medalScroll}
+          >
+            {achievements.map((achievement) => (
+              <View key={achievement.id} style={styles.achievementCard}>
+                {/* Achievement Badge */}
+                <View style={styles.achievementBadge}>
+                  <Text style={styles.achievementBadgeText}>NEW</Text>
+                </View>
+
+                {/* Icon Circle */}
+                <View style={[styles.iconCircle, styles.achievementIconCircle]}>
+                  <FontAwesome5
+                    name={achievement.food_icon}
+                    size={32}
+                    color="#FF6B35"
+                  />
+                </View>
+
+                {/* Achievement Info */}
+                <Text style={styles.achievementName} numberOfLines={2}>
+                  {formatAchievementName(achievement.achievement_type)}
+                </Text>
+                <Text style={styles.achievementDate}>
+                  {new Date(achievement.earned_at).toLocaleDateString()}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </>
+      )}
     </View>
   );
 };
+
+// Helper function to format achievement type to readable name
+function formatAchievementName(achievementType: string): string {
+  // Convert "first_burger_win" to "First Burger Win"
+  return achievementType
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
 
 // Helper function for rank badge colors
 function getRankStyle(index: number) {
@@ -191,5 +244,56 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     color: colors.text.grey,
     textAlign: "center",
+  },
+  achievementHeader: {
+    paddingHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  achievementTitle: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+  },
+  achievementCard: {
+    width: 130,
+    backgroundColor: colors.background.card,
+    borderRadius: borderRadius.md,
+    padding: 14,
+    marginRight: 12,
+    alignItems: "center",
+    position: "relative",
+    borderWidth: 2,
+    borderColor: "#FF6B35",
+    ...shadows.card,
+  },
+  achievementBadge: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "#FF6B35",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  achievementBadgeText: {
+    fontSize: 9,
+    fontWeight: typography.weights.bold,
+    color: "#FFF",
+  },
+  achievementIconCircle: {
+    backgroundColor: "#FFE5DC",
+  },
+  achievementName: {
+    fontSize: typography.sizes.xs,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+    marginBottom: 4,
+    textAlign: "center",
+    lineHeight: 14,
+  },
+  achievementDate: {
+    fontSize: 10,
+    color: colors.text.grey,
   },
 });

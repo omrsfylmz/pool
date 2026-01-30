@@ -9,7 +9,7 @@ import { MedalDisplay } from "../components/ui/MedalDisplay";
 import { PastPolls, type Poll } from "../components/ui/PastPolls";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { getActivePool, getPastPolls, getUserMedals, type FoodMedal, type Pool } from "../services/api";
+import { getActivePool, getPastPolls, getUserAchievements, getUserMedals, type AchievementMedal, type FoodMedal, type Pool } from "../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [activePool, setActivePool] = useState<Pool | null>(null);
   const [pastPolls, setPastPolls] = useState<Pool[]>([]);
   const [medals, setMedals] = useState<FoodMedal[]>([]);
+  const [achievements, setAchievements] = useState<AchievementMedal[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Redirect to login if not authenticated
@@ -33,15 +34,17 @@ export default function Dashboard() {
       if (!user) return;
 
       try {
-        const [active, past, userMedals] = await Promise.all([
+        const [active, past, userMedals, userAchievements] = await Promise.all([
           getActivePool(),
           getPastPolls(5),
           getUserMedals(user.id),
+          getUserAchievements(user.id),
         ]);
         
         setActivePool(active);
         setPastPolls(past);
         setMedals(userMedals);
+        setAchievements(userAchievements);
       } catch (error) {
         console.error("Error loading pools:", error);
       } finally {
@@ -124,7 +127,7 @@ export default function Dashboard() {
           <Text style={styles.joinPoolButtonText}>Join Pool with Code</Text>
         </TouchableOpacity>
 
-        <MedalDisplay medals={medals} />
+        <MedalDisplay medals={medals} achievements={achievements} />
 
         <PastPolls polls={polls} onViewAll={handleViewAll} />
 

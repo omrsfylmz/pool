@@ -238,6 +238,104 @@ export async function getUserMedals(userId: string): Promise<FoodMedal[]> {
 }
 
 // ============================================
+// ACHIEVEMENT MEDALS
+// ============================================
+
+export interface AchievementMedal {
+  id: string;
+  achievement_type: string;
+  food_icon: string;
+  food_name: string | null;
+  earned_at: string;
+  metadata?: any;
+}
+
+export async function getUserAchievements(userId: string): Promise<AchievementMedal[]> {
+  try {
+    const { data, error } = await supabase
+      .from("user_achievements")
+      .select("*")
+      .eq("user_id", userId)
+      .order("earned_at", { ascending: false });
+
+    if (error) {
+      // If table doesn't exist yet, return empty array
+      if (error.code === 'PGRST205' || error.code === '42P01') {
+        console.log('user_achievements table not created yet');
+        return [];
+      }
+      throw error;
+    }
+    return (data || []) as AchievementMedal[];
+  } catch (error) {
+    console.error('Error fetching achievements:', error);
+    return [];
+  }
+}
+
+export async function awardAchievement(
+  userId: string,
+  achievementType: string,
+  foodIcon: string,
+  foodName?: string,
+  metadata?: any
+): Promise<void> {
+  const { error } = await supabase
+    .from("user_achievements")
+    .insert({
+      user_id: userId,
+      achievement_type: achievementType,
+      food_icon: foodIcon,
+      food_name: foodName,
+      metadata: metadata || {},
+    });
+
+  if (error) {
+    // Ignore duplicate errors (achievement already earned)
+    if (error.code !== '23505') {
+      throw error;
+    }
+  }
+}
+
+export async function checkAchievement(
+  userId: string,
+  achievementType: string
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from("user_achievements")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("achievement_type", achievementType)
+    .single();
+
+  if (error && error.code !== 'PGRST116') {
+    throw error;
+  }
+
+  return !!data;
+}
+
+// Check and award "first win" achievements after pool ends
+export async function checkAndAwardFirstWinAchievements(
+  userId: string,
+  winnerIcon: string,
+  winnerName: string
+): Promise<void> {
+  // Skip default icon
+  if (winnerIcon === 'utensils') return;
+
+  const achievementType = `first_${winnerIcon.replace('-', '_')}_win`;
+  
+  // Check if user already has this achievement
+  const hasAchievement = await checkAchievement(userId, achievementType);
+  
+  if (!hasAchievement) {
+    await awardAchievement(userId, achievementType, winnerIcon, winnerName);
+  }
+}
+
+// ============================================
 // FOOD OPTION OPERATIONS
 // ============================================
 
