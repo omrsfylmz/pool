@@ -3,14 +3,13 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
-import { DailyChallenge } from "../components/ui/DailyChallenge";
 import { DashboardHeader } from "../components/ui/DashboardHeader";
 import { FloatingActionButton } from "../components/ui/FloatingActionButton";
-import { MedalCase, type Medal } from "../components/ui/MedalCase";
+import { MedalDisplay } from "../components/ui/MedalDisplay";
 import { PastPolls, type Poll } from "../components/ui/PastPolls";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { getActivePool, getPastPolls, type Pool } from "../services/api";
+import { getActivePool, getPastPolls, getUserMedals, type FoodMedal, type Pool } from "../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -18,6 +17,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<NavItem>("home");
   const [activePool, setActivePool] = useState<Pool | null>(null);
   const [pastPolls, setPastPolls] = useState<Pool[]>([]);
+  const [medals, setMedals] = useState<FoodMedal[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Redirect to login if not authenticated
@@ -33,13 +33,15 @@ export default function Dashboard() {
       if (!user) return;
 
       try {
-        const [active, past] = await Promise.all([
+        const [active, past, userMedals] = await Promise.all([
           getActivePool(),
           getPastPolls(5),
+          getUserMedals(user.id),
         ]);
         
         setActivePool(active);
         setPastPolls(past);
+        setMedals(userMedals);
       } catch (error) {
         console.error("Error loading pools:", error);
       } finally {
@@ -66,35 +68,6 @@ export default function Dashboard() {
   if (!user) {
     return null;
   }
-
-  // Sample medals data - will be replaced with real data later
-  const medals: Medal[] = [
-    {
-      id: "1",
-      name: "Burger\nMonster",
-      icon: "hamburger",
-      status: "earned",
-    },
-    {
-      id: "2",
-      name: "Sushi\nSensei",
-      icon: "fish",
-      status: "available",
-      isNew: true,
-    },
-    {
-      id: "3",
-      name: "Salad\nSage",
-      icon: "leaf",
-      status: "locked",
-    },
-    {
-      id: "4",
-      name: "Pizza\nParty",
-      icon: "pizza-slice",
-      status: "locked",
-    },
-  ];
 
   // Convert past pools to Poll format
   const polls: Poll[] = pastPolls.map((pool) => ({
@@ -151,14 +124,7 @@ export default function Dashboard() {
           <Text style={styles.joinPoolButtonText}>Join Pool with Code</Text>
         </TouchableOpacity>
 
-        <MedalCase medals={medals} earnedCount={1} />
-
-        <DailyChallenge
-          title="Eat 3 times at the Deli"
-          current={2}
-          total={3}
-          nextReward="Sushi Sensei medal"
-        />
+        <MedalDisplay medals={medals} />
 
         <PastPolls polls={polls} onViewAll={handleViewAll} />
 

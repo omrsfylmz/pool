@@ -133,12 +133,108 @@ export async function getPastPolls(limit: number = 10) {
 }
 
 export async function endPool(poolId: string) {
+  // Get all votes for this pool
+  const { data: votes } = await supabase
+    .from("votes")
+    .select("food_option_id")
+    .eq("pool_id", poolId);
+
+  // Count votes per option
+  const voteCounts: Record<string, number> = {};
+  votes?.forEach((vote) => {
+    voteCounts[vote.food_option_id] = (voteCounts[vote.food_option_id] || 0) + 1;
+  });
+
+  // Find winner (option with most votes)
+  let winnerId: string | null = null;
+  let maxVotes = 0;
+  for (const [optionId, count] of Object.entries(voteCounts)) {
+    if (count > maxVotes) {
+      maxVotes = count;
+      winnerId = optionId;
+    }
+  }
+
+  // Update pool with winner and ended status
   const { error } = await supabase
     .from("pools")
-    .update({ status: "ended" })
+    .update({ 
+      status: "ended",
+      winner_id: winnerId 
+    })
     .eq("id", poolId);
 
   if (error) throw error;
+}
+
+// ============================================
+// MEDAL SYSTEM
+// ============================================
+
+export interface FoodMedal {
+  icon: string;
+  name: string;
+  wins: number;
+  totalPools: number;
+  percentage: number;
+}
+
+export async function getUserMedals(userId: string): Promise<FoodMedal[]> {
+  // Get all pools user participated in
+  const { data: userPools } = await supabase
+    .from("pool_members")
+    .select("pool_id")
+    .eq("user_id", userId);
+
+  if (!userPools || userPools.length === 0) {
+    return [];
+  }
+
+  const poolIds = userPools.map((p) => p.pool_id);
+
+  // Get winners from those pools
+  const { data: pools } = await supabase
+    .from("pools")
+    .select(`
+      winner_id,
+      food_options!pools_winner_id_fkey (
+        icon,
+        name
+      )
+    `)
+    .in("id", poolIds)
+    .eq("status", "ended")
+    .not("winner_id", "is", null);
+
+  if (!pools || pools.length === 0) {
+    return [];
+  }
+
+  // Count wins by icon (exclude utensils)
+  const medalCounts: Record<string, { name: string; wins: number }> = {};
+
+  pools.forEach((pool: any) => {
+    const foodOption = pool.food_options;
+    if (foodOption && foodOption.icon && foodOption.icon !== "utensils") {
+      if (!medalCounts[foodOption.icon]) {
+        medalCounts[foodOption.icon] = { name: foodOption.name, wins: 0 };
+      }
+      medalCounts[foodOption.icon].wins++;
+    }
+  });
+
+  // Convert to array and calculate percentages
+  const totalPools = pools.length;
+  const medals: FoodMedal[] = Object.entries(medalCounts).map(([icon, data]) => ({
+    icon,
+    name: data.name,
+    wins: data.wins,
+    totalPools,
+    percentage: Math.round((data.wins / totalPools) * 100),
+  }));
+
+  // Sort by wins (descending)
+  return medals.sort((a, b) => b.wins - a.wins);
 }
 
 // ============================================
@@ -342,48 +438,5 @@ export async function updateProfile(userId: string, updates: Partial<Profile>) {
 }
 
 // ============================================
-// MEDAL OPERATIONS
+// MEDAL OPERATIONS (Legacy - can be removed)
 // ============================================
-
-export interface Medal {
-  id: string;
-  name: string;
-  icon: string;
-  description: string | null;
-  unlock_criteria: any;
-  created_at: string;
-}
-
-export interface UserMedal {
-  id: string;
-  user_id: string;
-  medal_id: string;
-  earned_at: string;
-  medal: Medal;
-}
-
-export async function getUserMedals(userId: string) {
-  const { data, error } = await supabase
-    .from("user_medals")
-    .select(
-      `
-      *,
-      medal:medals (*)
-    `
-    )
-    .eq("user_id", userId)
-    .order("earned_at", { ascending: false });
-
-  if (error) throw error;
-  return data as UserMedal[];
-}
-
-export async function getAllMedals() {
-  const { data, error } = await supabase
-    .from("medals")
-    .select("*")
-    .order("created_at", { ascending: true });
-
-  if (error) throw error;
-  return data as Medal[];
-}
