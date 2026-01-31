@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AllBadgesModal } from "../components/ui/AllBadgesModal";
-import { BadgesSection } from "../components/ui/BadgesSection";
+import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { ChartCard, type ChartData } from "../components/ui/ChartCard";
 import { EditProfileButton } from "../components/ui/EditProfileButton";
@@ -64,6 +64,37 @@ export default function Profile() {
 
     loadProfile();
   }, [user, authLoading]);
+
+  // Map earned badge IDs to badge display objects
+  const getBadgeDisplay = (badgeId: string): Badge => {
+    const badgeMap: { [key: string]: { icon: string; type: "burger" | "salad" | "sun" } } = {
+      newcomer: { icon: "user-plus", type: "sun" },
+      burger_monster: { icon: "hamburger", type: "burger" },
+      salad_sultan: { icon: "leaf", type: "salad" },
+      pizza_pro: { icon: "pizza-slice", type: "burger" },
+      taco_titan: { icon: "pepper-hot", type: "burger" },
+      early_bird: { icon: "sun", type: "sun" },
+      consistent_voter: { icon: "check-circle", type: "sun" },
+      streak_master: { icon: "fire", type: "burger" },
+      pool_creator: { icon: "plus-circle", type: "salad" },
+      winner_winner: { icon: "trophy", type: "sun" },
+      tie_breaker: { icon: "dice", type: "sun" },
+      idea_generator: { icon: "lightbulb", type: "sun" },
+    };
+
+    const badge = badgeMap[badgeId] || { icon: "star", type: "sun" };
+    return {
+      id: badgeId,
+      title: badgeId.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
+      subtitle: "Earned",
+      icon: badge.icon,
+      type: badge.type,
+      earned: true,
+    };
+  };
+
+  // Get top 3 earned badges for display
+  const displayBadges = earnedBadgeIds.slice(0, 3).map(getBadgeDisplay);
 
   // Sample chart data (will be replaced with real data later)
   const chartData: ChartData[] = [
@@ -140,7 +171,7 @@ export default function Profile() {
           <EditProfileButton onPress={handleEditProfile} />
 
           <BadgesSection 
-            badges={[]} 
+            badges={displayBadges} 
             earnedCount={earnedBadgeIds.length} 
             totalCount={12}
             onViewAll={() => setShowBadgesModal(true)}
