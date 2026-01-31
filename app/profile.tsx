@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from "react-native";
 import { AllBadgesModal } from "../components/ui/AllBadgesModal";
@@ -22,6 +23,7 @@ import { ProfileInfo } from "../components/ui/ProfileInfo";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { getProfile, getUserAchievements, type Profile } from "../services/api";
+import { scheduleTestNotification } from "../services/NotificationService";
 
 export default function Profile() {
   const router = useRouter();
@@ -209,6 +211,19 @@ export default function Profile() {
             text={t('profile.privacy')}
             onPress={handlePrivacy}
           />
+
+          {/* Temporary Test Button */}
+          <TouchableOpacity 
+            style={{ padding: 15, alignItems: 'center', marginBottom: 10 }} 
+            onPress={async () => {
+              await scheduleTestNotification();
+              alert("Notification sent! Check your status bar.");
+            }}
+          >
+            <Text style={{ color: colors.primary.yellowDark, fontWeight: 'bold' }}>
+              🔔 Test Notification
+            </Text>
+          </TouchableOpacity>
 
           <View style={{ flex: 1 }} />
           <View style={{ marginBottom: 50 }}>
