@@ -11,16 +11,16 @@ import { MedalDisplay } from "../components/ui/MedalDisplay";
 import { PastPolls, type Poll } from "../components/ui/PastPolls";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { getActivePool, getPastPolls, getUserAchievements, getUserMedals, type AchievementMedal, type FoodMedal, type Pool } from "../services/api";
+import { getActivePool, getPastPolls, getProfile, getUserAchievements, type AchievementMedal, type Pool, type Profile } from "../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<NavItem>("home");
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [activePool, setActivePool] = useState<Pool | null>(null);
   const [pastPolls, setPastPolls] = useState<Pool[]>([]);
-  const [medals, setMedals] = useState<FoodMedal[]>([]);
   const [achievements, setAchievements] = useState<AchievementMedal[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,19 +37,19 @@ export default function Dashboard() {
       if (!user) return;
 
       try {
-        const [active, past, userMedals, userAchievements] = await Promise.all([
+        const [profileData, activePoolData, pastPollsData, achievementsData] = await Promise.all([
+          getProfile(user.id),
           getActivePool(),
-          getPastPolls(5),
-          getUserMedals(user.id),
+          getPastPolls(),
           getUserAchievements(user.id),
         ]);
-        
-        setActivePool(active);
-        setPastPolls(past);
-        setMedals(userMedals);
-        setAchievements(userAchievements);
+
+        setProfile(profileData);
+        setActivePool(activePoolData);
+        setPastPolls(pastPollsData);
+        setAchievements(achievementsData);
       } catch (error) {
-        console.error("Error loading pools:", error);
+        console.error("Error loading dashboard:", error);
       } finally {
         setLoading(false);
       }
@@ -148,7 +148,7 @@ export default function Dashboard() {
           <Text style={styles.joinPoolButtonText}>{t('dashboard.joinPool')}</Text>
         </TouchableOpacity>
 
-        <MedalDisplay medals={medals} achievements={achievements} />
+        <MedalDisplay achievements={achievements} />
 
         <PastPolls polls={polls} onViewAll={handleViewAll} />
 
