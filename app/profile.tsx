@@ -14,13 +14,11 @@ import { AllBadgesModal } from "../components/ui/AllBadgesModal";
 import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { ChartCard, type ChartData } from "../components/ui/ChartCard";
-import { EditProfileButton } from "../components/ui/EditProfileButton";
 import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
 import { LogoutButton } from "../components/ui/LogoutButton";
 import { MenuItem } from "../components/ui/MenuItem";
 import { PasswordUpdateModal } from "../components/ui/PasswordUpdateModal";
 import { PrivacyPolicyModal } from "../components/ui/PrivacyPolicyModal";
-import { ProfileHeader } from "../components/ui/ProfileHeader";
 import { ProfileInfo } from "../components/ui/ProfileInfo";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
@@ -122,16 +120,6 @@ export default function Profile() {
     { label: "Other", percentage: 25, color: "#ffe6ad" },
   ];
 
-  const handleSettings = () => {
-    // TODO: Implement settings
-    console.log("Settings pressed");
-  };
-
-  const handleEditProfile = () => {
-    // TODO: Implement edit profile
-    console.log("Edit profile pressed");
-  };
-
   const handleSecurity = () => {
     setShowPasswordModal(true);
   };
@@ -195,17 +183,13 @@ export default function Profile() {
           />
         }
       >
-        <ProfileHeader onSettings={handleSettings} />
-
         <View style={styles.main}>
           <ProfileInfo
             userName={profile.full_name || profile.avatar_name}
-            userEmail={profile.email}
+            userEmail={user?.email || ""}
             avatarAnimal={profile.avatar_animal}
             isVerified={true}
           />
-
-          <EditProfileButton onPress={handleEditProfile} />
 
           <BadgesSection 
             badges={displayBadges} 
