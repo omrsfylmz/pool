@@ -9,34 +9,42 @@ interface SplashScreenProps {
 
 export default function SplashScreen({ onFinish }: SplashScreenProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const scaleAnim = useRef(new Animated.Value(0.5)).current;
+  const iconRotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Fade in and scale animation
+    // Smooth entrance animation
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 800,
+        duration: 600,
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
-        friction: 4,
-        tension: 40,
+        friction: 8,
+        tension: 50,
         useNativeDriver: true,
       }),
     ]).start();
 
-    // Auto-dismiss after 2.5 seconds
+    // Auto-dismiss after 2 seconds
     const timer = setTimeout(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 400,
-        useNativeDriver: true,
-      }).start(() => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 0.9,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
         onFinish();
       });
-    }, 2500);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -93,20 +101,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconContainer: {
-    width: 200,
-    height: 200,
+    width: 220,
+    height: 220,
   },
   appIcon: {
-    width: 200,
-    height: 200,
-    backgroundColor: "#EEAD2B",
-    borderRadius: 45,
+    width: 220,
+    height: 220,
+    backgroundColor: "#F5B82E",
+    borderRadius: 50,
     position: "relative",
+    overflow: "hidden",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.15,
-    shadowRadius: 30,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 15 },
+    shadowOpacity: 0.25,
+    shadowRadius: 35,
+    elevation: 15,
   },
 
   // Utensils
@@ -130,18 +139,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     left: "50%",
-    marginLeft: -70, // Half of width for centering
-    width: 140,
-    height: 120,
+    marginLeft: -77, // Half of width for centering
+    width: 154,
+    height: 132,
   },
   faceBase: {
     width: "100%",
     height: "100%",
     backgroundColor: "#FF7B22", // Bear orange
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderTopLeftRadius: 45,
+    borderTopRightRadius: 45,
+    borderBottomLeftRadius: 22,
+    borderBottomRightRadius: 22,
     position: "relative",
     zIndex: 2,
   },
