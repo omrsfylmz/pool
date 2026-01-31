@@ -52,8 +52,11 @@ export default function Profile() {
         ]);
         setProfile(profileData);
         
+        console.log('Fetched achievements:', achievements);
+        
         // Map achievements to badge IDs
         const badgeIds = achievements.map((a: any) => a.achievement_type);
+        console.log('Badge IDs:', badgeIds);
         setEarnedBadgeIds(badgeIds);
       } catch (error) {
         console.error("Error loading profile:", error);
@@ -95,6 +98,7 @@ export default function Profile() {
 
   // Get top 3 earned badges for display
   const displayBadges = earnedBadgeIds.slice(0, 3).map(getBadgeDisplay);
+  console.log('Display badges:', displayBadges);
 
   // Sample chart data (will be replaced with real data later)
   const chartData: ChartData[] = [

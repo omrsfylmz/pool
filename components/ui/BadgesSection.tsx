@@ -71,27 +71,34 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
       </View>
 
       <View style={styles.badgesGrid}>
-        {badges.map((badge) => {
-          const badgeStyle = getBadgeStyle(badge.type);
-          return (
-            <View key={badge.id} style={styles.badgeItem}>
-              <View
-                style={[
-                  styles.badgeCircle,
-                  { backgroundColor: badgeStyle.backgroundColor },
-                ]}
-              >
-                <FontAwesome5
-                  name={badge.icon as any}
-                  size={24}
-                  color={badgeStyle.color}
-                />
+        {badges.length > 0 ? (
+          badges.map((badge) => {
+            const badgeStyle = getBadgeStyle(badge.type);
+            return (
+              <View key={badge.id} style={styles.badgeItem}>
+                <View
+                  style={[
+                    styles.badgeCircle,
+                    { backgroundColor: badgeStyle.backgroundColor },
+                  ]}
+                >
+                  <FontAwesome5
+                    name={badge.icon as any}
+                    size={24}
+                    color={badgeStyle.color}
+                  />
+                </View>
+                <Text style={styles.badgeTitle}>{badge.title}</Text>
+                <Text style={styles.badgeSub}>{badge.subtitle}</Text>
               </View>
-              <Text style={styles.badgeTitle}>{badge.title}</Text>
-              <Text style={styles.badgeSub}>{badge.subtitle}</Text>
-            </View>
-          );
-        })}
+            );
+          })
+        ) : (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyText}>No badges earned yet</Text>
+            <Text style={styles.emptySubtext}>Start voting to earn badges!</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -154,6 +161,21 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.text.muted,
     textAlign: "center",
+  },
+  emptyState: {
+    width: "100%",
+    paddingVertical: 20,
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 14,
+    fontWeight: typography.weights.medium,
+    color: colors.text.muted,
+    marginBottom: 4,
+  },
+  emptySubtext: {
+    fontSize: 12,
+    color: colors.text.grey,
   },
 });
 
