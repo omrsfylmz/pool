@@ -59,31 +59,12 @@ export async function scheduleDailyNotification() {
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.DAILY,
-        hour: 12,
-        minute: 0,
+        hour: 11,
+        minute: 45,
       },
     });
     console.log("Daily notification scheduled");
   } catch (error) {
     console.error("Error scheduling daily notification:", error);
-  }
-}
-
-export async function scheduleTestNotification() {
-  try {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "🧪 Test Notification",
-        body: "This is a test notification! It works! 🎉",
-        sound: true,
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 2,
-        repeats: false,
-      },
-    });
-  } catch (error) {
-    console.error("Error scheduling test notification:", error);
   }
 }
