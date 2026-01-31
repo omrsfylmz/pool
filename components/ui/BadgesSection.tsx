@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 export interface Badge {
   id: string;
@@ -16,6 +16,7 @@ interface BadgesSectionProps {
   badges: Badge[];
   earnedCount?: number;
   totalCount?: number;
+  onViewAll?: () => void;
 }
 
 /**
@@ -26,6 +27,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
   badges,
   earnedCount = 0,
   totalCount = 12,
+  onViewAll,
 }) => {
   const getBadgeStyle = (type: string) => {
     switch (type) {
@@ -56,11 +58,16 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
     <View style={styles.container}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Lunch Hero Badges</Text>
-        <View style={styles.countPill}>
+        <TouchableOpacity 
+          style={styles.countPill}
+          onPress={onViewAll}
+          activeOpacity={0.7}
+        >
           <Text style={styles.countText}>
             {earnedCount}/{totalCount} Won
           </Text>
-        </View>
+          <FontAwesome5 name="chevron-right" size={10} color={colors.primary.yellowDark} style={{ marginLeft: 4 }} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.badgesGrid}>
@@ -110,6 +117,8 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 12,
+    flexDirection: "row",
+    alignItems: "center",
   },
   countText: {
     color: colors.primary.yellowDark,

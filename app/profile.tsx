@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { AllBadgesModal } from "../components/ui/AllBadgesModal";
 import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { ChartCard, type ChartData } from "../components/ui/ChartCard";
@@ -15,7 +16,7 @@ import { ProfileHeader } from "../components/ui/ProfileHeader";
 import { ProfileInfo } from "../components/ui/ProfileInfo";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { getProfile, type Profile } from "../services/api";
+import { getProfile, getUserAchievements, type Profile } from "../services/api";
 
 export default function Profile() {
   const router = useRouter();
@@ -27,6 +28,8 @@ export default function Profile() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showBadgesModal, setShowBadgesModal] = useState(false);
+  const [earnedBadgeIds, setEarnedBadgeIds] = useState<string[]>([]);
 
   // Fetch user profile data
   useEffect(() => {
@@ -43,8 +46,15 @@ export default function Profile() {
       }
 
       try {
-        const profileData = await getProfile(user.id);
+        const [profileData, achievements] = await Promise.all([
+          getProfile(user.id),
+          getUserAchievements(user.id),
+        ]);
         setProfile(profileData);
+        
+        // Map achievements to badge IDs
+        const badgeIds = achievements.map((a: any) => a.achievement_type);
+        setEarnedBadgeIds(badgeIds);
       } catch (error) {
         console.error("Error loading profile:", error);
       } finally {
@@ -157,7 +167,18 @@ export default function Profile() {
 
           <EditProfileButton onPress={handleEditProfile} />
 
-          <BadgesSection badges={badges} earnedCount={6} totalCount={12} />
+          <BadgesSection 
+            badges={badges} 
+            earnedCount={earnedBadgeIds.length} 
+            totalCount={12}
+            onViewAll={() => setShowBadgesModal(true)}
+          />
+
+          <AllBadgesModal
+            visible={showBadgesModal}
+            onClose={() => setShowBadgesModal(false)}
+            earnedBadgeIds={earnedBadgeIds}
+          />
 
           <Text style={styles.sectionTitle}>{t('profile.plateThisWeek')}</Text>
           <View style={styles.chartSpacer} />
