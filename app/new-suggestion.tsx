@@ -142,7 +142,7 @@ export default function NewSuggestion() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <NewSuggestionHeader onBack={handleBack} />
+        <NewSuggestionHeader onBack={() => router.push('/dashboard')} />
 
         <IdentityBanner
           identityName={profile.avatar_name.replace("Anonymous ", "")}

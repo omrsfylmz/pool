@@ -186,7 +186,11 @@ export default function Vote() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <VoteHeader userAvatar={profile.avatar_animal} onSearch={handleSearch} />
+        <VoteHeader 
+          userAvatar={profile.avatar_animal} 
+          onSearch={handleSearch}
+          onAvatarPress={() => router.push('/dashboard')}
+        />
 
         <TimerSection hours={hours} minutes={minutes} seconds={seconds} />
 

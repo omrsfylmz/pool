@@ -7,6 +7,7 @@ import { colors, typography } from "../../constants/theme";
 interface VoteHeaderProps {
   userAvatar?: string;
   onSearch?: () => void;
+  onAvatarPress?: () => void;
 }
 
 /**
@@ -16,13 +17,18 @@ interface VoteHeaderProps {
 export const VoteHeader: React.FC<VoteHeaderProps> = ({
   userAvatar = "🦁",
   onSearch,
+  onAvatarPress,
 }) => {
   const { t } = useTranslation();
   return (
     <View style={styles.header}>
-      <View style={styles.userAvatar}>
+      <TouchableOpacity
+        onPress={onAvatarPress}
+        activeOpacity={0.7}
+        style={styles.userAvatar}
+      >
         <Text style={styles.avatarEmoji}>{userAvatar}</Text>
-      </View>
+      </TouchableOpacity>
       <View style={styles.headerCenter}>
         <Text style={styles.headerTitle}>{t('headers.voteTitle')}</Text>
         <Text style={styles.headerSubtitle}>{t('headers.voteSubtitle')}</Text>
