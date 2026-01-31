@@ -85,19 +85,19 @@
     }
   },
   "vote": {
-    "alerts": {
-      "search": "Arama özelliği yakında!"
-    },
+    "title": "Oyunuzu Kullanın",
+    "subtitle": "Favori seçeneğinizi seçin",
+    "loadingResults": "Sonuçlar yükleniyor...",
+    "voted": "Oy verdiniz",
+    "changeVote": "Oyu Değiştir",
+    "castVote": "Oy Ver",
+    "votes": "oy",
+    "leading": "Önde",
     "errors": {
-      "noPoolId": "Oylama ID eksik",
-      "loadFailed": "Oylama verileri yüklenemedi"
-    },
-    "subtitle": {
-      "default": "Kazanmasını istediğin favorini seç!"
-    },
-    "emptyState": "Henüz yemek seçeneği yok!",
-    "footerHint": "Oy verenler süre bitene kadar gizlidir. 🤫",
-    "addIdeaButton": "+ Fikrini Ekle"
+      "noPoolId": "Havuz kimliği sağlanmadı",
+      "loadFailed": "Oylama verileri yüklenemedi",
+      "voteFailed": "Oy kullanılamadı. Lütfen tekrar deneyin."
+    }
   },
   "newSuggestion": {
     "errors": {

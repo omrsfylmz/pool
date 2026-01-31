@@ -21,6 +21,7 @@ export default function Vote() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [userVoteId, setUserVoteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [navigating, setNavigating] = useState(false);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -78,14 +79,18 @@ export default function Vote() {
         setSeconds(0);
         // End the pool and navigate to winner page
         if (pool.status === "active") {
+          setNavigating(true);
           endPool(pool.id)
             .then(() => {
               // Wait a moment before navigating to show the 0:00:00
               setTimeout(() => {
                 router.replace(`/winner?poolId=${pool.id}`);
-              }, 2000);
+              }, 500);
             })
-            .catch(console.error);
+            .catch((error) => {
+              console.error("Error ending pool:", error);
+              setNavigating(false);
+            });
         }
         return;
       }
@@ -167,6 +172,16 @@ export default function Vote() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Loading Overlay when navigating */}
+      {navigating && (
+        <View style={styles.loadingOverlay}>
+          <View style={styles.loadingCard}>
+            <ActivityIndicator size="large" color={colors.primary.yellow} />
+            <Text style={styles.loadingText}>{t('vote.loadingResults')}</Text>
+          </View>
+        </View>
+      )}
+
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -224,6 +239,34 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  loadingOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+  loadingCard: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 30,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.medium,
+    color: colors.text.dark,
   },
   scrollContent: {
     paddingBottom: 40,

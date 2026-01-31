@@ -85,19 +85,19 @@
     }
   },
   "vote": {
-    "alerts": {
-      "search": "Search functionality coming soon!"
-    },
+    "title": "Cast Your Vote",
+    "subtitle": "Choose your favorite option",
+    "loadingResults": "Loading results...",
+    "voted": "You voted for",
+    "changeVote": "Change Vote",
+    "castVote": "Cast Vote",
+    "votes": "votes",
+    "leading": "Leading",
     "errors": {
       "noPoolId": "No pool ID provided",
-      "loadFailed": "Failed to load voting data"
-    },
-    "subtitle": {
-      "default": "Select your favorite to win the vote!"
-    },
-    "emptyState": "No food options yet!",
-    "footerHint": "Voters are hidden until the timer ends. 🤫",
-    "addIdeaButton": "+ Add Your Idea"
+      "loadFailed": "Failed to load voting data",
+      "voteFailed": "Failed to cast vote. Please try again."
+    }
   },
   "newSuggestion": {
     "errors": {
