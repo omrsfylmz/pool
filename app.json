@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "firstExpo",
-    "slug": "firstExpo",
+    "name": "FoodPool",
+    "slug": "foodpool",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
