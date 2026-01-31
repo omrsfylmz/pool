@@ -25,6 +25,7 @@ export default function Vote() {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
+  const hasNavigated = React.useRef(false);
 
   // Real-time subscriptions
   const { votes, loading: votesLoading } = useRealtimeVotes(poolId || null);
@@ -77,12 +78,12 @@ export default function Vote() {
         setHours(0);
         setMinutes(0);
         setSeconds(0);
-        // End the pool and navigate to winner page
-        if (pool.status === "active") {
+        // End the pool and navigate to winner page (only once)
+        if (pool.status === "active" && !hasNavigated.current) {
+          hasNavigated.current = true;
           setNavigating(true);
           endPool(pool.id)
             .then(() => {
-              // Wait a moment before navigating to show the 0:00:00
               setTimeout(() => {
                 router.replace(`/winner?poolId=${pool.id}`);
               }, 500);
@@ -90,6 +91,7 @@ export default function Vote() {
             .catch((error) => {
               console.error("Error ending pool:", error);
               setNavigating(false);
+              hasNavigated.current = false;
             });
         }
         return;
