@@ -86,13 +86,21 @@
   },
   "vote": {
     "title": "Cast Your Vote",
-    "subtitle": "Choose your favorite option",
+    "subtitle": {
+      "default": "Select your favorite to win the vote!"
+    },
     "loadingResults": "Loading results...",
     "voted": "You voted for",
     "changeVote": "Change Vote",
     "castVote": "Cast Vote",
     "votes": "votes",
     "leading": "Leading",
+    "emptyState": "No food options yet!",
+    "footerHint": "Voters are hidden until the timer ends. 🤫",
+    "addIdeaButton": "+ Add Your Idea",
+    "alerts": {
+      "search": "Search functionality coming soon!"
+    },
     "errors": {
       "noPoolId": "No pool ID provided",
       "loadFailed": "Failed to load voting data",
