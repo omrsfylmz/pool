@@ -22,6 +22,16 @@ interface AllBadgesModalProps {
 
 // All 12 available badges
 const ALL_BADGES: BadgeDefinition[] = [
+  // Welcome Badge
+  {
+    id: "newcomer",
+    icon: "user-plus",
+    name: "Newcomer",
+    description: "Joined FoodPool!",
+    type: "achievement",
+    color: "#7c3aed",
+    backgroundColor: "#ede9fe",
+  },
   // Food Preference Badges
   {
     id: "burger_monster",
@@ -124,15 +134,6 @@ const ALL_BADGES: BadgeDefinition[] = [
     color: "#d97706",
     backgroundColor: "#fef3c7",
   },
-  {
-    id: "popular_choice",
-    icon: "star",
-    name: "Popular Choice",
-    description: "Got 20+ votes total",
-    type: "achievement",
-    color: "#be123c",
-    backgroundColor: "#ffe4e6",
-  },
 ];
 
 export function AllBadgesModal({ visible, onClose, earnedBadgeIds }: AllBadgesModalProps) {
@@ -176,6 +177,41 @@ export function AllBadgesModal({ visible, onClose, earnedBadgeIds }: AllBadgesMo
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          {/* Newcomer Badge */}
+          <Text style={styles.categoryTitle}>🎉 Welcome</Text>
+          <View style={styles.badgesGrid}>
+            {ALL_BADGES.filter((b) => b.id === "newcomer").map((badge) => {
+              const earned = isBadgeEarned(badge.id);
+              return (
+                <View key={badge.id} style={styles.badgeCard}>
+                  <View
+                    style={[
+                      styles.badgeCircle,
+                      {
+                        backgroundColor: earned ? badge.backgroundColor : "#f3f4f6",
+                      },
+                    ]}
+                  >
+                    <FontAwesome5
+                      name={badge.icon as any}
+                      size={28}
+                      color={earned ? badge.color : "#9ca3af"}
+                    />
+                    {!earned && (
+                      <View style={styles.lockOverlay}>
+                        <FontAwesome5 name="lock" size={16} color="#6b7280" />
+                      </View>
+                    )}
+                  </View>
+                  <Text style={[styles.badgeName, !earned && styles.unearnedText]}>
+                    {badge.name}
+                  </Text>
+                  <Text style={styles.badgeDescription}>{badge.description}</Text>
+                </View>
+              );
+            })}
+          </View>
+
           {/* Food Badges */}
           <Text style={styles.categoryTitle}>🍔 Food Preferences</Text>
           <View style={styles.badgesGrid}>

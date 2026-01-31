@@ -279,25 +279,50 @@ export async function getUserAchievements(userId: string): Promise<AchievementMe
 export async function awardAchievement(
   userId: string,
   achievementType: string,
-  foodIcon: string,
-  foodName?: string,
-  metadata?: any
-): Promise<void> {
-  const { error } = await supabase
-    .from("user_achievements")
-    .insert({
-      user_id: userId,
-      achievement_type: achievementType,
-      food_icon: foodIcon,
-      food_name: foodName,
-      metadata: metadata || {},
-    });
+  foodIcon: string = "star",
+  foodName: string | null = null,
+  metadata: any = null
+) {
+  try {
+    const { data, error } = await supabase
+      .from("user_achievements")
+      .insert({
+        user_id: userId,
+        achievement_type: achievementType,
+        food_icon: foodIcon,
+        food_name: foodName,
+        metadata,
+      })
+      .select()
+      .single();
 
-  if (error) {
-    // Ignore duplicate errors (achievement already earned)
-    if (error.code !== '23505') {
-      throw error;
+    if (error) throw error;
+    return data as AchievementMedal;
+  } catch (error) {
+    console.error('Error awarding achievement:', error);
+    throw error;
+  }
+}
+
+// Award newcomer badge to new users
+export async function awardNewcomerBadge(userId: string) {
+  try {
+    // Check if user already has the badge
+    const { data: existing } = await supabase
+      .from("user_achievements")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("achievement_type", "newcomer")
+      .single();
+
+    if (existing) {
+      return; // Already has the badge
     }
+
+    // Award the badge
+    await awardAchievement(userId, "newcomer", "user-plus", "Welcome to FoodPool!");
+  } catch (error) {
+    console.error('Error awarding newcomer badge:', error);
   }
 }
 

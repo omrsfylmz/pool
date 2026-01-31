@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AllBadgesModal } from "../components/ui/AllBadgesModal";
-import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
+import { BadgesSection } from "../components/ui/BadgesSection";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { ChartCard, type ChartData } from "../components/ui/ChartCard";
 import { EditProfileButton } from "../components/ui/EditProfileButton";
@@ -64,34 +64,6 @@ export default function Profile() {
 
     loadProfile();
   }, [user, authLoading]);
-
-  // Sample badges (will be replaced with real data later)
-  const badges: Badge[] = [
-    {
-      id: "1",
-      title: "Burger Monster",
-      subtitle: "3x Burgers/week",
-      icon: "hamburger",
-      type: "burger",
-      earned: true,
-    },
-    {
-      id: "2",
-      title: "Salad Sultan",
-      subtitle: "Healthy choice",
-      icon: "leaf",
-      type: "salad",
-      earned: true,
-    },
-    {
-      id: "3",
-      title: "Early Bird",
-      subtitle: "First to vote",
-      icon: "sun",
-      type: "sun",
-      earned: true,
-    },
-  ];
 
   // Sample chart data (will be replaced with real data later)
   const chartData: ChartData[] = [
@@ -168,7 +140,7 @@ export default function Profile() {
           <EditProfileButton onPress={handleEditProfile} />
 
           <BadgesSection 
-            badges={badges} 
+            badges={[]} 
             earnedCount={earnedBadgeIds.length} 
             totalCount={12}
             onViewAll={() => setShowBadgesModal(true)}
