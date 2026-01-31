@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 interface WinnerSectionProps {
   winnerName: string;

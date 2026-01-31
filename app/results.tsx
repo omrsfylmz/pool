@@ -63,7 +63,7 @@ export default function Results() {
           return 59;
         }
         // Timer finished - navigate to breakdown
-        router.replace("/results-breakdown");
+        router.replace(`/results-breakdown?poolId=${poolId}`);
         return 0;
       });
     }, 1000);

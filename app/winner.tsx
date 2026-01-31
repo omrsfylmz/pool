@@ -1,9 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { borderRadius, colors, typography } from "../constants/theme";
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, typography } from "../constants/theme";
+import { supabase } from "../lib/supabase";
 import { getFoodOptions, getVotesForPool, type FoodOption } from "../services/api";
 
 interface WinnerData {
@@ -20,6 +20,8 @@ export default function Winner() {
   const [winner, setWinner] = useState<WinnerData | null>(null);
   const [allOptions, setAllOptions] = useState<Array<FoodOption & { voteCount: number }>>([]);
   const [loading, setLoading] = useState(true);
+  const [totalVotes, setTotalVotes] = useState(0);
+  const [voterAvatars, setVoterAvatars] = useState<string[]>([]);
 
   useEffect(() => {
     async function loadResults() {
@@ -46,16 +48,34 @@ export default function Winner() {
         // Get winner (most votes)
         if (optionsWithVotes.length > 0 && optionsWithVotes[0].voteCount > 0) {
           const winningOption = optionsWithVotes[0];
-          const winnerVotes = votes.filter((v: any) => v.food_option_id === winningOption.id);
           
           setWinner({
             foodOption: winningOption,
             voteCount: winningOption.voteCount,
-            voters: [], // Will be populated with voter avatars later
+            voters: [],
           });
         }
 
         setAllOptions(optionsWithVotes);
+        setTotalVotes(votes.length);
+
+        // Fetch voter profiles to get their avatars
+        const uniqueVoterIds = [...new Set(votes.map((v: any) => v.user_id))];
+        const voterProfiles = await Promise.all(
+          uniqueVoterIds.map(async (userId: string) => {
+            try {
+              const { data } = await supabase
+                .from("profiles")
+                .select("avatar_animal")
+                .eq("id", userId)
+                .single();
+              return data?.avatar_animal || "🦊";
+            } catch {
+              return "🦊";
+            }
+          })
+        );
+        setVoterAvatars(voterProfiles);
       } catch (error) {
         console.error("Error loading results:", error);
       } finally {
@@ -73,39 +93,40 @@ export default function Winner() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-      <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>{t('winner.calculating')}</Text>
+          <ActivityIndicator size="large" color={colors.primary.yellow} />
         </View>
-      </SafeAreaView>
       </SafeAreaView>
     );
   }
 
+  const runnerUp = allOptions.length > 1 ? allOptions[1] : null;
+  const isTie = winner && runnerUp && winner.voteCount === runnerUp.voteCount;
+
+  // Use real voter avatars
+  const visibleVoters = voterAvatars.slice(0, 4);
+  const remainingCount = Math.max(0, voterAvatars.length - visibleVoters.length);
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>{t('winner.headerTitle')}</Text>
-          <Text style={styles.headerSubtitle}>{t('winner.headerSubtitle')}</Text>
+          <TouchableOpacity style={styles.closeButton} onPress={handleBackToDashboard}>
+            <Text style={styles.closeIcon}>✕</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Results Breakdown</Text>
+          <View style={styles.headerSpacer} />
         </View>
 
-        {/* Winner Section */}
+        {/* Winner Hero Section */}
         {winner ? (
-          <View style={styles.winnerSection}>
-            <View style={styles.crownContainer}>
-              <Text style={styles.crownEmoji}>👑</Text>
+          <View style={styles.heroSection}>
+            <View style={styles.winnerBanner}>
+              <Text style={styles.winnerBannerText}>✨ WINNER WINNER!</Text>
             </View>
-            <Text style={styles.winnerLabel}>{t('winner.winnerLabel')}</Text>
-            <Text style={styles.winnerName}>{winner.foodOption.name}</Text>
-            {winner.foodOption.description && (
-              <Text style={styles.winnerDescription}>{winner.foodOption.description}</Text>
-            )}
-            <View style={styles.voteCountBadge}>
-              <Ionicons name="heart" size={20} color={colors.primary.yellow} />
-              <Text style={styles.voteCountText}>{winner.voteCount} {t('winner.votes')}</Text>
-            </View>
+            <Text style={styles.heroTitle}>{winner.foodOption.name.toUpperCase()}!</Text>
+            <Text style={styles.heroSubtitle}>The Office has spoken! 🍕</Text>
           </View>
         ) : (
           <View style={styles.noWinnerSection}>
@@ -115,37 +136,89 @@ export default function Winner() {
           </View>
         )}
 
-        {/* All Results */}
+        {/* Vote Breakdown Header */}
         {allOptions.length > 0 && (
-          <View style={styles.resultsSection}>
-            <Text style={styles.resultsTitle}>{t('winner.allOptions')}</Text>
-            {allOptions.map((option, index) => (
-              <View key={option.id} style={styles.resultCard}>
-                <View style={styles.resultRank}>
-                  <Text style={styles.resultRankText}>#{index + 1}</Text>
-                </View>
-                <View style={styles.resultInfo}>
-                  <Text style={styles.resultName}>{option.name}</Text>
-                  <Text style={styles.resultVotes}>{option.voteCount} {t('winner.votes')}</Text>
-                </View>
-                <View style={styles.resultBar}>
-                  <View 
-                    style={[
-                      styles.resultBarFill, 
-                      { 
-                        width: allOptions[0].voteCount > 0 
-                          ? `${(option.voteCount / allOptions[0].voteCount) * 100}%` 
-                          : '0%' 
-                      }
-                    ]} 
-                  />
-                </View>
+          <>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionLabel}>VOTE BREAKDOWN</Text>
+              <View style={styles.totalVotesBadge}>
+                <Text style={styles.totalVotesText}>{totalVotes} Total Votes</Text>
               </View>
-            ))}
-          </View>
+            </View>
+
+            {/* Vote Cards */}
+            {allOptions.map((option, index) => {
+              const isWinner = index === 0;
+              const percentage = totalVotes > 0 ? (option.voteCount / totalVotes) * 100 : 0;
+              
+              return (
+                <View key={option.id} style={[styles.voteCard, isWinner && styles.voteCardWinner]}>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.itemIcon}>{option.icon || "🍽️"}</Text>
+                    <View style={styles.itemInfo}>
+                      <Text style={styles.itemName}>{option.name}</Text>
+                      {isWinner && <Text style={styles.winningLabel}>WINNING CHOICE</Text>}
+                    </View>
+                    <View style={styles.voteCount}>
+                      <Text style={styles.voteCountNumber}>{option.voteCount}</Text>
+                      <Text style={styles.voteCountLabel}>votes</Text>
+                    </View>
+                  </View>
+
+                  {/* Progress Bar */}
+                  <View style={styles.progressTrack}>
+                    <View 
+                      style={[
+                        styles.progressFill, 
+                        { 
+                          width: `${percentage}%`,
+                          backgroundColor: isWinner ? colors.primary.yellow : "#8e9aaf"
+                        }
+                      ]} 
+                    />
+                  </View>
+
+                  {/* Tie-breaker Alert */}
+                  {isWinner && isTie && runnerUp && (
+                    <View style={styles.tieAlert}>
+                      <Text style={styles.tieIcon}>🔀</Text>
+                      <Text style={styles.tieText}>
+                        Tie-breaker win against {runnerUp.name}! Both options received {winner.voteCount} votes.
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              );
+            })}
+
+            {/* Participation Section */}
+            <View style={styles.participationSection}>
+              <Text style={styles.sectionLabel}>WHO PARTICIPATED</Text>
+              
+              <View style={styles.avatarStack}>
+                {visibleVoters.map((emoji, index) => (
+                  <View 
+                    key={index} 
+                    style={[
+                      styles.avatar,
+                      { backgroundColor: ["#d1f4ff", "#e2f0cb", "#ffd1dc", "#fff9db"][index % 4] }
+                    ]}
+                  >
+                    <Text style={styles.avatarEmoji}>{emoji}</Text>
+                  </View>
+                ))}
+                {remainingCount > 0 && (
+                  <View style={[styles.avatar, styles.moreCount]}>
+                    <Text style={styles.moreCountText}>+{remainingCount}</Text>
+                    <Text style={styles.moreCountLabel}>MORE</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+          </>
         )}
 
-        {/* Action Button */}
+        {/* Back Button */}
         <TouchableOpacity 
           style={styles.backButton}
           onPress={handleBackToDashboard}
@@ -161,88 +234,79 @@ export default function Winner() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background.main,
+    backgroundColor: "#f9fafc",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  loadingText: {
-    fontSize: typography.sizes.md,
-    color: colors.text.grey,
-  },
   scrollContent: {
     padding: 24,
+    paddingBottom: 40,
   },
+  
+  // Header
   header: {
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  headerTitle: {
-    fontSize: 32,
-    fontWeight: typography.weights.bold,
-    color: colors.text.dark,
-    marginBottom: 8,
-  },
-  headerSubtitle: {
-    fontSize: typography.sizes.md,
-    color: colors.text.grey,
-  },
-  winnerSection: {
-    backgroundColor: colors.primary.yellow,
-    borderRadius: borderRadius.lg,
-    padding: 32,
-    alignItems: "center",
-    marginBottom: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  crownContainer: {
-    marginBottom: 16,
-  },
-  crownEmoji: {
-    fontSize: 64,
-  },
-  winnerLabel: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.bold,
-    color: colors.text.dark,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  winnerName: {
-    fontSize: 28,
-    fontWeight: typography.weights.bold,
-    color: colors.text.dark,
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  winnerDescription: {
-    fontSize: typography.sizes.sm,
-    color: colors.text.dark,
-    textAlign: "center",
-    marginBottom: 16,
-    opacity: 0.8,
-  },
-  voteCountBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    gap: 6,
+    justifyContent: "space-between",
+    marginBottom: 30,
   },
-  voteCountText: {
-    fontSize: typography.sizes.sm,
+  closeButton: {
+    width: 36,
+    height: 36,
+    backgroundColor: "#f1f3f5",
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  closeIcon: {
+    fontSize: 18,
+    color: colors.text.dark,
+  },
+  headerTitle: {
+    fontSize: 16,
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
   },
+  headerSpacer: {
+    width: 36,
+  },
+
+  // Hero Section
+  heroSection: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  winnerBanner: {
+    backgroundColor: "#fff9db",
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginBottom: 10,
+  },
+  winnerBannerText: {
+    color: "#f08c00",
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  heroTitle: {
+    fontSize: 64,
+    fontStyle: "italic",
+    fontWeight: "900",
+    color: colors.primary.yellow,
+    marginVertical: 0,
+    letterSpacing: -2,
+  },
+  heroSubtitle: {
+    fontSize: 16,
+    color: "#5c5f66",
+    marginTop: 5,
+  },
+
+  // No Winner
   noWinnerSection: {
     alignItems: "center",
     paddingVertical: 40,
@@ -262,74 +326,188 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     color: colors.text.grey,
   },
-  resultsSection: {
-    marginBottom: 30,
-  },
-  resultsTitle: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.bold,
-    color: colors.text.dark,
-    marginBottom: 16,
-  },
-  resultCard: {
-    backgroundColor: colors.background.card,
-    borderRadius: borderRadius.sm,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: colors.border.light,
-  },
-  resultRank: {
-    position: "absolute",
-    top: 12,
-    right: 12,
-    backgroundColor: colors.primary.yellow,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: "center",
+
+  // Section Headers
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 10,
+    paddingHorizontal: 5,
   },
-  resultRankText: {
-    fontSize: typography.sizes.xs,
+  sectionLabel: {
+    fontSize: 10,
     fontWeight: typography.weights.bold,
-    color: colors.text.dark,
-  },
-  resultInfo: {
-    marginBottom: 12,
-    paddingRight: 40,
-  },
-  resultName: {
-    fontSize: typography.sizes.md,
-    fontWeight: typography.weights.bold,
-    color: colors.text.dark,
-    marginBottom: 4,
-  },
-  resultVotes: {
-    fontSize: typography.sizes.sm,
     color: colors.text.grey,
+    letterSpacing: 1,
   },
-  resultBar: {
-    height: 8,
-    backgroundColor: colors.background.main,
-    borderRadius: 4,
+  totalVotesBadge: {
+    backgroundColor: "#e9ecef",
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+  },
+  totalVotesText: {
+    fontSize: 10,
+    color: "#495057",
+    fontWeight: typography.weights.medium,
+  },
+
+  // Vote Cards
+  voteCard: {
+    backgroundColor: "white",
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.05,
+    shadowRadius: 25,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: "transparent",
+  },
+  voteCardWinner: {
+    borderColor: "#fff3bf",
+    borderWidth: 2,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
+    marginBottom: 15,
+  },
+  itemIcon: {
+    fontSize: 32,
+  },
+  itemInfo: {
+    flex: 1,
+  },
+  itemName: {
+    fontSize: 18,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+    marginBottom: 2,
+  },
+  winningLabel: {
+    fontSize: 10,
+    color: colors.primary.yellow,
+    fontWeight: typography.weights.bold,
+  },
+  voteCount: {
+    alignItems: "flex-end",
+  },
+  voteCountNumber: {
+    fontSize: 24,
+    fontWeight: typography.weights.bold,
+    color: colors.primary.yellow,
+  },
+  voteCountLabel: {
+    fontSize: 10,
+    color: colors.text.grey,
+    textTransform: "uppercase",
+  },
+
+  // Progress Bar
+  progressTrack: {
+    height: 12,
+    backgroundColor: "#f1f3f5",
+    borderRadius: 6,
+    width: "100%",
+    marginBottom: 10,
     overflow: "hidden",
   },
-  resultBarFill: {
+  progressFill: {
     height: "100%",
-    backgroundColor: colors.primary.yellow,
-    borderRadius: 4,
+    borderRadius: 6,
   },
-  backButton: {
-    backgroundColor: colors.primary.yellow,
-    paddingVertical: 16,
-    borderRadius: borderRadius.sm,
+
+  // Tie Alert
+  tieAlert: {
+    backgroundColor: "#fffef2",
+    borderRadius: 16,
+    padding: 12,
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#fff9db",
+  },
+  tieIcon: {
+    fontSize: 16,
+  },
+  tieText: {
+    flex: 1,
+    fontSize: 13,
+    color: "#5c5f66",
+    lineHeight: 18,
+  },
+
+  // Participation Section
+  participationSection: {
+    alignItems: "center",
+    marginTop: 40,
+    marginBottom: 20,
+  },
+  avatarStack: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 20,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 3,
+    borderColor: "white",
+    marginLeft: -15,
+    justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 2,
+  },
+  avatarEmoji: {
+    fontSize: 24,
+  },
+  moreCount: {
+    backgroundColor: "#e9ecef",
+  },
+  moreCountText: {
+    fontSize: 14,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+  },
+  moreCountLabel: {
+    fontSize: 8,
+    color: colors.text.grey,
+  },
+  viewButton: {
+    backgroundColor: "#fff9db",
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+  },
+  viewButtonText: {
+    color: colors.primary.yellow,
+    fontSize: 12,
+    fontWeight: typography.weights.bold,
+  },
+
+  // Back Button
+  backButton: {
+    backgroundColor: colors.primary.yellow,
+    paddingVertical: 16,
+    borderRadius: 30,
+    alignItems: "center",
+    marginTop: 20,
+    shadowColor: colors.primary.yellow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   backButtonText: {
     fontSize: typography.sizes.md,
