@@ -13,7 +13,6 @@ import {
 import { AllBadgesModal } from "../components/ui/AllBadgesModal";
 import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
-import { ChartCard, type ChartData } from "../components/ui/ChartCard";
 import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
 import { LogoutButton } from "../components/ui/LogoutButton";
 import { MenuItem } from "../components/ui/MenuItem";
@@ -62,11 +61,8 @@ export default function Profile() {
       ]);
       setProfile(profileData);
       
-      console.log('Fetched achievements:', achievements);
-      
       // Map achievements to badge IDs
       const badgeIds = achievements.map((a: any) => a.achievement_type);
-      console.log('Badge IDs:', badgeIds);
       setEarnedBadgeIds(badgeIds);
     } catch (error) {
       console.error("Error loading profile:", error);
@@ -111,14 +107,6 @@ export default function Profile() {
 
   // Get top 3 earned badges for display
   const displayBadges = earnedBadgeIds.slice(0, 3).map(getBadgeDisplay);
-  console.log('Display badges:', displayBadges);
-
-  // Sample chart data (will be replaced with real data later)
-  const chartData: ChartData[] = [
-    { label: "Fast Food", percentage: 45, color: colors.primary.yellow },
-    { label: "Healthy", percentage: 30, color: "#fcd072" },
-    { label: "Other", percentage: 25, color: "#ffe6ad" },
-  ];
 
   const handleSecurity = () => {
     setShowPasswordModal(true);
@@ -204,10 +192,6 @@ export default function Profile() {
             earnedBadgeIds={earnedBadgeIds}
           />
 
-          <Text style={styles.sectionTitle}>{t('profile.plateThisWeek')}</Text>
-          <View style={styles.chartSpacer} />
-          <ChartCard total={5} data={chartData} />
-
           <Text style={styles.sectionLabel}>{t('profile.accountPrivacy')}</Text>
 
           <MenuItem
@@ -226,7 +210,10 @@ export default function Profile() {
             onPress={handlePrivacy}
           />
 
-          <LogoutButton onPress={handleLogout} text={t('profile.logout')} />
+          <View style={{ flex: 1 }} />
+          <View style={{ marginBottom: 50 }}>
+            <LogoutButton onPress={handleLogout} text={t('profile.logout')} />
+          </View>
         </View>
       </ScrollView>
 
@@ -264,11 +251,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollContent: {
-    paddingBottom: 90, // Space for bottom nav
+    paddingBottom: 80, // Space for bottom nav
+    flexGrow: 1,
   },
   main: {
     paddingHorizontal: 24,
     paddingTop: 10,
+    flex: 1,
+    minHeight: "100%", // Force full height
+    justifyContent: "flex-start", // Start content from top
   },
   sectionTitle: {
     fontSize: typography.sizes.md,
