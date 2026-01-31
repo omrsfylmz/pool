@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 15,
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   badgeItem: {
     width: "30%",
