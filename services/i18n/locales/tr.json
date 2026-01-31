@@ -14,10 +14,18 @@
     "taglineSubtitle": "Ekibinle oyla,\nanonim kal."
   },
   "dashboard": {
-    "title": "Yemek Oylaması",
-    "joinPool": "Kod ile Oylamaya Katıl",
+    "title": "Tekrar hoş geldin!",
+    "joinPool": "Bir Havuza Katıl",
+    "medals": "Madalyalarınız",
+    "achievements": "Başarılar",
     "pastPolls": "Geçmiş Oylamalar",
-    "viewAll": "Hepsini Gör"
+    "viewAll": "Tümünü Gör",
+    "activePool": {
+      "title": "Aktif Oylama",
+      "endsIn": "Bitiş",
+      "joinButton": "Oylamaya Katıl",
+      "participants": "katılımcı"
+    }
   },
   "join": {
     "title": "Oylamaya Katıl",

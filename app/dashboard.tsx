@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivePoolCard } from "../components/ui/ActivePoolCard";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
 import { DashboardHeader } from "../components/ui/DashboardHeader";
 import { FloatingActionButton } from "../components/ui/FloatingActionButton";
@@ -110,6 +111,16 @@ export default function Dashboard() {
     router.push("/past-pools");
   };
 
+  const handleTimerEnd = async () => {
+    // Refresh active pool status when timer ends
+    try {
+      const active = await getActivePool();
+      setActivePool(active);
+    } catch (error) {
+      console.error("Error refreshing active pool:", error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -117,6 +128,15 @@ export default function Dashboard() {
         showsVerticalScrollIndicator={false}
       >
         <DashboardHeader onNotificationPress={handleNotificationPress} />
+
+        {/* Active Pool Card */}
+        {activePool && (
+          <ActivePoolCard
+            pool={activePool}
+            onPress={() => router.push(`/vote?poolId=${activePool.id}`)}
+            onTimerEnd={handleTimerEnd}
+          />
+        )}
 
         {/* Join Pool Button */}
         <TouchableOpacity

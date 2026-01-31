@@ -86,10 +86,13 @@ export async function createPool(
 }
 
 export async function getActivePool() {
+  const now = new Date().toISOString();
+  
   const { data, error } = await supabase
     .from("pools")
     .select("*")
     .eq("status", "active")
+    .gt("ends_at", now) // Only get pools that haven't ended yet
     .order("created_at", { ascending: false })
     .limit(1)
     .single();

@@ -14,10 +14,18 @@
     "taglineSubtitle": "Vote with your team, stay\nanonymous."
   },
   "dashboard": {
-    "title": "Lunch Pool",
-    "joinPool": "Join Pool with Code",
+    "title": "Welcome back!",
+    "joinPool": "Join a Pool",
+    "medals": "Your Medals",
+    "achievements": "Achievements",
     "pastPolls": "Past Polls",
-    "viewAll": "View all"
+    "viewAll": "View All",
+    "activePool": {
+      "title": "Active Voting",
+      "endsIn": "Ends in",
+      "joinButton": "Join Voting",
+      "participants": "participants"
+    }
   },
   "join": {
     "title": "Join a Pool",
