@@ -1,7 +1,15 @@
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { AllBadgesModal } from "../components/ui/AllBadgesModal";
 import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
 import { BottomNav, type NavItem } from "../components/ui/BottomNav";
@@ -25,6 +33,7 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState<NavItem>("profile");
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
@@ -33,40 +42,46 @@ export default function Profile() {
 
   // Fetch user profile data
   useEffect(() => {
-    async function loadProfile() {
-      // Wait for auth to finish loading
-      if (authLoading) {
-        return;
-      }
+    loadData();
+  }, [user, authLoading]);
 
-      // If no user after auth loaded, redirect to login
-      if (!user) {
-        router.replace("/");
-        return;
-      }
-
-      try {
-        const [profileData, achievements] = await Promise.all([
-          getProfile(user.id),
-          getUserAchievements(user.id),
-        ]);
-        setProfile(profileData);
-        
-        console.log('Fetched achievements:', achievements);
-        
-        // Map achievements to badge IDs
-        const badgeIds = achievements.map((a: any) => a.achievement_type);
-        console.log('Badge IDs:', badgeIds);
-        setEarnedBadgeIds(badgeIds);
-      } catch (error) {
-        console.error("Error loading profile:", error);
-      } finally {
-        setLoading(false);
-      }
+  async function loadData() {
+    // Wait for auth to finish loading
+    if (authLoading) {
+      return;
     }
 
-    loadProfile();
-  }, [user, authLoading]);
+    // If no user after auth loaded, redirect to login
+    if (!user) {
+      router.replace("/");
+      return;
+    }
+
+    try {
+      const [profileData, achievements] = await Promise.all([
+        getProfile(user.id),
+        getUserAchievements(user.id),
+      ]);
+      setProfile(profileData);
+      
+      console.log('Fetched achievements:', achievements);
+      
+      // Map achievements to badge IDs
+      const badgeIds = achievements.map((a: any) => a.achievement_type);
+      console.log('Badge IDs:', badgeIds);
+      setEarnedBadgeIds(badgeIds);
+    } catch (error) {
+      console.error("Error loading profile:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadData();
+  };
 
   // Map earned badge IDs to badge display objects
   const getBadgeDisplay = (badgeId: string): Badge => {
@@ -144,11 +159,21 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <ScrollView 
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.primary.yellow}
+            colors={[colors.primary.yellow]}
+          />
+        }
+      >
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary.yellow} />
         </View>
-      </SafeAreaView>
+      </ScrollView>
     );
   }
 
@@ -161,6 +186,14 @@ export default function Profile() {
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.primary.yellow}
+            colors={[colors.primary.yellow]}
+          />
+        }
       >
         <ProfileHeader onSettings={handleSettings} />
 
