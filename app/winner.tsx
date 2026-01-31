@@ -1,3 +1,4 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -154,7 +155,13 @@ export default function Winner() {
               return (
                 <View key={option.id} style={[styles.voteCard, isWinner && styles.voteCardWinner]}>
                   <View style={styles.cardHeader}>
-                    <Text style={styles.itemIcon}>{option.icon || "🍽️"}</Text>
+                    <View style={styles.iconCircle}>
+                      <FontAwesome5 
+                        name={option.icon || "utensils"} 
+                        size={24} 
+                        color={isWinner ? colors.primary.yellow : colors.text.grey} 
+                      />
+                    </View>
                     <View style={styles.itemInfo}>
                       <Text style={styles.itemName}>{option.name}</Text>
                       {isWinner && <Text style={styles.winningLabel}>WINNING CHOICE</Text>}
@@ -376,6 +383,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 15,
     marginBottom: 15,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#f8f9fa",
+    justifyContent: "center",
+    alignItems: "center",
   },
   itemIcon: {
     fontSize: 32,
