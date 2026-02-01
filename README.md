@@ -1,51 +1,41 @@
-# Welcome to your Expo app 👋
+# FoodPool 🍔
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**FoodPool** makes group food decisions fun, fast, and fair. Stop arguing about where to eat and start voting!
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+*   **Create a Pool:** Start a room in seconds and share the code with friends.
+*   **Real-time Suggestions:** Everyone can add their favorite restaurant or dish ideas.
+*   **Group Voting:** Vote on suggestions to democratically choose the winner.
+*   **Instant Results:** See the winning choice immediately with a voting breakdown.
 
-   ```bash
-   npm install
-   ```
+## 🛠 Tech Stack
 
-2. Start the app
+*   **Framework:** [React Native](https://reactnative.dev/) with [Expo](https://expo.dev/)
+*   **Backend:** [Supabase](https://supabase.com/) (Real-time database)
+*   **Navigation:** [Expo Router](https://docs.expo.dev/router/introduction)
 
-   ```bash
-   npx expo start
-   ```
+## 🏃‍♂️ Get Started
 
-In the output, you'll find options to open the app in a
+1.  **Install dependencies**
+    ```bash
+    npm install
+    ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+2.  **Start the app**
+    ```bash
+    npx expo start
+    ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+3.  **Run on device/simulator**
+    *   Press `i` for iOS Simulator
+    *   Press `a` for Android Emulator
+    *   Scan QR code with Expo Go app
 
-## Get a fresh project
+## 📄 Privacy & Support
 
-When you're ready, run:
+*   [Privacy Policy](docs/PRIVACY.md)
+*   [Support](docs/SUPPORT.md)
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-# pool
+## © Copyright
+2026 FoodPool
