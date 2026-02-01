@@ -2,7 +2,7 @@
 
 Having trouble with the app? We are here to help!
 
-**Contact Email:** support@example.com (Please replace with your actual email)
+**Contact Email:** omrsfylmz@gmail.com
 
 ## Frequently Asked Questions (FAQ)
 

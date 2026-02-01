@@ -25,4 +25,4 @@ We use your information to:
 We implement reasonable security measures to protect your information and ensure your voting data is handled securely.
 
 ## Contact Us
-If you have questions about this Privacy Policy, please contact us at: support@example.com (Please replace with your actual email)
+If you have questions about this Privacy Policy, please contact us at: omrsfylmz@gmail.com
