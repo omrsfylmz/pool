@@ -15,7 +15,7 @@
   },
   "dashboard": {
     "title": "Tekrar hoş geldin!",
-    "joinPool": "Bir Havuza Katıl",
+    "joinPool": "Bir Oylamaya Katıl",
     "medals": "Madalyalarınız",
     "achievements": "Başarılar",
     "pastPolls": "Geçmiş Oylamalar",
@@ -110,7 +110,7 @@
       "search": "Arama özelliği yakında!"
     },
     "errors": {
-      "noPoolId": "Havuz kimliği sağlanmadı",
+      "noPoolId": "Oylama kimliği sağlanmadı",
       "loadFailed": "Oylama verileri yüklenemedi",
       "voteFailed": "Oy kullanılamadı. Lütfen tekrar deneyin."
     }
