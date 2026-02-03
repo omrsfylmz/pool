@@ -82,6 +82,12 @@ export async function createPool(
     .single();
 
   if (error) throw error;
+
+  // Add creator to pool members automatically
+  if (data) {
+    await joinPoolMember(data.id);
+  }
+
   return data as Pool;
 }
 
@@ -200,10 +206,15 @@ export async function getPastPolls(userId: string, limit: number = 10) {
 
   if (poolIds.length === 0) return [];
 
-  // 3. Fetch pools
+  // 3. Fetch pools with creator profile
   const { data: pools } = await supabase
     .from("pools")
-    .select("*")
+    .select(`
+      *,
+      creator:creator_id (
+        avatar_animal
+      )
+    `)
     .in("id", poolIds)
     .eq("status", "ended")
     .order("created_at", { ascending: false })
@@ -212,7 +223,7 @@ export async function getPastPolls(userId: string, limit: number = 10) {
   if (!pools) return [];
 
   // 4. Fetch avatars for each pool
-  const poolsWithData = await Promise.all(pools.map(async (pool) => {
+  const poolsWithData = await Promise.all(pools.map(async (pool: any) => {
     const { data: members } = await supabase
       .from("pool_members")
       .select(`
@@ -223,11 +234,17 @@ export async function getPastPolls(userId: string, limit: number = 10) {
       .eq("pool_id", pool.id)
       .limit(3);
 
-    const avatars = members?.map((m: any) => m.profiles?.avatar_animal).filter(Boolean) || [];
+    const memberAvatars = members?.map((m: any) => m.profiles?.avatar_animal).filter(Boolean) || [];
+    
+    // Add creator avatar if available and not already in list
+    const creatorAvatar = pool.creator?.avatar_animal;
+    const allAvatars = creatorAvatar ? [creatorAvatar, ...memberAvatars] : memberAvatars;
+    // Unique avatars
+    const uniqueAvatars = [...new Set(allAvatars)].slice(0, 3);
 
     return {
       ...pool,
-      participant_avatars: avatars.length > 0 ? avatars : ["👤"]
+      participant_avatars: uniqueAvatars.length > 0 ? uniqueAvatars : ["👤"]
     };
   }));
 
