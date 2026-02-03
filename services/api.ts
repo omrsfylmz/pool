@@ -85,20 +85,76 @@ export async function createPool(
   return data as Pool;
 }
 
-export async function getActivePool() {
-  const now = new Date().toISOString();
-  
-  const { data, error } = await supabase
-    .from("pools")
-    .select("*")
-    .eq("status", "active")
-    .gt("ends_at", now) // Only get pools that haven't ended yet
-    .order("created_at", { ascending: false })
-    .limit(1)
+
+/**
+ * Join a pool as a member
+ */
+export async function joinPoolMember(poolId: string) {
+  const user = (await supabase.auth.getUser()).data.user;
+  if (!user) throw new Error("Not authenticated");
+
+  // Check if already a member
+  const { data: existing } = await supabase
+    .from("pool_members")
+    .select("id")
+    .eq("pool_id", poolId)
+    .eq("user_id", user.id)
     .single();
 
-  if (error && error.code !== "PGRST116") throw error; // PGRST116 = no rows
-  return data as Pool | null;
+  if (existing) return;
+
+  const { error } = await supabase
+    .from("pool_members")
+    .insert({
+      pool_id: poolId,
+      user_id: user.id
+    });
+
+  if (error) throw error;
+}
+
+/**
+ * Get active pool for the current user (created by them or joined by them)
+ */
+export async function getActivePool(userId: string) {
+  const now = new Date().toISOString();
+  
+  // 1. Get pools created by user
+  const { data: createdPools } = await supabase
+    .from("pools")
+    .select("*")
+    .eq("creator_id", userId)
+    .eq("status", "active")
+    .gt("ends_at", now)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  // 2. Get pools user is a member of
+  const { data: memberPools } = await supabase
+    .from("pool_members")
+    .select("pool_id, pools(*)")
+    .eq("user_id", userId);
+
+  let joinedPools: Pool[] = [];
+  if (memberPools && memberPools.length > 0) {
+    // Filter manually for active status since it's a join
+    joinedPools = memberPools
+      .map((mp: any) => mp.pools)
+      .filter((p: Pool) => 
+        p.status === "active" && 
+        new Date(p.ends_at) > new Date()
+      );
+  }
+
+  // Combine and find the most recent one
+  const allPools = [...(createdPools || []), ...joinedPools];
+  
+  if (allPools.length === 0) return null;
+
+  // Sort by creation date descending
+  allPools.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  
+  return allPools[0];
 }
 
 /**

@@ -39,7 +39,7 @@ export default function Dashboard() {
       try {
         const [profileData, activePoolData, pastPollsData, achievementsData] = await Promise.all([
           getProfile(user.id),
-          getActivePool(),
+          getActivePool(user.id),
           getPastPolls(),
           getUserAchievements(user.id),
         ]);
@@ -114,8 +114,10 @@ export default function Dashboard() {
   const handleTimerEnd = async () => {
     // Refresh active pool status when timer ends
     try {
-      const active = await getActivePool();
-      setActivePool(active);
+      if (user) {
+        const active = await getActivePool(user.id);
+        setActivePool(active);
+      }
     } catch (error) {
       console.error("Error refreshing active pool:", error);
     }

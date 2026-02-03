@@ -3,19 +3,19 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  Alert,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { JoinRoomHeader } from "../components/ui/JoinRoomHeader";
 import { colors, typography } from "../constants/theme";
-import { getPoolByJoinCode } from "../services/api";
+import { getPoolByJoinCode, joinPoolMember } from "../services/api";
 
 export default function JoinRoom() {
   const router = useRouter();
@@ -47,6 +47,9 @@ export default function JoinRoom() {
         );
         return;
       }
+
+      // Join the pool as a member
+      await joinPoolMember(pool.id);
 
       // Navigate to vote page with pool ID
       router.push(`/vote?poolId=${pool.id}`);
