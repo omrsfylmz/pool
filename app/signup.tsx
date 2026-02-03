@@ -2,15 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  Alert, KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+    Alert, KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from "react-native";
 import { borderRadius, colors, spacing, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
@@ -45,7 +45,7 @@ export default function SignUp() {
       Alert.alert(
         "Success!",
         "Account created successfully. Please check your email to verify your account.",
-        [{ text: "OK", onPress: () => router.push("/dashboard") }]
+        [{ text: "OK", onPress: () => router.replace("/(tabs)") }]
       );
     }
   };

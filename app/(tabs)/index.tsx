@@ -3,22 +3,20 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ActivePoolCard } from "../components/ui/ActivePoolCard";
-import { BottomNav, type NavItem } from "../components/ui/BottomNav";
-import { DashboardHeader } from "../components/ui/DashboardHeader";
-import { FloatingActionButton } from "../components/ui/FloatingActionButton";
-import { MedalDisplay } from "../components/ui/MedalDisplay";
-import { PastPolls, type Poll } from "../components/ui/PastPolls";
-import { getAvatarEmoji } from "../constants/avatars";
-import { colors } from "../constants/theme";
-import { useAuth } from "../contexts/AuthContext";
-import { getActivePool, getPastPolls, getProfile, getUserAchievements, type AchievementMedal, type Pool, type Profile } from "../services/api";
+import { ActivePoolCard } from "../../components/ui/ActivePoolCard";
+import { DashboardHeader } from "../../components/ui/DashboardHeader";
+import { FloatingActionButton } from "../../components/ui/FloatingActionButton";
+import { MedalDisplay } from "../../components/ui/MedalDisplay";
+import { PastPolls, type Poll } from "../../components/ui/PastPolls";
+import { getAvatarEmoji } from "../../constants/avatars";
+import { colors } from "../../constants/theme";
+import { useAuth } from "../../contexts/AuthContext";
+import { getActivePool, getPastPolls, getProfile, getUserAchievements, type AchievementMedal, type Pool, type Profile } from "../../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState<NavItem>("home");
   const [profile, setProfile] = useState<Profile | null>(null);
   const [activePool, setActivePool] = useState<Pool | null>(null);
   const [pastPolls, setPastPolls] = useState<Pool[]>([]);
@@ -61,7 +59,6 @@ export default function Dashboard() {
     }
   }, [user]);
 
-  // Show loading while checking auth
   if (loading || authLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -100,18 +97,6 @@ export default function Dashboard() {
     router.push("/create-pool");
   };
 
-  const handleTabChange = (tab: NavItem) => {
-    setActiveTab(tab);
-    if (tab === "profile") {
-      router.push("/profile");
-    }
-    // Home tab is already active
-  };
-
-  const handleViewAll = () => {
-    router.push("/past-pools");
-  };
-
   const handleTimerEnd = async () => {
     // Refresh active pool status when timer ends
     try {
@@ -132,15 +117,6 @@ export default function Dashboard() {
       >
         <DashboardHeader onNotificationPress={handleNotificationPress} />
 
-        {/* Active Pool Card */}
-        {activePool && (
-          <ActivePoolCard
-            pool={activePool}
-            onPress={() => router.push(`/vote?poolId=${activePool.id}`)}
-            onTimerEnd={handleTimerEnd}
-          />
-        )}
-
         {/* Join Pool Button */}
         <TouchableOpacity
           style={styles.joinPoolButton}
@@ -153,14 +129,21 @@ export default function Dashboard() {
 
         <MedalDisplay achievements={achievements} />
 
-        <PastPolls polls={polls} onViewAll={handleViewAll} />
+        {activePool && (
+          <ActivePoolCard
+            pool={activePool}
+            onPress={() => router.push(activePool.status === 'ended' ? `/results?poolId=${activePool.id}` : `/vote?poolId=${activePool.id}`)}
+            onTimerEnd={handleTimerEnd}
+          />
+        )}
 
-        {/* Add padding at bottom for FAB and bottom nav */}
-        <View style={styles.bottomSpacer} />
+        <PastPolls 
+          polls={polls} 
+          onViewAll={() => router.push("/past-pools")}
+        />
       </ScrollView>
 
       <FloatingActionButton onPress={handleFabPress} />
-      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
     </SafeAreaView>
   );
 }
@@ -176,7 +159,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   scrollContent: {
-    paddingBottom: 180, // Space for FAB and bottom nav
+    flexGrow: 1,
+    paddingBottom: 80, // Space for FAB
+  },
+  emptyState: {
+    backgroundColor: colors.background.card,
+    borderRadius: 16,
+    padding: 24,
+    marginHorizontal: 24,
+    marginBottom: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: colors.border.light,
+    borderStyle: "dashed",
+  },
+  emptyIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: colors.background.light,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: colors.text.dark,
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: colors.text.grey,
+    textAlign: "center",
   },
   joinPoolButton: {
     flexDirection: 'row',
@@ -199,8 +215,4 @@ const styles = StyleSheet.create({
     fontWeight: '600' as any,
     color: colors.text.dark,
   },
-  bottomSpacer: {
-    height: 20,
-  },
 });
-

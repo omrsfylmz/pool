@@ -10,25 +10,25 @@ import {
     Text,
     View
 } from "react-native";
-import { AllBadgesModal } from "../components/ui/AllBadgesModal";
-import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
-import { BottomNav, type NavItem } from "../components/ui/BottomNav";
-import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
-import { LogoutButton } from "../components/ui/LogoutButton";
-import { MenuItem } from "../components/ui/MenuItem";
-import { PasswordUpdateModal } from "../components/ui/PasswordUpdateModal";
-import { PrivacyPolicyModal } from "../components/ui/PrivacyPolicyModal";
-import { ProfileInfo } from "../components/ui/ProfileInfo";
-import { getAvatarEmoji } from "../constants/avatars";
-import { colors, typography } from "../constants/theme";
-import { useAuth } from "../contexts/AuthContext";
-import { getProfile, getUserAchievements, type Profile } from "../services/api";
+import { AllBadgesModal } from "../../components/ui/AllBadgesModal";
+import { BadgesSection, type Badge } from "../../components/ui/BadgesSection";
+// BottomNav removed
+import { LanguageSelectorModal } from "../../components/ui/LanguageSelectorModal";
+import { LogoutButton } from "../../components/ui/LogoutButton";
+import { MenuItem } from "../../components/ui/MenuItem";
+import { PasswordUpdateModal } from "../../components/ui/PasswordUpdateModal";
+import { PrivacyPolicyModal } from "../../components/ui/PrivacyPolicyModal";
+import { ProfileInfo } from "../../components/ui/ProfileInfo";
+import { getAvatarEmoji } from "../../constants/avatars";
+import { colors, typography } from "../../constants/theme";
+import { useAuth } from "../../contexts/AuthContext";
+import { getProfile, getUserAchievements, type Profile } from "../../services/api";
 
-export default function Profile() {
+export default function ProfileScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user, loading: authLoading, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<NavItem>("profile");
+  // activeTab state removed
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -106,8 +106,7 @@ export default function Profile() {
     };
   };
 
-  // Get top 3 earned badges for display
-  const displayBadges = earnedBadgeIds.slice(0, 3).map(getBadgeDisplay);
+  const displayBadges = earnedBadgeIds.map(getBadgeDisplay);
 
   const handleSecurity = () => {
     setShowPasswordModal(true);
@@ -126,116 +125,87 @@ export default function Profile() {
     router.replace("/");
   };
 
-  const handleTabChange = (tab: NavItem) => {
-    setActiveTab(tab);
-    if (tab === "home") {
-      router.push("/dashboard");
-    }
-    // Profile tab is already active
-  };
-
   if (loading) {
     return (
-      <ScrollView 
-        style={styles.container}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={colors.primary.yellow}
-            colors={[colors.primary.yellow]}
-          />
-        }
-      >
+      <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary.yellow} />
         </View>
-      </ScrollView>
+      </SafeAreaView>
     );
   }
 
-  if (!profile) {
-    return null;
-  }
+  if (!profile) return null;
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <ScrollView 
+        style={styles.container}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={colors.primary.yellow}
-            colors={[colors.primary.yellow]}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        contentContainerStyle={styles.scrollContent}
       >
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>{t('profile.title')}</Text>
+        </View>
+        
         <View style={styles.main}>
           <ProfileInfo
-          userName={profile?.full_name || "User"}
-          userEmail={profile?.email || ""}
-          avatarAnimal={getAvatarEmoji(profile?.avatar_animal)}
-          isVerified={true} // Assuming email verified for now
-        />
+            userName={profile?.full_name || "User"}
+            userEmail={profile?.email || ""}
+            avatarAnimal={getAvatarEmoji(profile?.avatar_animal)}
+            isVerified={true} // Assuming email verified for now
+          />
 
           <BadgesSection 
             badges={displayBadges} 
-            earnedCount={earnedBadgeIds.length} 
-            totalCount={12}
             onViewAll={() => setShowBadgesModal(true)}
           />
-
-          <AllBadgesModal
-            visible={showBadgesModal}
-            onClose={() => setShowBadgesModal(false)}
-            earnedBadgeIds={earnedBadgeIds}
-          />
-
-          <Text style={styles.sectionLabel}>{t('profile.accountPrivacy')}</Text>
-
-          <MenuItem
-            icon="globe"
-            text={t('profile.language')}
-            onPress={handleLanguage}
-          />
-          <MenuItem
-            icon="lock"
-            text={t('profile.security')}
-            onPress={handleSecurity}
-          />
-          <MenuItem
-            icon="shield-alt"
-            text={t('profile.privacy')}
-            onPress={handlePrivacy}
-          />
-
-          <View style={{ flex: 1 }} />
-          <View style={{ marginBottom: 50 }}>
-            <LogoutButton onPress={handleLogout} text={t('profile.logout')} />
+          
+          <View style={styles.menuSection}>
+            <Text style={styles.sectionTitle}>{t('profile.account')}</Text>
+            <MenuItem 
+              icon="lock" 
+              text={t('profile.security')} 
+              onPress={handleSecurity}
+            />
+            <MenuItem 
+              icon="globe" 
+              text={t('profile.language')} 
+              onPress={handleLanguage}
+            />
+            <MenuItem 
+              icon="shield-alt" 
+              text={t('profile.privacy')} 
+              onPress={handlePrivacy}
+            />
           </View>
+          
+          <LogoutButton onPress={handleLogout} />
         </View>
       </ScrollView>
 
-      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-
-      {/* Password Update Modal */}
+      {/* Modals */}
       <PasswordUpdateModal
         visible={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
       />
-
-      {/* Privacy Policy Modal */}
+      
       <PrivacyPolicyModal
         visible={showPrivacyModal}
         onClose={() => setShowPrivacyModal(false)}
       />
 
-      {/* Language Selector Modal */}
       <LanguageSelectorModal
         visible={showLanguageModal}
         onClose={() => setShowLanguageModal(false)}
+      />
+      
+      <AllBadgesModal
+        visible={showBadgesModal}
+        onClose={() => setShowBadgesModal(false)}
+        earnedBadgeIds={earnedBadgeIds}
       />
     </SafeAreaView>
   );
@@ -251,34 +221,33 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: colors.background.main,
+  },
+  headerTitle: {
+    fontSize: typography.sizes.xl,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+  },
   scrollContent: {
-    paddingBottom: 80, // Space for bottom nav
-    flexGrow: 1,
+    paddingBottom: 40,
   },
   main: {
-    paddingHorizontal: 24,
-    paddingTop: 10,
     flex: 1,
-    minHeight: "100%", // Force full height
-    justifyContent: "flex-start", // Start content from top
+    paddingHorizontal: 24,
+  },
+  menuSection: {
+    marginTop: 24,
+    marginBottom: 8,
   },
   sectionTitle: {
     fontSize: typography.sizes.md,
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
-    marginBottom: 10,
-  },
-  chartSpacer: {
-    height: 10,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: typography.weights.bold,
-    color: colors.text.grey,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 12,
-    paddingLeft: 5,
+    marginBottom: 16,
+    marginLeft: 4,
   },
 });
-
