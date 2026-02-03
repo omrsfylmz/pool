@@ -2,13 +2,13 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
+    ActivityIndicator,
+    RefreshControl,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View
 } from "react-native";
 import { AllBadgesModal } from "../components/ui/AllBadgesModal";
 import { BadgesSection, type Badge } from "../components/ui/BadgesSection";
@@ -19,6 +19,7 @@ import { MenuItem } from "../components/ui/MenuItem";
 import { PasswordUpdateModal } from "../components/ui/PasswordUpdateModal";
 import { PrivacyPolicyModal } from "../components/ui/PrivacyPolicyModal";
 import { ProfileInfo } from "../components/ui/ProfileInfo";
+import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { getProfile, getUserAchievements, type Profile } from "../services/api";
@@ -173,11 +174,11 @@ export default function Profile() {
       >
         <View style={styles.main}>
           <ProfileInfo
-            userName={profile.full_name || profile.avatar_name}
-            userEmail={user?.email || ""}
-            avatarAnimal={profile.avatar_animal}
-            isVerified={true}
-          />
+          userName={profile?.full_name || "User"}
+          userEmail={profile?.email || ""}
+          avatarAnimal={getAvatarEmoji(profile?.avatar_animal)}
+          isVerified={true} // Assuming email verified for now
+        />
 
           <BadgesSection 
             badges={displayBadges} 

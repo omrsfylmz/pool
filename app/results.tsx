@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ResultCard, type ResultItem } from "../components/ui/ResultCard";
 import { TimerCard } from "../components/ui/TimerCard";
+import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, typography } from "../constants/theme";
 import { getPoolResults, type PoolResult } from "../services/api";
 
@@ -95,7 +96,7 @@ export default function Results() {
       ? Math.round((result.voteCount / poolData.totalVotes) * 100)
       : 0,
     icon: result.icon, // Pass the food icon
-    voters: [], // We can add voter avatars later if needed
+    voters: (result.avatars || []).map(avatar => getAvatarEmoji(avatar)),
     isWinner: result.isWinner,
   }));
 

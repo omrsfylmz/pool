@@ -634,6 +634,7 @@ export interface PoolResult {
     description: string | null;
     icon: string;
     voteCount: number;
+    avatars: string[];
     rank: number;
     isWinner: boolean;
   }>;
@@ -658,18 +659,32 @@ export async function getPoolResults(poolId: string): Promise<PoolResult> {
 
   if (foodError) throw foodError;
 
-  // Get all votes for this pool
+  // Get all votes for this pool with user profiles
   const { data: votes, error: votesError } = await supabase
     .from("votes")
-    .select("food_option_id")
+    .select(`
+      food_option_id,
+      profiles:user_id (
+        avatar_animal
+      )
+    `)
     .eq("pool_id", poolId);
 
   if (votesError) throw votesError;
 
-  // Count votes per option
+  // Count votes per option and collect avatars
   const voteCounts: Record<string, number> = {};
-  votes?.forEach((vote) => {
-    voteCounts[vote.food_option_id] = (voteCounts[vote.food_option_id] || 0) + 1;
+  const voteAvatars: Record<string, string[]> = {};
+
+  votes?.forEach((vote: any) => {
+    const optionId = vote.food_option_id;
+    voteCounts[optionId] = (voteCounts[optionId] || 0) + 1;
+    
+    // Collect avatar
+    if (vote.profiles?.avatar_animal) {
+      if (!voteAvatars[optionId]) voteAvatars[optionId] = [];
+      voteAvatars[optionId].push(vote.profiles.avatar_animal);
+    }
   });
 
   // Build results array
@@ -679,7 +694,8 @@ export async function getPoolResults(poolId: string): Promise<PoolResult> {
     description: option.description,
     icon: option.icon,
     voteCount: voteCounts[option.id] || 0,
-    rank: 0, // Will be set after sorting
+    avatars: voteAvatars[option.id] || [], // Pass raw helper strings, UI will map them
+    rank: 0, // Will be calculated below
     isWinner: pool.winner_id === option.id,
   }));
 

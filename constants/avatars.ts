@@ -25,5 +25,11 @@ export const AVATAR_MAP: Record<string, string> = {
 export function getAvatarEmoji(name?: string | null): string {
   if (!name) return AVATAR_MAP.default;
   const key = name.toLowerCase();
-  return AVATAR_MAP[key] || AVATAR_MAP.default;
+  // Check if it's a mapped name (e.g. "lion" -> "🦁")
+  if (AVATAR_MAP[key]) {
+    return AVATAR_MAP[key];
+  }
+  // Otherwise assume it's already an emoji (e.g. "🦁") or return distinct default if you prefer
+  // We'll pass it through so DB emojis work
+  return name;
 }
