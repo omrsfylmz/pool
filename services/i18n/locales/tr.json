@@ -181,7 +181,10 @@
       "totalVotes": "Toplam Oy",
       "votesAllCaps": "OY",
       "viewAllVoters": "Tüm oy verenleri gör"
-    }
+    },
+    "joinCode": "Katılım Kodu",
+    "copied": "Kod Kopyalandı!",
+    "copyHint": "Kodu panoya kopyalamak için dokunun"
   },
   "shareButton": {
     "defaultText": "Oylama Linkini Paylaş"

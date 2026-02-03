@@ -106,12 +106,14 @@ export default function CreatePool() {
           onDurationChange={setVotingDuration}
           initialDuration={votingDuration}
         />
-
+      </ScrollView>
+      
+      <View style={styles.footer}>
         <CreatePoolButton
           onPress={handleStartVoting}
           disabled={!isFormValid || creating}
         />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -128,6 +130,17 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 24,
-    paddingBottom: 30,
+    paddingBottom: 30, // Reduced padding since button is gone
+  },
+  footer: {
+    padding: 24,
+    backgroundColor: colors.background.main,
+    borderTopWidth: 1,
+    borderTopColor: colors.border.light,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 4,
   },
 });

@@ -181,7 +181,10 @@
       "totalVotes": "Votes total",
       "votesAllCaps": "VOTES",
       "viewAllVoters": "View all voters"
-    }
+    },
+    "joinCode": "Join Code",
+    "copied": "Code Copied!",
+    "copyHint": "Tap to copy code to clipboard"
   },
   "shareButton": {
     "defaultText": "Share Pool Link"

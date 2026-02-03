@@ -1,3 +1,5 @@
+import { FontAwesome5 } from "@expo/vector-icons";
+import * as Clipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -136,6 +138,13 @@ export default function Vote() {
     }
   };
 
+  const handleCopyCode = async () => {
+    if (pool?.join_code) {
+      await Clipboard.setStringAsync(pool.join_code);
+      Alert.alert(t('common.success'), t('results.copied'));
+    }
+  };
+
   if (loading || poolLoading || votesLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -193,6 +202,29 @@ export default function Vote() {
           onSearch={handleSearch}
           onAvatarPress={() => router.push('/dashboard')}
         />
+
+        <View style={styles.headerContainer}>
+          <Text style={styles.poolTitle}>{pool.title}</Text>
+          {pool.description && (
+            <Text style={styles.poolDescription}>{pool.description}</Text>
+          )}
+        </View>
+
+        {/* Join Code Display */}
+        {pool?.join_code && (
+          <TouchableOpacity 
+            style={styles.joinCodeContainer} 
+            onPress={handleCopyCode}
+            activeOpacity={0.8}
+          >
+            <View style={styles.joinCodeLabelContainer}>
+              <Text style={styles.joinCodeLabel}>{t('results.joinCode')}</Text>
+              <FontAwesome5 name="copy" size={12} color={colors.text.grey} style={{ marginLeft: 6 }} />
+            </View>
+            <Text style={styles.joinCodeValue}>{pool.join_code}</Text>
+            <Text style={styles.joinCodeHint}>{t('results.copyHint')}</Text>
+          </TouchableOpacity>
+        )}
 
         <TimerSection hours={hours} minutes={minutes} seconds={seconds} />
 
@@ -342,8 +374,55 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   floatingButtonText: {
-    fontSize: typography.sizes.md,
+    color: "#FFF",
     fontWeight: typography.weights.bold,
+    fontSize: typography.sizes.md,
+  },
+  joinCodeContainer: {
+    backgroundColor: colors.background.card,
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 20,
+    marginBottom: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border.light,
+    borderStyle: 'dashed',
+  },
+  joinCodeLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  joinCodeLabel: {
+    fontSize: typography.sizes.sm,
+    color: colors.text.grey,
+    fontWeight: "500",
+  },
+  joinCodeValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.primary.yellow,
+    letterSpacing: 4,
+    marginVertical: 4,
+  },
+  joinCodeHint: {
+    fontSize: 12,
+    color: colors.text.disabled,
+  },
+  headerContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
+  poolTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
     color: colors.text.dark,
+    marginBottom: 8,
+  },
+  poolDescription: {
+    fontSize: 14,
+    color: colors.text.grey,
+    lineHeight: 20,
   },
 });

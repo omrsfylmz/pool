@@ -12,7 +12,7 @@ import { SubmitSuggestionButton } from "../components/ui/SubmitSuggestionButton"
 import { SuggestionInput } from "../components/ui/SuggestionInput";
 import { borderRadius, colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { addFoodOption, getFoodOptions, getProfile, type FoodOption, type Profile } from "../services/api";
+import { addFoodOption, getFoodOptions, getPoolResults, getProfile, type FoodOption, type Pool, type Profile } from "../services/api";
 
 export default function NewSuggestion() {
   const router = useRouter();
@@ -21,6 +21,7 @@ export default function NewSuggestion() {
   const { user } = useAuth();
   
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [pool, setPool] = useState<Pool | null>(null);
   const [suggestion, setSuggestion] = useState("");
   const [note, setNote] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("utensils");
@@ -44,13 +45,15 @@ export default function NewSuggestion() {
       }
 
       try {
-        const [profileData, foodOptions] = await Promise.all([
+        const [profileData, foodOptions, poolData] = await Promise.all([
           getProfile(user.id),
           getFoodOptions(poolId),
+          getPoolResults(poolId),
         ]);
         
         setProfile(profileData);
         setExistingSuggestions(foodOptions);
+        setPool(poolData.pool);
       } catch (error) {
         console.error("Error loading data:", error);
         Alert.alert(t('common.error'), t('newSuggestion.errors.loadFailed'));
@@ -64,6 +67,13 @@ export default function NewSuggestion() {
 
   const handleBack = () => {
     router.back();
+  };
+
+  const handleCopyCode = async () => {
+    if (pool?.join_code) {
+      await Clipboard.setStringAsync(pool.join_code);
+      Alert.alert(t('common.success'), t('results.copied'));
+    }
   };
 
   const handleSelectSuggestion = (suggestion: PreviousSuggestion) => {
@@ -260,5 +270,37 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.md,
     fontWeight: typography.weights.medium,
     color: colors.text.dark,
+  },
+  joinCodeContainer: {
+    backgroundColor: colors.background.card,
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 0,
+    marginBottom: 20,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border.light,
+    borderStyle: 'dashed',
+  },
+  joinCodeLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  joinCodeLabel: {
+    fontSize: typography.sizes.sm,
+    color: colors.text.grey,
+    fontWeight: "500",
+  },
+  joinCodeValue: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.primary.yellow,
+    letterSpacing: 4,
+    marginVertical: 4,
+  },
+  joinCodeHint: {
+    fontSize: 12,
+    color: colors.text.disabled,
   },
 });

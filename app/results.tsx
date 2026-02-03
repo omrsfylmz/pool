@@ -102,6 +102,13 @@ export default function Results() {
 
   const isEnded = poolData.pool.status === "ended";
 
+  const handleCopyCode = async () => {
+    if (poolData?.pool.join_code) {
+      await Clipboard.setStringAsync(poolData.pool.join_code);
+      Alert.alert(t('common.success'), t('results.copied'));
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -127,6 +134,22 @@ export default function Results() {
         </View>
 
         <View style={styles.main}>
+          {/* Join Code Display - Only if active */}
+          {!isEnded && poolData.pool.join_code && (
+            <TouchableOpacity 
+              style={styles.joinCodeContainer} 
+              onPress={handleCopyCode}
+              activeOpacity={0.8}
+            >
+              <View style={styles.joinCodeLabelContainer}>
+                <Text style={styles.joinCodeLabel}>{t('results.joinCode')}</Text>
+                <FontAwesome5 name="copy" size={12} color={colors.text.grey} style={{ marginLeft: 6 }} />
+              </View>
+              <Text style={styles.joinCodeValue}>{poolData.pool.join_code}</Text>
+              <Text style={styles.joinCodeHint}>{t('results.copyHint')}</Text>
+            </TouchableOpacity>
+          )}
+
           {!isEnded && (
             <TimerCard minutes={minutes} seconds={seconds} />
           )}
@@ -236,8 +259,41 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   notificationText: {
-    fontSize: typography.sizes.xs,
+    fontSize: typography.sizes.sm,
+    color: colors.text.dark,
+    lineHeight: 20,
+    flex: 1,
+  },
+  joinCodeContainer: {
+    backgroundColor: colors.background.card,
+    borderRadius: borderRadius.md,
+    padding: 16,
+    marginBottom: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border.light,
+    borderStyle: 'dashed',
+  },
+  joinCodeLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  joinCodeLabel: {
+    fontSize: typography.sizes.sm,
     color: colors.text.grey,
-    lineHeight: 18,
+    fontWeight: typography.weights.medium,
+  },
+  joinCodeValue: {
+    fontSize: 24,
+    fontWeight: typography.weights.bold,
+    color: colors.primary.yellow,
+    letterSpacing: 4,
+    marginVertical: 4,
+  },
+  joinCodeHint: {
+    fontSize: typography.sizes.xs,
+    color: colors.text.disabled,
   },
 });
+
