@@ -20,6 +20,9 @@ export const CreatePoolHeader: React.FC<CreatePoolHeaderProps> = ({
   const { t } = useTranslation();
   return (
     <View style={styles.header}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.headerTitle}>{t('createPool.title')}</Text>
+      </View>
       <TouchableOpacity
         onPress={onClose}
         activeOpacity={0.7}
@@ -27,7 +30,6 @@ export const CreatePoolHeader: React.FC<CreatePoolHeaderProps> = ({
       >
         <FontAwesome5 name="chevron-left" size={20} color={colors.text.dark} />
       </TouchableOpacity>
-      <Text style={styles.headerTitle}>{t('createPool.title')}</Text>
       <TouchableOpacity
         onPress={onHelp}
         activeOpacity={0.7}
@@ -41,7 +43,7 @@ export const CreatePoolHeader: React.FC<CreatePoolHeaderProps> = ({
 
 const styles = StyleSheet.create({
   header: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 12,
     paddingVertical: 20,
     flexDirection: "row",
     alignItems: "center",
@@ -49,13 +51,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.main,
     borderBottomWidth: 1,
     borderBottomColor: colors.border.light,
+    position: "relative",
+  },
+  titleContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
-    flex: 1,
-    textAlign: "center",
     fontSize: typography.sizes.lg,
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
+    textAlign: "center",
   },
   iconButton: {
     width: 40,

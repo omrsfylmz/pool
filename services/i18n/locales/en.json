@@ -185,5 +185,24 @@
   },
   "shareButton": {
     "defaultText": "Share Pool Link"
+  },
+  "passwordUpdate": {
+    "title": "Update Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "enterCurrent": "Enter current password",
+    "enterNew": "Enter new password",
+    "confirmNew": "Confirm new password",
+    "requirements": "Password Requirements:",
+    "requirementText": "At least 6 characters",
+    "updateButton": "Update Password",
+    "error": {
+      "fillAll": "Please fill in all fields",
+      "mismatch": "New passwords do not match",
+      "length": "Password must be at least 6 characters",
+      "failed": "Failed to update password"
+    },
+    "success": "Password updated successfully"
   }
 }

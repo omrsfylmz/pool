@@ -67,7 +67,7 @@
     "plateThisWeek": "Bu Haftaki Tabağın"
   },
   "createPool": {
-    "title": "Öğle Yemeği Oylaması Oluştur",
+    "title": "Oylama Oluştur",
     "button": "Oylamayı Başlat",
     "help": {
       "title": "Oylama Oluştur",
@@ -185,5 +185,24 @@
   },
   "shareButton": {
     "defaultText": "Oylama Linkini Paylaş"
+  },
+  "passwordUpdate": {
+    "title": "Şifre Güncelle",
+    "currentPassword": "Mevcut Şifre",
+    "newPassword": "Yeni Şifre",
+    "confirmNewPassword": "Yeni Şifreyi Onayla",
+    "enterCurrent": "Mevcut şifreyi girin",
+    "enterNew": "Yeni şifreyi girin",
+    "confirmNew": "Yeni şifreyi doğrulayın",
+    "requirements": "Şifre Gereksinimleri:",
+    "requirementText": "En az 6 karakter",
+    "updateButton": "Şifreyi Güncelle",
+    "error": {
+      "fillAll": "Lütfen tüm alanları doldurun",
+      "mismatch": "Yeni şifreler eşleşmiyor",
+      "length": "Şifre en az 6 karakter olmalıdır",
+      "failed": "Şifre güncellenemedi"
+    },
+    "success": "Şifre başarıyla güncellendi"
   }
 }

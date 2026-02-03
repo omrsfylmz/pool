@@ -1,16 +1,17 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    Modal,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
-import { borderRadius, colors, typography } from "../../constants/theme";
+import { colors, typography } from "../../constants/theme";
 import { supabase } from "../../lib/supabase";
 
 interface PasswordUpdateModalProps {
@@ -22,6 +23,7 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
   visible,
   onClose,
 }) => {
+  const { t } = useTranslation();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,17 +35,17 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
   const handleUpdatePassword = async () => {
     // Validation
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert(t('common.error'), t('passwordUpdate.error.fillAll'));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert("Error", "New passwords do not match");
+      Alert.alert(t('common.error'), t('passwordUpdate.error.mismatch'));
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters");
+      Alert.alert(t('common.error'), t('passwordUpdate.error.length'));
       return;
     }
 
@@ -57,7 +59,7 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
 
       if (error) throw error;
 
-      Alert.alert("Success", "Password updated successfully");
+      Alert.alert(t('common.success'), t('passwordUpdate.success'));
       
       // Clear fields and close modal
       setCurrentPassword("");
@@ -66,7 +68,7 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
       onClose();
     } catch (error: any) {
       console.error("Error updating password:", error);
-      Alert.alert("Error", error.message || "Failed to update password");
+      Alert.alert(t('common.error'), error.message || t('passwordUpdate.error.failed'));
     } finally {
       setLoading(false);
     }
@@ -93,7 +95,7 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
         <View style={styles.modalContainer}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Update Password</Text>
+            <Text style={styles.title}>{t('passwordUpdate.title')}</Text>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={handleClose}
@@ -107,13 +109,16 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
           <View style={styles.form}>
             {/* Current Password */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Current Password</Text>
+                <Text style={styles.label}>{t('passwordUpdate.currentPassword')}</Text>
               <View style={styles.inputContainer}>
+                <View style={styles.inputIcon}>
+                  <FontAwesome5 name="lock" size={14} color={colors.text.grey} />
+                </View>
                 <TextInput
                   style={styles.input}
                   value={currentPassword}
                   onChangeText={setCurrentPassword}
-                  placeholder="Enter current password"
+                  placeholder={t('passwordUpdate.enterCurrent')}
                   placeholderTextColor={colors.text.grey}
                   secureTextEntry={!showCurrentPassword}
                   autoCapitalize="none"
@@ -133,13 +138,16 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
 
             {/* New Password */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>New Password</Text>
+              <Text style={styles.label}>{t('passwordUpdate.newPassword')}</Text>
               <View style={styles.inputContainer}>
+                <View style={styles.inputIcon}>
+                  <FontAwesome5 name="key" size={14} color={colors.text.grey} />
+                </View>
                 <TextInput
                   style={styles.input}
                   value={newPassword}
                   onChangeText={setNewPassword}
-                  placeholder="Enter new password"
+                  placeholder={t('passwordUpdate.enterNew')}
                   placeholderTextColor={colors.text.grey}
                   secureTextEntry={!showNewPassword}
                   autoCapitalize="none"
@@ -159,13 +167,16 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
 
             {/* Confirm Password */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Confirm New Password</Text>
+              <Text style={styles.label}>{t('passwordUpdate.confirmNewPassword')}</Text>
               <View style={styles.inputContainer}>
+                <View style={styles.inputIcon}>
+                  <FontAwesome5 name="check-circle" size={14} color={colors.text.grey} />
+                </View>
                 <TextInput
                   style={styles.input}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
-                  placeholder="Confirm new password"
+                  placeholder={t('passwordUpdate.confirmNew')}
                   placeholderTextColor={colors.text.grey}
                   secureTextEntry={!showConfirmPassword}
                   autoCapitalize="none"
@@ -185,8 +196,8 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
 
             {/* Password Requirements */}
             <View style={styles.requirementsBox}>
-              <Text style={styles.requirementsTitle}>Password Requirements:</Text>
-              <Text style={styles.requirementText}>• At least 6 characters</Text>
+              <Text style={styles.requirementsTitle}>{t('passwordUpdate.requirements')}</Text>
+              <Text style={styles.requirementText}>• {t('passwordUpdate.requirementText')}</Text>
             </View>
           </View>
 
@@ -197,7 +208,7 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
               onPress={handleClose}
               activeOpacity={0.7}
             >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
+              <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -209,7 +220,9 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
               {loading ? (
                 <ActivityIndicator size="small" color="#FFF" />
               ) : (
-                <Text style={styles.updateButtonText}>Update Password</Text>
+                <Text style={styles.updateButtonText} numberOfLines={1} adjustsFontSizeToFit>
+                  {t('passwordUpdate.updateButton')}
+                </Text>
               )}
             </TouchableOpacity>
           </View>
@@ -229,19 +242,29 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: colors.background.card,
-    borderRadius: borderRadius.lg,
+    borderRadius: 24,
     width: "100%",
     maxWidth: 400,
     padding: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 10,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border.light,
+    paddingBottom: 16,
+    marginHorizontal: -24,
+    paddingHorizontal: 24,
   },
   title: {
-    fontSize: typography.sizes.xl,
+    fontSize: typography.sizes.lg,
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
   },
@@ -250,6 +273,8 @@ const styles = StyleSheet.create({
     height: 32,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: colors.background.light,
+    borderRadius: 16,
   },
   form: {
     gap: 20,
@@ -259,54 +284,68 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
+    fontWeight: typography.weights.bold,
     color: colors.text.dark,
+    marginLeft: 4,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.background.light,
-    borderRadius: borderRadius.sm,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.border.light,
   },
+  inputIcon: {
+    paddingLeft: 16,
+    paddingRight: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   input: {
     flex: 1,
-    padding: 12,
+    paddingVertical: 14,
+    paddingRight: 12,
     fontSize: typography.sizes.sm,
     color: colors.text.dark,
   },
   eyeButton: {
-    padding: 12,
+    padding: 14,
   },
   requirementsBox: {
     backgroundColor: colors.primary.yellowLight,
-    padding: 12,
-    borderRadius: borderRadius.sm,
+    padding: 16,
+    borderRadius: 12,
     marginTop: 8,
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
   },
   requirementsTitle: {
     fontSize: typography.sizes.xs,
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
-    marginBottom: 4,
+    marginBottom: 0,
   },
   requirementText: {
     fontSize: typography.sizes.xs,
     color: colors.text.grey,
+    flex: 1,
   },
   buttonContainer: {
     flexDirection: "row",
     gap: 12,
-    marginTop: 24,
+    marginTop: 30,
   },
   cancelButton: {
     flex: 1,
-    padding: 14,
-    borderRadius: borderRadius.sm,
+    padding: 16,
+    borderRadius: 50,
     borderWidth: 1,
     borderColor: colors.border.light,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.background.main,
   },
   cancelButtonText: {
     fontSize: typography.sizes.sm,
@@ -315,13 +354,20 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     flex: 1,
-    padding: 14,
-    borderRadius: borderRadius.sm,
+    padding: 16,
+    borderRadius: 50,
     backgroundColor: colors.primary.yellow,
     alignItems: "center",
+    justifyContent: "center",
+    shadowColor: colors.primary.yellow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   updateButtonDisabled: {
     opacity: 0.6,
+    shadowOpacity: 0,
   },
   updateButtonText: {
     fontSize: typography.sizes.sm,
