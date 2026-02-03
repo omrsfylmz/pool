@@ -38,7 +38,8 @@ describe('Active Pool Visibility', () => {
         ends_at: '2025-01-01T13:00:00.000Z',
       };
 
-      (supabase.from as jest.Mock).mockReturnValueOnce({ // Created pools query
+      const mockFrom = supabase.from as jest.Mock;
+      mockFrom.mockReturnValueOnce({ // Created pools query
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
         gt: jest.fn().mockReturnThis(),
@@ -64,7 +65,8 @@ describe('Active Pool Visibility', () => {
         ends_at: '2025-01-01T13:30:00.000Z',
       };
 
-      (supabase.from as jest.Mock).mockReturnValueOnce({ // Created pools query
+      const mockFrom = supabase.from as jest.Mock;
+      mockFrom.mockReturnValueOnce({ // Created pools query
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
         gt: jest.fn().mockReturnThis(),
@@ -82,7 +84,8 @@ describe('Active Pool Visibility', () => {
     });
 
     it('should return null if user neither created nor joined any active pool', async () => {
-      (supabase.from as jest.Mock).mockReturnValueOnce({ // Created pools
+      const mockFrom = supabase.from as jest.Mock;
+      mockFrom.mockReturnValueOnce({ // Created pools
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
         gt: jest.fn().mockReturnThis(),
@@ -112,7 +115,8 @@ describe('Active Pool Visibility', () => {
         ends_at: '2025-01-01T14:00:00.000Z',
       };
 
-      (supabase.from as jest.Mock).mockReturnValueOnce({ 
+      const mockFrom = supabase.from as jest.Mock;
+      mockFrom.mockReturnValueOnce({ 
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
         gt: jest.fn().mockReturnThis(),
