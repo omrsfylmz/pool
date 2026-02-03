@@ -9,6 +9,7 @@ import { DashboardHeader } from "../components/ui/DashboardHeader";
 import { FloatingActionButton } from "../components/ui/FloatingActionButton";
 import { MedalDisplay } from "../components/ui/MedalDisplay";
 import { PastPolls, type Poll } from "../components/ui/PastPolls";
+import { getAvatarEmoji } from "../constants/avatars";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { getActivePool, getPastPolls, getProfile, getUserAchievements, type AchievementMedal, type Pool, type Profile } from "../services/api";
@@ -40,7 +41,7 @@ export default function Dashboard() {
         const [profileData, activePoolData, pastPollsData, achievementsData] = await Promise.all([
           getProfile(user.id),
           getActivePool(user.id),
-          getPastPolls(),
+          getPastPolls(user.id),
           getUserAchievements(user.id),
         ]);
 
@@ -49,7 +50,7 @@ export default function Dashboard() {
         setPastPolls(pastPollsData);
         setAchievements(achievementsData);
       } catch (error) {
-        console.error("Error loading dashboard:", error);
+        console.error("Error loading pools:", error);
       } finally {
         setLoading(false);
       }
@@ -58,10 +59,10 @@ export default function Dashboard() {
     if (!authLoading) {
       loadPools();
     }
-  }, [user, authLoading]);
+  }, [user]);
 
   // Show loading while checking auth
-  if (authLoading || loading) {
+  if (loading || authLoading) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
@@ -76,7 +77,7 @@ export default function Dashboard() {
   }
 
   // Convert past pools to Poll format
-  const polls: Poll[] = pastPolls.map((pool) => ({
+  const polls: Poll[] = pastPolls.map((pool: any) => ({
     id: pool.id,
     title: pool.title,
     date: new Date(pool.created_at).toLocaleDateString("en-US", {
@@ -87,7 +88,7 @@ export default function Dashboard() {
     }),
     icon: "utensils",
     iconColor: "taco",
-    avatars: ["🦁", "🐼", "🦊"], // Will be replaced with real voter avatars later
+    avatars: (pool.participant_avatars || []).map((avatar: string) => getAvatarEmoji(avatar)),
   }));
 
   const handleNotificationPress = () => {

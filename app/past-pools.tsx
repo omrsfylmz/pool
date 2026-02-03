@@ -3,14 +3,15 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
+import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, shadows, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { getPastPolls, type Pool } from "../services/api";
@@ -28,7 +29,7 @@ export default function PastPools() {
 
       try {
         // Load all past pools (no limit)
-        const pastPools = await getPastPolls(100);
+        const pastPools = await getPastPolls(user.id, 100);
         setPools(pastPools);
       } catch (error) {
         console.error("Error loading past pools:", error);
@@ -130,6 +131,25 @@ export default function PastPools() {
                     />
                     <Text style={styles.statusText}>{t('pastPools.ended')}</Text>
                   </View>
+                  <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+                    {((pool as any).participant_avatars || []).slice(0, 3).map((avatar: string, index: number) => (
+                      <View key={index} style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: 12,
+                        backgroundColor: colors.background.light,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginLeft: -8,
+                        borderWidth: 2,
+                        borderColor: colors.background.card,
+                        zIndex: 3 - index,
+                      }}>
+                        <Text style={{ fontSize: 12 }}>{getAvatarEmoji(avatar)}</Text>
+                      </View>
+                    ))}
+                  </View>
+                  <View style={{ flex: 1 }} />
                   <Text style={styles.poolCode}>{t('pastPools.code')}{pool.join_code}</Text>
                 </View>
               </TouchableOpacity>

@@ -179,16 +179,59 @@ export async function getPoolByJoinCode(joinCode: string): Promise<Pool | null> 
   return data as Pool;
 }
 
-export async function getPastPolls(limit: number = 10) {
-  const { data, error } = await supabase
+export async function getPastPolls(userId: string, limit: number = 10) {
+  // 1. Get pools created by user
+  const { data: created } = await supabase
+    .from("pools")
+    .select("id")
+    .eq("creator_id", userId)
+    .eq("status", "ended");
+
+  // 2. Get pools user joined
+  const { data: joined } = await supabase
+    .from("pool_members")
+    .select("pool_id")
+    .eq("user_id", userId);
+
+  const poolIds = [...new Set([
+    ...(created?.map(p => p.id) || []),
+    ...(joined?.map(p => p.pool_id) || [])
+  ])];
+
+  if (poolIds.length === 0) return [];
+
+  // 3. Fetch pools
+  const { data: pools } = await supabase
     .from("pools")
     .select("*")
+    .in("id", poolIds)
     .eq("status", "ended")
     .order("created_at", { ascending: false })
     .limit(limit);
 
-  if (error) throw error;
-  return data as Pool[];
+  if (!pools) return [];
+
+  // 4. Fetch avatars for each pool
+  const poolsWithData = await Promise.all(pools.map(async (pool) => {
+    const { data: members } = await supabase
+      .from("pool_members")
+      .select(`
+        profiles (
+          avatar_animal
+        )
+      `)
+      .eq("pool_id", pool.id)
+      .limit(3);
+
+    const avatars = members?.map((m: any) => m.profiles?.avatar_animal).filter(Boolean) || [];
+
+    return {
+      ...pool,
+      participant_avatars: avatars.length > 0 ? avatars : ["👤"]
+    };
+  }));
+
+  return poolsWithData;
 }
 
 export async function endPool(poolId: string) {
