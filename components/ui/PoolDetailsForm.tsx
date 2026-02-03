@@ -10,7 +10,7 @@ interface PoolDetailsFormProps {
   onDurationChange?: (duration: number) => void;
   initialTitle?: string;
   initialDescription?: string;
-  initialDuration?: number;
+  initialDuration?: number | null;
 }
 
 /**
@@ -23,7 +23,7 @@ export const PoolDetailsForm: React.FC<PoolDetailsFormProps> = ({
   onDurationChange,
   initialTitle = "",
   initialDescription = "",
-  initialDuration = 5,
+  initialDuration,
 }) => {
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);

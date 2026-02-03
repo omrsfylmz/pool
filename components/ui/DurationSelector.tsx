@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
@@ -10,14 +10,13 @@ export type DurationOption = {
 
 interface DurationSelectorProps {
   options?: DurationOption[];
-  selectedValue?: number;
+  selectedValue?: number | null;
   onSelect?: (value: number) => void;
 }
 
 const defaultOptions: DurationOption[] = [
-  { value: 0.5, unit: "sec", label: "30 sec" }, // 30 seconds in minutes
+  { value: 0.5, unit: "sec", label: "30 sec" },
   { value: 5, unit: "min", label: "5 min" },
-  { value: 10, unit: "min", label: "10 min" },
   { value: 15, unit: "min", label: "15 min" },
   { value: 30, unit: "min", label: "30 min" },
 ];
@@ -28,26 +27,19 @@ const defaultOptions: DurationOption[] = [
  */
 export const DurationSelector: React.FC<DurationSelectorProps> = ({
   options = defaultOptions,
-  selectedValue = 5,
+  selectedValue,
   onSelect,
 }) => {
-  const [selected, setSelected] = useState(selectedValue);
-
-  const handleSelect = (value: number) => {
-    setSelected(value);
-    onSelect?.(value);
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.grid}>
         {options.map((option) => {
-          const isActive = selected === option.value;
+          const isActive = selectedValue === option.value;
           return (
             <TouchableOpacity
               key={option.value}
-              style={[styles.option, isActive && styles.optionActive]}
-              onPress={() => handleSelect(option.value)}
+              style={[styles.option, styles.optionWrapper, isActive && styles.optionActive]}
+              onPress={() => onSelect?.(option.value)}
               activeOpacity={0.8}
             >
               <Text
@@ -76,8 +68,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   option: {
-    flex: 1,
-    minWidth: "22%",
     backgroundColor: colors.background.card,
     borderWidth: 1,
     borderColor: colors.border.light,
@@ -86,7 +76,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     alignItems: "center",
     justifyContent: "center",
-    height: 80,
+    height: 60,
+  },
+  optionWrapper: {
+     flexBasis: '45%'
   },
   optionActive: {
     backgroundColor: colors.primary.yellow,

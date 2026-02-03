@@ -17,7 +17,7 @@ export default function CreatePool() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [poolTitle, setPoolTitle] = useState("");
   const [poolDescription, setPoolDescription] = useState("");
-  const [votingDuration, setVotingDuration] = useState(60);
+  const [votingDuration, setVotingDuration] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
 
@@ -60,6 +60,11 @@ export default function CreatePool() {
       return;
     }
 
+    if (!votingDuration) {
+      Alert.alert(t('common.error'), "Please select a voting duration");
+      return;
+    }
+
     setCreating(true);
     try {
       const pool = await createPool(poolTitle, poolDescription, votingDuration);
@@ -74,7 +79,7 @@ export default function CreatePool() {
     }
   };
 
-  const isFormValid = poolTitle.trim().length > 0;
+  const isFormValid = poolTitle.trim().length > 0 && votingDuration !== null;
 
   if (loading) {
     return (
