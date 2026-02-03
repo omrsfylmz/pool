@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
     Modal,
     SafeAreaView,
@@ -20,6 +21,8 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
   visible,
   onClose,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -30,7 +33,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
       <SafeAreaView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Privacy Policy</Text>
+          <Text style={styles.title}>{t('privacyPolicy.title')}</Text>
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
@@ -46,63 +49,63 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.lastUpdated}>Last Updated: January 30, 2026</Text>
+          <Text style={styles.lastUpdated}>{t('privacyPolicy.lastUpdated')}</Text>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>1. Introduction</Text>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.intro.title')}</Text>
             <Text style={styles.paragraph}>
-              Welcome to FoodPool. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our application and tell you about your privacy rights and how the law protects you.
+              {t('privacyPolicy.sections.intro.text')}
             </Text>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>2. Data We Collect</Text>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.dataCollection.title')}</Text>
             <Text style={styles.paragraph}>
-              We may collect, use, store and transfer different kinds of personal data about you which we have grouped together follows:
+              {t('privacyPolicy.sections.dataCollection.text')}
             </Text>
             <View style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>Identity Data: includes first name, last name, username or similar identifier.</Text>
+              <Text style={styles.bulletText}>{t('privacyPolicy.sections.dataCollection.bullets.identity')}</Text>
             </View>
             <View style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>Contact Data: includes email address.</Text>
+              <Text style={styles.bulletText}>{t('privacyPolicy.sections.dataCollection.bullets.contact')}</Text>
             </View>
             <View style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>Usage Data: includes information about how you use our app, pools created, and voting history.</Text>
+              <Text style={styles.bulletText}>{t('privacyPolicy.sections.dataCollection.bullets.usage')}</Text>
             </View>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>3. How We Use Your Data</Text>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.usage.title')}</Text>
             <Text style={styles.paragraph}>
-              We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:
+              {t('privacyPolicy.sections.usage.text')}
             </Text>
             <View style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>To register you as a new user.</Text>
+              <Text style={styles.bulletText}>{t('privacyPolicy.sections.usage.bullets.register')}</Text>
             </View>
             <View style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>To manage our relationship with you.</Text>
+              <Text style={styles.bulletText}>{t('privacyPolicy.sections.usage.bullets.manage')}</Text>
             </View>
             <View style={styles.bulletPoint}>
               <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>To enable you to participate in pools and voting.</Text>
+              <Text style={styles.bulletText}>{t('privacyPolicy.sections.usage.bullets.participate')}</Text>
             </View>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>4. Data Security</Text>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.security.title')}</Text>
             <Text style={styles.paragraph}>
-              We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way, altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know.
+              {t('privacyPolicy.sections.security.text')}
             </Text>
           </View>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>
-              If you have any questions about this privacy policy, please contact us at privacy@foodpool.app
+              {t('privacyPolicy.footer')}
             </Text>
           </View>
         </ScrollView>

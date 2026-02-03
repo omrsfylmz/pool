@@ -204,5 +204,38 @@
       "failed": "Şifre güncellenemedi"
     },
     "success": "Şifre başarıyla güncellendi"
+  },
+  "privacyPolicy": {
+    "title": "Gizlilik Politikası",
+    "lastUpdated": "Son Güncelleme: 30 Ocak 2026",
+    "sections": {
+      "intro": {
+        "title": "1. Giriş",
+        "text": "FoodPool'a hoş geldiniz. Gizliliğinize saygı duyuyoruz ve kişisel verilerinizi korumaya kararlıyız. Bu gizlilik politikası, uygulamamızı ziyaret ettiğinizde kişisel verilerinizi nasıl işlediğimiz konusunda sizi bilgilendirecek ve gizlilik haklarınız ile yasaların sizi nasıl koruduğu hakkında bilgi verecektir."
+      },
+      "dataCollection": {
+        "title": "2. Topladığımız Veriler",
+        "text": "Sizinle ilgili farklı türde kişisel verileri toplayabilir, kullanabilir, saklayabilir ve aktarabiliriz. Bunları aşağıdaki gibi gruplandırdık:",
+        "bullets": {
+          "identity": "Kimlik Verileri: ad, soyad, kullanıcı adı veya benzer tanımlayıcıları içerir.",
+          "contact": "İletişim Verileri: e-posta adresini içerir.",
+          "usage": "Kullanım Verileri: uygulamamızı nasıl kullandığınız, oluşturulan oylamalar ve oy kullanma geçmişinizle ilgili bilgileri içerir."
+        }
+      },
+      "usage": {
+        "title": "3. Verilerinizi Nasıl Kullanıyoruz",
+        "text": "Kişisel verilerinizi yalnızca yasaların izin verdiği durumlarda kullanacağız. En yaygın olarak, kişisel verilerinizi aşağıdaki durumlarda kullanacağız:",
+        "bullets": {
+          "register": "Sizi yeni bir kullanıcı olarak kaydetmek için.",
+          "manage": "Sizinle olan ilişkimizi yönetmek için.",
+          "participate": "Oylamalara katılmanızı ve oy kullanmanızı sağlamak için."
+        }
+      },
+      "security": {
+        "title": "4. Veri Güvenliği",
+        "text": "Kişisel verilerinizin kazara kaybolmasını, yetkisiz bir şekilde kullanılmasını veya erişilmesini, değiştirilmesini veya ifşa edilmesini önlemek için uygun güvenlik önlemleri aldık. Ayrıca, kişisel verilerinize erişimi, iş gereği bilmesi gereken çalışanlar, temsilciler, yükleniciler ve diğer üçüncü taraflarla sınırlandırıyoruz."
+      }
+    },
+    "footer": "Bu gizlilik politikası hakkında herhangi bir sorunuz varsa, lütfen privacy@foodpool.app adresinden bizimle iletişime geçin."
   }
 }

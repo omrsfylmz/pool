@@ -204,5 +204,38 @@
       "failed": "Failed to update password"
     },
     "success": "Password updated successfully"
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last Updated: January 30, 2026",
+    "sections": {
+      "intro": {
+        "title": "1. Introduction",
+        "text": "Welcome to FoodPool. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our application and tell you about your privacy rights and how the law protects you."
+      },
+      "dataCollection": {
+        "title": "2. Data We Collect",
+        "text": "We may collect, use, store and transfer different kinds of personal data about you which we have grouped together follows:",
+        "bullets": {
+          "identity": "Identity Data: includes first name, last name, username or similar identifier.",
+          "contact": "Contact Data: includes email address.",
+          "usage": "Usage Data: includes information about how you use our app, pools created, and voting history."
+        }
+      },
+      "usage": {
+        "title": "3. How We Use Your Data",
+        "text": "We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:",
+        "bullets": {
+          "register": "To register you as a new user.",
+          "manage": "To manage our relationship with you.",
+          "participate": "To enable you to participate in pools and voting."
+        }
+      },
+      "security": {
+        "title": "4. Data Security",
+        "text": "We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way, altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know."
+      }
+    },
+    "footer": "If you have any questions about this privacy policy, please contact us at privacy@foodpool.app"
   }
 }
