@@ -1,20 +1,16 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
-interface DashboardHeaderProps {
-  onNotificationPress?: () => void;
-}
+interface DashboardHeaderProps {}
 
 /**
  * DashboardHeader Component
- * Header for the dashboard with logo and notification bell
+ * Header for the dashboard with logo
  */
-export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
-  onNotificationPress,
-}) => {
+export const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
   const { t } = useTranslation();
   return (
     <View style={styles.header}>
@@ -24,9 +20,6 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         </View>
         <Text style={styles.appTitle}>{t('dashboard.title')}</Text>
       </View>
-      <TouchableOpacity onPress={onNotificationPress} activeOpacity={0.7}>
-        <FontAwesome5 name="bell" size={20} color={colors.text.dark} />
-      </TouchableOpacity>
     </View>
   );
 };

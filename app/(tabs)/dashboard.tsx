@@ -88,10 +88,7 @@ export default function Dashboard() {
     avatars: (pool.participant_avatars || []).map((avatar: string) => getAvatarEmoji(avatar)),
   }));
 
-  const handleNotificationPress = () => {
-    // TODO: Implement notification handling
 
-  };
 
   const handleFabPress = () => {
     router.push("/create-pool");
@@ -115,7 +112,7 @@ export default function Dashboard() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <DashboardHeader onNotificationPress={handleNotificationPress} />
+        <DashboardHeader />
 
         {/* Join Pool Button */}
         <TouchableOpacity
