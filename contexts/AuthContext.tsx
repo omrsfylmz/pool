@@ -1,6 +1,8 @@
 import { Session, User } from "@supabase/supabase-js";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { awardNewcomerBadge, checkAndEndExpiredPools, updatePushToken } from "../services/api";
+import { registerForPushNotificationsAsync } from "../services/NotificationService";
 
 interface AuthContextType {
   user: User | null;
@@ -26,15 +28,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // Run lazy expiration check on initial load
+      if (session?.user) {
+        checkAndEndExpiredPools(session.user.id);
+      }
     });
+
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Register for push notifications if logged in
+      if (session?.user) {
+        try {
+          const token = await registerForPushNotificationsAsync();
+          if (token) {
+            await updatePushToken(token);
+          }
+          
+          // Check for any expired pools that need to be finalized (lazy expiration)
+          // This ensures notifications are sent for pools that ended while app was closed
+          await checkAndEndExpiredPools(session.user.id);
+
+        } catch (error) {
+          console.error("Error configuring push notifications:", error);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();

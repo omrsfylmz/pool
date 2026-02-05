@@ -13,7 +13,7 @@ export default function Index() {
   // Redirect to dashboard if already logged in
   useEffect(() => {
     if (!loading && user) {
-      router.replace("/(tabs)");
+      router.replace("/dashboard");
     }
   }, [user, loading]);
 

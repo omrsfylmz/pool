@@ -251,6 +251,89 @@ export async function getPastPolls(userId: string, limit: number = 10) {
   return poolsWithData;
 }
 
+
+
+export async function updatePushToken(token: string) {
+  const user = (await supabase.auth.getUser()).data.user;
+  if (!user) return;
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ expo_push_token: token })
+    .eq("id", user.id);
+
+  if (error) {
+     console.error("Error updating push token:", error);
+     throw error;
+  }
+  console.log("Push token updated in profile");
+}
+
+export async function sendPoolCompletionNotification(poolId: string) {
+  try {
+    console.log(`Attempting to send notifications for pool ${poolId}`);
+    // 1. Get pool details
+    const { data: pool } = await supabase
+      .from("pools")
+      .select("title")
+      .eq("id", poolId)
+      .single();
+
+    if (!pool) return;
+
+    // 2. Get all participants
+    const { data: members } = await supabase
+      .from("pool_members")
+      .select("user_id")
+      .eq("pool_id", poolId);
+
+    if (!members || members.length === 0) return;
+
+    // 3. Get push tokens for these users
+    const memberIds = members.map(m => m.user_id);
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("expo_push_token")
+      .in("id", memberIds)
+      .not("expo_push_token", "is", null);
+
+    if (!profiles || profiles.length === 0) return;
+
+    // 4. Send notifications
+    const tokens = profiles.map(p => p.expo_push_token).filter(Boolean);
+    
+    // Prepare notifications
+    const notifications = tokens.map(token => ({
+      to: token,
+      sound: 'default',
+      title: "Pool Complete! 🏁",
+      body: `"${pool.title}" is complete. Check the results!`,
+      data: { url: `/winner?poolId=${poolId}` },
+    }));
+
+    // Send in batches (Expo limit is 100)
+    const chunks = [];
+    for (let i = 0; i < notifications.length; i += 100) {
+      chunks.push(notifications.slice(i, i + 100));
+    }
+
+    for (const chunk of chunks) {
+      await fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Accept-encoding': 'gzip, deflate',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(chunk),
+      });
+    }
+
+  } catch (error) {
+    console.error("Error sending completion notifications:", error);
+  }
+}
+
 export async function endPool(poolId: string) {
   // Get all votes for this pool
   const { data: votes } = await supabase
@@ -275,15 +358,82 @@ export async function endPool(poolId: string) {
   }
 
   // Update pool with winner and ended status
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("pools")
     .update({ 
       status: "ended",
       winner_id: winnerId 
     })
-    .eq("id", poolId);
+    .eq("id", poolId)
+    .eq("status", "active") // Guard against race conditions
+    .select();
 
   if (error) throw error;
+
+  // Only send notifications if we were the one who effectively ended the pool
+  if (data && data.length > 0) {
+    await sendPoolCompletionNotification(poolId);
+  }
+}
+
+/**
+ * Check for expiried active pools and end them (Lazy Expiration)
+ * This ensures notifications are sent even if the app was closed when the pool ended
+ */
+export async function checkAndEndExpiredPools(userId: string) {
+  try {
+    const now = new Date().toISOString();
+    
+    // 1. Find all active pools involving this user that have expired
+    
+    // Get pools created by user
+    const { data: createdPools } = await supabase
+      .from("pools")
+      .select("id")
+      .eq("creator_id", userId)
+      .eq("status", "active")
+      .lte("ends_at", now);
+
+    // Get pools user is a member of
+    const { data: memberPools } = await supabase
+      .from("pool_members")
+      .select("pool_id, pools!inner(id, status, ends_at)")
+      .eq("user_id", userId)
+      .eq("pools.status", "active")
+      .lte("pools.ends_at", now);
+
+    // Combine pool IDs
+    const poolIdsToProcess = new Set<string>();
+    
+    createdPools?.forEach(p => poolIdsToProcess.add(p.id));
+    
+    memberPools?.forEach((mp: any) => {
+      // The inner join filter might return the structure differently depending on supabase client version,
+      // but typically with !inner and filtering on relation, we get the hits.
+      if (mp.pools) {
+        poolIdsToProcess.add(mp.pools.id);
+      }
+    });
+
+
+
+    if (poolIdsToProcess.size === 0) {
+      console.log("No expired pools found to finalize.");
+      return;
+    }
+
+    console.log(`Found ${poolIdsToProcess.size} expired pools to finalize. IDs:`, [...poolIdsToProcess]);
+
+    // 2. End each pool
+    // We process sequentially to avoid overwhelming the client/connection although parallel would be faster
+    for (const poolId of poolIdsToProcess) {
+      console.log(`Finalizing expired pool: ${poolId}`);
+      await endPool(poolId);
+      console.log(`Pool ${poolId} finalized.`);
+    }
+  } catch (error) {
+    console.error("Error checking expired pools:", error);
+  }
 }
 
 // ============================================
