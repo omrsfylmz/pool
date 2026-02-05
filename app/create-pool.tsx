@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useGlobalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
@@ -8,7 +8,7 @@ import { IdentitySection } from "../components/ui/IdentitySection";
 import { PoolDetailsForm } from "../components/ui/PoolDetailsForm";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { createPool, getProfile, type Profile } from "../services/api";
+import { clonePoolOptions, createPool, getProfile, type Profile } from "../services/api";
 
 export default function CreatePool() {
   const router = useRouter();
@@ -43,6 +43,17 @@ export default function CreatePool() {
     loadProfile();
   }, [user]);
 
+  // Pre-fill form if reactivating
+  const params = useGlobalSearchParams();
+  useEffect(() => {
+    if (params.initialTitle) {
+      setPoolTitle(params.initialTitle as string);
+    }
+    if (params.initialDescription) {
+      setPoolDescription(params.initialDescription as string);
+    }
+  }, [params]);
+
   const handleClose = () => {
     router.back();
   };
@@ -68,6 +79,12 @@ export default function CreatePool() {
     setCreating(true);
     try {
       const pool = await createPool(poolTitle, poolDescription, votingDuration);
+      
+      // If reactivating, clone options from the old pool
+      const { reactivateFromId } = params;
+      if (reactivateFromId) {
+         await clonePoolOptions(reactivateFromId as string, pool.id);
+      }
       
       // Navigate to share pool page with pool ID
       router.push(`/share-pool?poolId=${pool.id}`);

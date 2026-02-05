@@ -52,6 +52,8 @@
   },
   "join": {
     "title": "Oylamaya Katıl",
+    "emptyText": "Henüz herhangi bir oylamaya katılmadınız. Başlamak için bir oylamaya katılın veya oluşturun!",
+    "reactivate": "Tekrar Başlat",
     "subtitle": "Öğle yemeği oylamasına katılmak için\n6 haneli kodu girin",
     "label": "Katılım Kodu",
     "button": "Oylamaya Katıl",
@@ -69,7 +71,8 @@
     "title": "Geçmiş Oylamalar",
     "emptyTitle": "Geçmiş Oylama Yok",
     "emptyText": "Katıldığınız oylamalar burada görünecek",
-    "ended": "Bitti",
+    "ended": "Tamamlandı",
+    "reactivate": "Tekrar Başlat",
     "code": "Kod: "
   },
   "nav": {

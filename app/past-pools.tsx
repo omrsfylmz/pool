@@ -3,13 +3,13 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, shadows, typography } from "../constants/theme";
@@ -150,7 +150,22 @@ export default function PastPools() {
                     ))}
                   </View>
                   <View style={{ flex: 1 }} />
-                  <Text style={styles.poolCode}>{t('pastPools.code')}{pool.join_code}</Text>
+                  <TouchableOpacity
+                    style={styles.reactivateButton}
+                    onPress={() => {
+                      router.push({
+                        pathname: "/create-pool",
+                        params: {
+                          initialTitle: pool.title,
+                          initialDescription: pool.description || "",
+                          reactivateFromId: pool.id,
+                        },
+                      });
+                    }}
+                  >
+                    <FontAwesome5 name="redo" size={12} color={colors.primary.yellow} />
+                    <Text style={styles.reactivateText}>{t('pastPools.reactivate')}</Text>
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             ))}
@@ -270,12 +285,26 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: typography.sizes.xs,
-    color: colors.primary.green,
+    color: colors.status.success,
     fontWeight: typography.weights.medium,
   },
   poolCode: {
     fontSize: typography.sizes.xs,
     color: colors.text.grey,
     fontWeight: typography.weights.medium,
+  },
+  reactivateButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    backgroundColor: colors.primary.yellowLight,
+    borderRadius: borderRadius.sm,
+  },
+  reactivateText: {
+    fontSize: typography.sizes.xs,
+    color: colors.primary.yellow,
+    fontWeight: typography.weights.bold,
   },
 });

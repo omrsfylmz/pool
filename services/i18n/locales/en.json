@@ -68,9 +68,9 @@
   "pastPools": {
     "title": "Past Pools",
     "emptyTitle": "No Past Pools",
-    "emptyText": "Pools you've participated in will appear here",
+    "emptyText": "You haven't participated in any pools yet. Join a pool or create one to get started!",
     "ended": "Ended",
-    "code": "Code: "
+    "reactivate": "Reactivate"
   },
   "nav": {
     "home": "Home",

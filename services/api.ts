@@ -691,6 +691,36 @@ export async function deleteFoodOption(optionId: string) {
   if (error) throw error;
 }
 
+export async function clonePoolOptions(oldPoolId: string, newPoolId: string) {
+  const user = (await supabase.auth.getUser()).data.user;
+  if (!user) throw new Error("Not authenticated");
+
+  // 1. Get old pool options
+  const start = Date.now();
+  const options = await getFoodOptions(oldPoolId);
+  
+  if (!options || options.length === 0) return;
+
+  // 2. Prepare new options
+  const newOptions = options.map(opt => ({
+    pool_id: newPoolId,
+    creator_id: user.id, // The new pool creator owns these copies
+    name: opt.name,
+    description: opt.description,
+    icon: opt.icon,
+  }));
+
+  // 3. Insert new options
+  const { error } = await supabase
+    .from("food_options")
+    .insert(newOptions);
+
+  if (error) {
+    console.error("Error cloning options:", error);
+    throw error;
+  }
+}
+
 // ============================================
 // VOTE OPERATIONS
 // ============================================
