@@ -1,7 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
-import { Header } from "../components/ui/Header";
 import { LoginContent } from "../components/ui/LoginContent";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
@@ -44,7 +43,7 @@ export default function Index() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Header />
+
         <LoginContent
           onCreateAccount={handleCreateAccount}
           onLogIn={handleLogIn}
