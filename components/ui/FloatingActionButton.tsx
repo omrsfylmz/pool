@@ -1,6 +1,6 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { colors, shadows } from "../../constants/theme";
 
 interface FloatingActionButtonProps {
@@ -30,7 +30,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 const styles = StyleSheet.create({
   fab: {
     position: "absolute",
-    bottom: 100,
+    bottom: 30,
     right: 25,
     width: 60,
     height: 60,
