@@ -64,7 +64,18 @@
     "english": "İngilizce",
     "turkish": "Türkçe",
     "accountPrivacy": "HESAP & GİZLİLİK",
-    "plateThisWeek": "Bu Haftaki Tabağın"
+    "plateThisWeek": "Bu Haftaki Tabağın",
+    "editProfile": "Profili Düzenle",
+    "fullName": "Ad Soyad",
+    "namePlaceholder": "Adınızı ve soyadınızı girin",
+    "updateSuccess": "Profil başarıyla güncellendi",
+    "deleteAccount": "Hesabı Sil",
+    "deleteConfirmation": "Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+    "errors": {
+      "nameRequired": "İsim alanı boş bırakılamaz",
+      "updateFailed": "Profil güncellenemedi",
+      "deleteFailed": "Hesap silinemedi"
+    }
   },
   "createPool": {
     "title": "Oylama Oluştur",

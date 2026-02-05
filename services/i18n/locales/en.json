@@ -64,7 +64,18 @@
     "english": "English",
     "turkish": "Turkish",
     "accountPrivacy": "ACCOUNT & PRIVACY",
-    "plateThisWeek": "Your Plate This Week"
+    "plateThisWeek": "Your Plate This Week",
+    "editProfile": "Edit Profile",
+    "fullName": "Full Name",
+    "namePlaceholder": "Enter your full name",
+    "updateSuccess": "Profile updated successfully",
+    "deleteAccount": "Delete Account",
+    "deleteConfirmation": "Are you sure you want to delete your account? This action cannot be undone.",
+    "errors": {
+      "nameRequired": "Name cannot be empty",
+      "updateFailed": "Failed to update profile",
+      "deleteFailed": "Failed to delete account"
+    }
   },
   "createPool": {
     "title": "Create Lunch Pool",

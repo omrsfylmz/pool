@@ -269,6 +269,11 @@ export async function updatePushToken(token: string) {
   console.log("Push token updated in profile");
 }
 
+export async function deleteAccount() {
+  const { error } = await supabase.rpc('delete_user');
+  if (error) throw error;
+}
+
 export async function sendPoolCompletionNotification(poolId: string) {
   try {
     console.log(`Attempting to send notifications for pool ${poolId}`);

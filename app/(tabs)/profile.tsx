@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
+    Alert,
     RefreshControl,
     SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View
 } from "react-native";
 import { AllBadgesModal } from "../../components/ui/AllBadgesModal";
@@ -18,11 +20,12 @@ import { LogoutButton } from "../../components/ui/LogoutButton";
 import { MenuItem } from "../../components/ui/MenuItem";
 import { PasswordUpdateModal } from "../../components/ui/PasswordUpdateModal";
 import { PrivacyPolicyModal } from "../../components/ui/PrivacyPolicyModal";
+import { ProfileEditModal } from "../../components/ui/ProfileEditModal";
 import { ProfileInfo } from "../../components/ui/ProfileInfo";
 import { getAvatarEmoji } from "../../constants/avatars";
 import { colors, typography } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
-import { getProfile, getUserAchievements, type Profile } from "../../services/api";
+import { deleteAccount, getProfile, getUserAchievements, type Profile } from "../../services/api";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -36,6 +39,7 @@ export default function ProfileScreen() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showBadgesModal, setShowBadgesModal] = useState(false);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [earnedBadgeIds, setEarnedBadgeIds] = useState<string[]>([]);
 
   // Fetch user profile data
@@ -108,6 +112,10 @@ export default function ProfileScreen() {
 
   const displayBadges = earnedBadgeIds.map(getBadgeDisplay);
 
+  const handleEditProfile = () => {
+    setShowEditProfileModal(true);
+  };
+
   const handleSecurity = () => {
     setShowPasswordModal(true);
   };
@@ -124,6 +132,32 @@ export default function ProfileScreen() {
     await signOut();
     router.replace("/");
   };
+
+  const handleDeleteAccount = () => {
+      Alert.alert(
+        t('profile.deleteAccount'),
+        t('profile.deleteConfirmation'),
+        [
+          { text: t('common.cancel'), style: "cancel" },
+          {
+            text: t('common.delete'),
+            style: "destructive",
+            onPress: async () => {
+              setLoading(true);
+              try {
+                await deleteAccount();
+                await signOut();
+                router.replace("/");
+              } catch (error) {
+                console.error("Error deleting account:", error);
+                Alert.alert(t('common.error'), t('profile.errors.deleteFailed'));
+                setLoading(false);
+              }
+            },
+          },
+        ]
+      );
+    };
 
   if (loading) {
     return (
@@ -165,6 +199,11 @@ export default function ProfileScreen() {
           
           <View style={styles.menuSection}>
             <Text style={styles.sectionTitle}>{t('profile.account')}</Text>
+            <MenuItem
+               icon="user-edit"
+               text={t('profile.editProfile')}
+               onPress={handleEditProfile}
+             />
             <MenuItem 
               icon="lock" 
               text={t('profile.security')} 
@@ -183,6 +222,12 @@ export default function ProfileScreen() {
           </View>
           
           <LogoutButton onPress={handleLogout} />
+
+          <View style={styles.dangerZone}>
+            <TouchableOpacity onPress={handleDeleteAccount} style={styles.deleteButton}>
+              <Text style={styles.deleteButtonText}>{t('profile.deleteAccount')}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
 
@@ -206,6 +251,13 @@ export default function ProfileScreen() {
         visible={showBadgesModal}
         onClose={() => setShowBadgesModal(false)}
         earnedBadgeIds={earnedBadgeIds}
+      />
+      
+      <ProfileEditModal
+        visible={showEditProfileModal}
+        onClose={() => setShowEditProfileModal(false)}
+        currentName={profile?.full_name || ""}
+        onUpdate={loadData}
       />
     </SafeAreaView>
   );
@@ -249,5 +301,18 @@ const styles = StyleSheet.create({
     color: colors.text.dark,
     marginBottom: 16,
     marginLeft: 4,
+  },
+  dangerZone: {
+    marginTop: 24,
+    marginBottom: 24,
+    alignItems: "center",
+  },
+  deleteButton: {
+    padding: 12,
+  },
+  deleteButtonText: {
+    color: colors.status.error,
+    fontWeight: typography.weights.bold,
+    fontSize: typography.sizes.sm,
   },
 });
