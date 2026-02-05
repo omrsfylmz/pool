@@ -5,13 +5,36 @@
     "save": "Save",
     "error": "Error",
     "success": "Success",
+    "delete": "Delete",
     "appTitle": "Lunch Vote"
   },
   "auth": {
     "login": "Log In",
     "createAccount": "Create Account",
     "taglineTitle": "What's for Lunch?",
-    "taglineSubtitle": "Vote with your team, stay\nanonymous."
+    "taglineSubtitle": "Vote with your team, stay\nanonymous.",
+    "welcomeBack": "Welcome Back!",
+    "avatarWaiting": "Your animal avatar is waiting for you.",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "loggingIn": "Logging In...",
+    "newToLunchVote": "New to Lunch Vote?",
+    "joinThePack": "Join the Pack!",
+    "createProfile": "Create your anonymous profile.",
+    "fullName": "Full Name",
+    "workEmail": "Work Email",
+    "creatingAccount": "Creating Account...",
+    "alreadyHaveAccount": "Already have an account?",
+    "errors": {
+      "fillAll": "Please fill in all fields",
+      "passwordLength": "Password must be at least 8 characters",
+      "loginFailed": "Login Failed",
+      "signupFailed": "Sign Up Error"
+    },
+    "success": {
+      "accountCreated": "Account created successfully. Please check your email to verify your account."
+    }
   },
   "dashboard": {
     "title": "Welcome back!",

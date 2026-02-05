@@ -1,6 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Alert, KeyboardAvoidingView,
     Platform,
@@ -12,26 +13,29 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
+import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
 import { borderRadius, colors, spacing, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function SignUp() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { signUp } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
 
   const handleCreateAccount = async () => {
     if (!fullName.trim() || !email.trim() || !password.trim()) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert(t('common.error'), t('auth.errors.fillAll'));
       return;
     }
 
     if (password.length < 8) {
-      Alert.alert("Error", "Password must be at least 8 characters");
+      Alert.alert(t('common.error'), t('auth.errors.passwordLength'));
       return;
     }
 
@@ -40,11 +44,11 @@ export default function SignUp() {
     setLoading(false);
 
     if (error) {
-      Alert.alert("Sign Up Error", error.message);
+      Alert.alert(t('auth.errors.signupFailed'), error.message);
     } else {
       Alert.alert(
-        "Success!",
-        "Account created successfully. Please check your email to verify your account.",
+        t('common.success'),
+        t('auth.success.accountCreated'),
         [{ text: "OK", onPress: () => router.replace("/(tabs)") }]
       );
     }
@@ -70,18 +74,25 @@ export default function SignUp() {
             >
               <Ionicons name="chevron-back" size={28} color={colors.text.dark} />
             </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.languageButton}
+              onPress={() => setShowLanguageModal(true)}
+            >
+              <FontAwesome5 name="globe" size={20} color={colors.text.dark} />
+            </TouchableOpacity>
           </View>
 
           {/* Main Content */}
           <View style={styles.content}>
-            <Text style={styles.title}>Join the Pack!</Text>
-            <Text style={styles.subtitle}>Create your anonymous profile.</Text>
+            <Text style={styles.title}>{t('auth.joinThePack')}</Text>
+            <Text style={styles.subtitle}>{t('auth.createProfile')}</Text>
 
             {/* Form */}
             <View style={styles.form}>
               {/* Full Name Input */}
               <View style={styles.formGroup}>
-                <Text style={styles.label}>Full Name</Text>
+                <Text style={styles.label}>{t('auth.fullName')}</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="John Doe"
@@ -94,7 +105,7 @@ export default function SignUp() {
 
               {/* Email Input */}
               <View style={styles.formGroup}>
-                <Text style={styles.label}>Work Email</Text>
+                <Text style={styles.label}>{t('auth.workEmail')}</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="john@company.com"
@@ -109,7 +120,7 @@ export default function SignUp() {
 
               {/* Password Input */}
               <View style={styles.formGroup}>
-                <Text style={styles.label}>Password</Text>
+                <Text style={styles.label}>{t('auth.password')}</Text>
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={styles.passwordInput}
@@ -142,7 +153,7 @@ export default function SignUp() {
                 disabled={loading}
               >
                 <Text style={styles.submitButtonText}>
-                  {loading ? "Creating Account..." : "Create Account"}
+                  {loading ? t('auth.creatingAccount') : t('auth.createAccount')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -152,18 +163,23 @@ export default function SignUp() {
             {/* Footer */}
             <View style={styles.footer}>
               <Text style={styles.footerText}>
-                Already have an account?{" "}
+                {t('auth.alreadyHaveAccount')}{" "}
                 <Text
                   style={styles.footerLink}
                   onPress={() => router.push("/login")}
                 >
-                  Log In
+                  {t('auth.login')}
                 </Text>
               </Text>
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      
+      <LanguageSelectorModal
+        visible={showLanguageModal}
+        onClose={() => setShowLanguageModal(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -189,6 +205,14 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
     alignItems: "flex-start",
+  },
+  languageButton: {
+    position: "absolute",
+    right: spacing.lg,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
   content: {
     flex: 1,

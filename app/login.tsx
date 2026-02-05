@@ -1,31 +1,36 @@
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
-    Alert, KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert, KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
+
+import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
 import { borderRadius, colors, spacing, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert(t('common.error'), t('auth.errors.fillAll'));
       return;
     }
 
@@ -34,7 +39,7 @@ export default function Login() {
     setLoading(false);
 
     if (error) {
-      Alert.alert("Login Error", error.message);
+      Alert.alert(t('auth.errors.loginFailed'), error.message);
     } else {
       router.replace("/(tabs)");
     }
@@ -44,7 +49,7 @@ export default function Login() {
 
   const handleForgotPassword = () => {
     Alert.alert(
-      "Forgot Password",
+      t('auth.forgotPassword'),
       "Password reset functionality will be implemented soon."
     );
   };
@@ -70,18 +75,24 @@ export default function Login() {
             <View style={styles.logoContainer}>
               <FontAwesome5 name="utensils" size={24} color={colors.primary.yellow} />
             </View>
+            <TouchableOpacity 
+              style={styles.languageButton}
+              onPress={() => setShowLanguageModal(true)}
+            >
+              <FontAwesome5 name="globe" size={20} color={colors.text.dark} />
+            </TouchableOpacity>
           </View>
 
           {/* Main Content */}
           <View style={styles.content}>
-            <Text style={styles.title}>Welcome Back!</Text>
-            <Text style={styles.subtitle}>Your animal avatar is waiting for you.</Text>
+            <Text style={styles.title}>{t('auth.welcomeBack')}</Text>
+            <Text style={styles.subtitle}>{t('auth.avatarWaiting')}</Text>
 
             {/* Form */}
             <View style={styles.form}>
               {/* Email Input */}
               <View style={styles.formGroup}>
-                <Text style={styles.label}>Email</Text>
+                <Text style={styles.label}>{t('auth.email')}</Text>
                 <View style={styles.inputWrapper}>
                   <Ionicons
                     name="mail-outline"
@@ -105,9 +116,9 @@ export default function Login() {
               {/* Password Input */}
               <View style={styles.formGroup}>
                 <View style={styles.labelRow}>
-                  <Text style={styles.label}>Password</Text>
+                  <Text style={styles.label}>{t('auth.password')}</Text>
                   <TouchableOpacity onPress={handleForgotPassword}>
-                    <Text style={styles.forgotLink}>Forgot Password?</Text>
+                    <Text style={styles.forgotLink}>{t('auth.forgotPassword')}</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.inputWrapper}>
@@ -148,7 +159,7 @@ export default function Login() {
                 disabled={loading}
               >
                 <Text style={styles.loginButtonText}>
-                  {loading ? "Logging In..." : "Log In"}
+                  {loading ? t('auth.loggingIn') : t('auth.login')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -162,18 +173,23 @@ export default function Login() {
             {/* Footer */}
             <View style={styles.footer}>
               <Text style={styles.footerText}>
-                New to Lunch Vote?{" "}
+                {t('auth.newToLunchVote')}{" "}
                 <Text
                   style={styles.footerLink}
                   onPress={() => router.push("/signup")}
                 >
-                  Create Account
+                  {t('auth.createAccount')}
                 </Text>
               </Text>
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <LanguageSelectorModal
+        visible={showLanguageModal}
+        onClose={() => setShowLanguageModal(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -209,6 +225,14 @@ const styles = StyleSheet.create({
   logoContainer: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  languageButton: {
+    position: "absolute",
+    right: spacing.lg,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
   content: {
     flex: 1,

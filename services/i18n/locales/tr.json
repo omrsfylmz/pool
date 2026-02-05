@@ -5,13 +5,36 @@
     "save": "Kaydet",
     "error": "Hata",
     "success": "Başarılı",
+    "delete": "Sil",
     "appTitle": "Öğle Yemeği Oylaması"
   },
   "auth": {
     "login": "Giriş Yap",
     "createAccount": "Hesap Oluştur",
     "taglineTitle": "Öğle Yemeğinde Ne Var?",
-    "taglineSubtitle": "Ekibinle oyla,\nanonim kal."
+    "taglineSubtitle": "Ekibinle oyla,\nanonim kal.",
+    "welcomeBack": "Tekrar Hoş Geldiniz!",
+    "avatarWaiting": "Hayvan avatarınız sizi bekliyor.",
+    "email": "E-posta",
+    "password": "Şifre",
+    "forgotPassword": "Şifremi Unuttum?",
+    "loggingIn": "Giriş Yapılıyor...",
+    "newToLunchVote": "Lunch Vote'a Yeni misin?",
+    "joinThePack": "Aramıza Katıl!",
+    "createProfile": "Anonim profilini oluştur.",
+    "fullName": "Ad Soyad",
+    "workEmail": "İş E-postası",
+    "creatingAccount": "Hesap Oluşturuluyor...",
+    "alreadyHaveAccount": "Zaten bir hesabın var mı?",
+    "errors": {
+      "fillAll": "Lütfen tüm alanları doldurun",
+      "passwordLength": "Şifre en az 8 karakter olmalıdır",
+      "loginFailed": "Giriş Başarısız",
+      "signupFailed": "Kayıt Hatası"
+    },
+    "success": {
+      "accountCreated": "Hesap başarıyla oluşturuldu. Hesabınızı doğrulamak için lütfen e-postanızı kontrol edin."
+    }
   },
   "dashboard": {
     "title": "Tekrar hoş geldin!",
