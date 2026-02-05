@@ -90,7 +90,7 @@ export default function Dashboard() {
 
   const handleNotificationPress = () => {
     // TODO: Implement notification handling
-    console.log("Notification pressed");
+
   };
 
   const handleFabPress = () => {

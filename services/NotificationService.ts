@@ -33,16 +33,16 @@ export async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-      console.log('Failed to get push token for push notification! Status:', finalStatus);
+
       return;
     }
-    console.log("Notification permissions granted.");
+
     // Learn more about projectId:
     // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
     token = (await Notifications.getExpoPushTokenAsync({ projectId: '0c0fcc48-2ce4-4bb4-abda-0cde3df99941' })).data;
-    console.log("Push Token obtained:", token);
+
   } else {
-    console.log('Must use physical device for Push Notifications');
+
   }
 
   return token;
@@ -66,7 +66,7 @@ export async function scheduleDailyNotification() {
         minute: 45,
       },
     });
-    console.log("Daily notification scheduled");
+
   } catch (error) {
     console.error("Error scheduling daily notification:", error);
   }

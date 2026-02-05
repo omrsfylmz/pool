@@ -49,7 +49,7 @@ export function useRealtimeFoodOptions(poolId: string | null) {
             filter: `pool_id=eq.${poolId}`,
           },
           (payload) => {
-            console.log("[Real-time] New food option added:", payload.new);
+
             setFoodOptions((prev) => [...prev, payload.new as FoodOption]);
           }
         )
@@ -62,7 +62,7 @@ export function useRealtimeFoodOptions(poolId: string | null) {
             filter: `pool_id=eq.${poolId}`,
           },
           (payload) => {
-            console.log("[Real-time] Food option updated:", payload.new);
+
             setFoodOptions((prev) =>
               prev.map((option) =>
                 option.id === payload.new.id ? (payload.new as FoodOption) : option
@@ -79,7 +79,7 @@ export function useRealtimeFoodOptions(poolId: string | null) {
             filter: `pool_id=eq.${poolId}`,
           },
           (payload) => {
-            console.log("[Real-time] Food option deleted:", payload.old);
+
             setFoodOptions((prev) =>
               prev.filter((option) => option.id !== payload.old.id)
             );

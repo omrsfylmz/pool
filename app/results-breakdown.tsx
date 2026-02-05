@@ -38,7 +38,7 @@ export default function ResultsBreakdown() {
 
   const handleViewAllVoters = () => {
     // TODO: Navigate to voters list
-    console.log("View all voters");
+
   };
 
   if (loading) {

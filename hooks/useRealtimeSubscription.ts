@@ -38,7 +38,7 @@ export function useRealtimeSubscription<T>(
         ? `${table}-${filter.column}-${filter.value}`
         : `${table}-all`;
 
-      console.log(`[Real-time] Subscribing to ${channelName}`);
+
 
       channel = supabase.channel(channelName);
 
@@ -58,7 +58,7 @@ export function useRealtimeSubscription<T>(
             filter: filterString,
           },
           (payload) => {
-            console.log(`[Real-time] INSERT on ${table}:`, payload.new);
+
             onInsert(payload.new as T);
           }
         );
@@ -75,7 +75,7 @@ export function useRealtimeSubscription<T>(
             filter: filterString,
           },
           (payload) => {
-            console.log(`[Real-time] UPDATE on ${table}:`, payload.new);
+
             onUpdate(payload.new as T);
           }
         );
@@ -92,7 +92,7 @@ export function useRealtimeSubscription<T>(
             filter: filterString,
           },
           (payload) => {
-            console.log(`[Real-time] DELETE on ${table}:`, payload.old);
+
             onDelete({ old: payload.old as T });
           }
         );
@@ -100,7 +100,7 @@ export function useRealtimeSubscription<T>(
 
       // Subscribe to channel
       channel.subscribe((status) => {
-        console.log(`[Real-time] Subscription status for ${channelName}:`, status);
+
       });
     };
 
@@ -109,7 +109,7 @@ export function useRealtimeSubscription<T>(
     // Cleanup on unmount
     return () => {
       if (channel) {
-        console.log(`[Real-time] Unsubscribing from ${table}`);
+
         supabase.removeChannel(channel);
       }
     };

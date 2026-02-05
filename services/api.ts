@@ -266,7 +266,7 @@ export async function updatePushToken(token: string) {
      console.error("Error updating push token:", error);
      throw error;
   }
-  console.log("Push token updated in profile");
+
 }
 
 export async function deleteAccount() {
@@ -276,7 +276,7 @@ export async function deleteAccount() {
 
 export async function sendPoolCompletionNotification(poolId: string) {
   try {
-    console.log(`Attempting to send notifications for pool ${poolId}`);
+
     // 1. Get pool details
     const { data: pool } = await supabase
       .from("pools")
@@ -423,18 +423,16 @@ export async function checkAndEndExpiredPools(userId: string) {
 
 
     if (poolIdsToProcess.size === 0) {
-      console.log("No expired pools found to finalize.");
+
       return;
     }
 
-    console.log(`Found ${poolIdsToProcess.size} expired pools to finalize. IDs:`, [...poolIdsToProcess]);
+
 
     // 2. End each pool
     // We process sequentially to avoid overwhelming the client/connection although parallel would be faster
     for (const poolId of poolIdsToProcess) {
-      console.log(`Finalizing expired pool: ${poolId}`);
       await endPool(poolId);
-      console.log(`Pool ${poolId} finalized.`);
     }
   } catch (error) {
     console.error("Error checking expired pools:", error);
@@ -535,7 +533,7 @@ export async function getUserAchievements(userId: string): Promise<AchievementMe
     if (error) {
       // If table doesn't exist yet, return empty array
       if (error.code === 'PGRST205' || error.code === '42P01') {
-        console.log('user_achievements table not created yet');
+
         return [];
       }
       throw error;

@@ -31,7 +31,7 @@ const LANGUAGE_DETECTOR = {
 
       return callback('en');
     } catch (error) {
-      console.log('Error reading language', error);
+
       callback('en');
     }
   },
@@ -40,7 +40,7 @@ const LANGUAGE_DETECTOR = {
     try {
       await AsyncStorage.setItem('user-language', language);
     } catch (error) {
-      console.log('Error saving language', error);
+
     }
   },
 };
