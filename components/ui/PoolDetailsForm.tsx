@@ -29,6 +29,15 @@ export const PoolDetailsForm: React.FC<PoolDetailsFormProps> = ({
   const [description, setDescription] = useState(initialDescription);
   const { t } = useTranslation();
 
+  // Sync with external updates (e.g. from reactivating a pool)
+  React.useEffect(() => {
+    setTitle(initialTitle);
+  }, [initialTitle]);
+
+  React.useEffect(() => {
+    setDescription(initialDescription);
+  }, [initialDescription]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>{t('createPool.details.title')}</Text>

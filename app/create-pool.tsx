@@ -52,6 +52,12 @@ export default function CreatePool() {
     if (params.initialDescription) {
       setPoolDescription(params.initialDescription as string);
     }
+    if (params.initialDuration) {
+      const duration = parseInt(params.initialDuration as string, 10);
+      if (!isNaN(duration)) {
+        setVotingDuration(duration);
+      }
+    }
   }, [params]);
 
   const handleClose = () => {
@@ -132,6 +138,8 @@ export default function CreatePool() {
             onTitleChange={setPoolTitle}
             onDescriptionChange={setPoolDescription}
             onDurationChange={setVotingDuration}
+            initialTitle={poolTitle}
+            initialDescription={poolDescription}
             initialDuration={votingDuration}
           />
         </ScrollView>

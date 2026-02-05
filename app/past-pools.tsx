@@ -158,6 +158,7 @@ export default function PastPools() {
                         params: {
                           initialTitle: pool.title,
                           initialDescription: pool.description || "",
+                          initialDuration: pool.voting_duration_minutes.toString(),
                           reactivateFromId: pool.id,
                         },
                       });
