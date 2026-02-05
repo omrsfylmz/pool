@@ -229,12 +229,7 @@ export default function Vote() {
         <TimerSection hours={hours} minutes={minutes} seconds={seconds} />
 
         <View style={styles.main}>
-          <View style={styles.listHeader}>
-            <Text style={styles.listTitle}>{pool.title}</Text>
-            <Text style={styles.listSubtitle}>
-              {pool.description || t('vote.subtitle.default')}
-            </Text>
-          </View>
+
 
           {foodOptionsWithVotes.map((food) => (
             <View key={food.id} style={styles.foodCardWrapper}>
@@ -312,19 +307,7 @@ const styles = StyleSheet.create({
   main: {
     paddingHorizontal: 20,
   },
-  listHeader: {
-    marginBottom: 20,
-  },
-  listTitle: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.bold,
-    marginBottom: 4,
-    color: colors.text.dark,
-  },
-  listSubtitle: {
-    fontSize: typography.sizes.sm,
-    color: colors.text.grey,
-  },
+
   footerHint: {
     textAlign: "center",
     fontSize: typography.sizes.xs,

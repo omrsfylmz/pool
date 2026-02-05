@@ -105,6 +105,7 @@ export default function SharePool() {
           <HeroCard
             poolName={pool.title}
             successTag={t('sharePool.successTag')}
+            imageUri={require("../assets/images/share-pool-hero-simple.png")}
           />
 
           {/* Join Code Display */}
