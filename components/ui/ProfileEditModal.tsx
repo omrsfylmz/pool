@@ -2,14 +2,16 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    Alert,
-    Modal,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { borderRadius, colors, typography } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
@@ -67,7 +69,10 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.centeredView}>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.centeredView}
+      >
         <View style={styles.modalView}>
           <View style={styles.header}>
             <Text style={styles.title}>{t('profile.editProfile')}</Text>
@@ -110,7 +115,7 @@ export const ProfileEditModal: React.FC<ProfileEditModalProps> = ({
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

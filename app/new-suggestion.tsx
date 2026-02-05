@@ -1,8 +1,9 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import * as ExpoClipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { FOOD_ICONS, IconPickerModal } from "../components/ui/IconPickerModal";
 import { IdentityBanner } from "../components/ui/IdentityBanner";
 import { NewSuggestionHeader } from "../components/ui/NewSuggestionHeader";
@@ -71,7 +72,7 @@ export default function NewSuggestion() {
 
   const handleCopyCode = async () => {
     if (pool?.join_code) {
-      await Clipboard.setStringAsync(pool.join_code);
+      await ExpoClipboard.setStringAsync(pool.join_code);
       Alert.alert(t('common.success'), t('results.copied'));
     }
   };
@@ -148,73 +149,79 @@ export default function NewSuggestion() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
       >
-        <NewSuggestionHeader onBack={() => router.push('/dashboard')} />
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <NewSuggestionHeader onBack={() => router.push('/dashboard')} />
 
-        <IdentityBanner
-          identityName={profile.avatar_name.replace("Anonymous ", "")}
-          identityEmoji={profile.avatar_animal}
-          message={`${profile.avatar_animal} ${t('newSuggestion.identityMessage')}`}
-        />
-
-        <SuggestionInput
-          value={suggestion}
-          onChangeText={setSuggestion}
-          label={t('newSuggestion.inputLabel')}
-        />
-
-        {/* Icon Picker */}
-        <View style={styles.iconSection}>
-          <Text style={styles.iconLabel}>{t('newSuggestion.iconLabel')}</Text>
-          <TouchableOpacity
-            style={styles.iconPickerButton}
-            onPress={() => setShowIconPicker(true)}
-            activeOpacity={0.8}
-          >
-            <View style={styles.iconPreview}>
-              <View style={styles.iconCircle}>
-                <FontAwesome5
-                  name={selectedIcon}
-                  size={24}
-                  color={colors.primary.yellow}
-                />
-              </View>
-              <Text style={styles.iconName}>
-                {FOOD_ICONS.find(i => i.name === selectedIcon)?.label || 'Utensils'}
-              </Text>
-            </View>
-            <FontAwesome5 name="chevron-right" size={16} color={colors.text.grey} />
-          </TouchableOpacity>
-        </View>
-
-        {previousSuggestions.length > 0 && (
-          <PreviousSuggestions
-            suggestions={previousSuggestions}
-            onSelect={handleSelectSuggestion}
+          <IdentityBanner
+            identityName={profile.avatar_name.replace("Anonymous ", "")}
+            identityEmoji={profile.avatar_animal}
+            message={`${profile.avatar_animal} ${t('newSuggestion.identityMessage')}`}
           />
-        )}
 
-        <NoteTextarea
-          value={note}
-          onChangeText={setNote}
-        />
+          <SuggestionInput
+            value={suggestion}
+            onChangeText={setSuggestion}
+            label={t('newSuggestion.inputLabel')}
+          />
 
-        <SubmitSuggestionButton
-          onPress={handleSubmit}
-          disabled={!isFormValid || submitting}
-        />
+          {/* Icon Picker */}
+          <View style={styles.iconSection}>
+            <Text style={styles.iconLabel}>{t('newSuggestion.iconLabel')}</Text>
+            <TouchableOpacity
+              style={styles.iconPickerButton}
+              onPress={() => setShowIconPicker(true)}
+              activeOpacity={0.8}
+            >
+              <View style={styles.iconPreview}>
+                <View style={styles.iconCircle}>
+                  <FontAwesome5
+                    name={selectedIcon}
+                    size={24}
+                    color={colors.primary.yellow}
+                  />
+                </View>
+                <Text style={styles.iconName}>
+                  {FOOD_ICONS.find(i => i.name === selectedIcon)?.label || 'Utensils'}
+                </Text>
+              </View>
+              <FontAwesome5 name="chevron-right" size={16} color={colors.text.grey} />
+            </TouchableOpacity>
+          </View>
 
-        {/* Icon Picker Modal */}
-        <IconPickerModal
-          visible={showIconPicker}
-          selectedIcon={selectedIcon}
-          onSelect={setSelectedIcon}
-          onClose={() => setShowIconPicker(false)}
-        />
-      </ScrollView>
+          {previousSuggestions.length > 0 && (
+            <PreviousSuggestions
+              suggestions={previousSuggestions}
+              onSelect={handleSelectSuggestion}
+            />
+          )}
+
+          <NoteTextarea
+            value={note}
+            onChangeText={setNote}
+          />
+
+          <SubmitSuggestionButton
+            onPress={handleSubmit}
+            disabled={!isFormValid || submitting}
+          />
+
+          {/* Icon Picker Modal */}
+          <IconPickerModal
+            visible={showIconPicker}
+            selectedIcon={selectedIcon}
+            onSelect={setSelectedIcon}
+            onClose={() => setShowIconPicker(false)}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

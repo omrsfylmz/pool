@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
 import { CreatePoolButton } from "../components/ui/CreatePoolButton";
 import { CreatePoolHeader } from "../components/ui/CreatePoolHeader";
 import { IdentitySection } from "../components/ui/IdentitySection";
@@ -97,21 +97,28 @@ export default function CreatePool() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
       >
-        <CreatePoolHeader onClose={handleClose} onHelp={handleHelp} />
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <CreatePoolHeader onClose={handleClose} onHelp={handleHelp} />
 
-        <IdentitySection identityName={profile.avatar_name} />
+          <IdentitySection identityName={profile.avatar_name} />
 
-        <PoolDetailsForm
-          onTitleChange={setPoolTitle}
-          onDescriptionChange={setPoolDescription}
-          onDurationChange={setVotingDuration}
-          initialDuration={votingDuration}
-        />
-      </ScrollView>
+          <PoolDetailsForm
+            onTitleChange={setPoolTitle}
+            onDescriptionChange={setPoolDescription}
+            onDurationChange={setVotingDuration}
+            initialDuration={votingDuration}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
       
       <View style={styles.footer}>
         <CreatePoolButton
