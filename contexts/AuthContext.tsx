@@ -1,4 +1,5 @@
 import { Session, User } from "@supabase/supabase-js";
+import { router } from "expo-router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { awardNewcomerBadge, checkAndEndExpiredPools, updatePushToken } from "../services/api";
@@ -24,7 +25,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.log("Error getting session:", error.message);
+        // If refresh token is invalid, ensure we are signed out and redirect
+        if (error.message.includes("Refresh Token") || error.message.includes("refresh_token")) {
+           supabase.auth.signOut();
+           router.replace("/");
+           setLoading(false);
+           return;
+        }
+      }
+
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -39,7 +51,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log(`Auth state changed: ${event}`);
+      
+      if (event === 'SIGNED_OUT') {
+        setSession(null);
+        setUser(null);
+        setLoading(false);
+        router.replace("/");
+        return;
+      }
+      
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
