@@ -3,16 +3,16 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    Alert, KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert, KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
 import { borderRadius, colors, spacing, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
@@ -49,7 +49,7 @@ export default function SignUp() {
       Alert.alert(
         t('common.success'),
         t('auth.success.accountCreated'),
-        [{ text: "OK", onPress: () => router.replace("/(tabs)") }]
+        [{ text: "OK", onPress: () => router.replace("/dashboard") }]
       );
     }
   };

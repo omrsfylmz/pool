@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import {
   Alert, KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,6 +12,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LanguageSelectorModal } from "../components/ui/LanguageSelectorModal";
 import { borderRadius, colors, spacing, typography } from "../constants/theme";
@@ -41,7 +41,7 @@ export default function Login() {
     if (error) {
       Alert.alert(t('auth.errors.loginFailed'), error.message);
     } else {
-      router.replace("/(tabs)");
+      router.replace("/dashboard");
     }
   };
 

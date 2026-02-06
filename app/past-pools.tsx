@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, shadows, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";

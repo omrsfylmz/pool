@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
@@ -33,16 +34,28 @@ export async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-
       return;
     }
 
-    // Learn more about projectId:
-    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-    token = (await Notifications.getExpoPushTokenAsync({ projectId: '0c0fcc48-2ce4-4bb4-abda-0cde3df99941' })).data;
+    // Check if running in Expo Go on Android
+    // The warning says: Android Push notifications ... was removed from Expo Go with SDK 53
+    if (Platform.OS === 'android' && Constants.executionEnvironment === 'storeClient') {
+      return;
+    }
+
+    try {
+      // Learn more about projectId:
+      // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+      // We wrap this in try-catch because on some devices/configs it might still throw or warn aggressively.
+      const tokenData = await Notifications.getExpoPushTokenAsync({ projectId: '0c0fcc48-2ce4-4bb4-abda-0cde3df99941' });
+      token = tokenData.data;
+    } catch (error) {
+       console.log('Error getting push token:', error);
+       // Suppress error in dev/Expo Go if it happens
+    }
 
   } else {
-
+    console.log('Must use physical device for Push Notifications');
   }
 
   return token;

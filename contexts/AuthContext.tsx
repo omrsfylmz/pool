@@ -27,7 +27,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
-        console.log("Error getting session:", error.message);
         // If refresh token is invalid, ensure we are signed out and redirect
         if (error.message.includes("Refresh Token") || error.message.includes("refresh_token")) {
            supabase.auth.signOut();
@@ -52,8 +51,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log(`Auth state changed: ${event}`);
-      
       if (event === 'SIGNED_OUT') {
         setSession(null);
         setUser(null);

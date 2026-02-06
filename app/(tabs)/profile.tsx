@@ -2,16 +2,16 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    Alert,
-    RefreshControl,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { AllBadgesModal } from "../../components/ui/AllBadgesModal";
 import { BadgesSection, type Badge } from "../../components/ui/BadgesSection";
 // BottomNav removed

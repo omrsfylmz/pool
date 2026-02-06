@@ -1,8 +1,10 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import * as Clipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ResultCard, type ResultItem } from "../components/ui/ResultCard";
 import { TimerCard } from "../components/ui/TimerCard";
 import { getAvatarEmoji } from "../constants/avatars";

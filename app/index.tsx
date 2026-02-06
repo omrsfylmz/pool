@@ -1,7 +1,8 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { ActivityIndicator, Dimensions, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { LoginContent } from "../components/ui/LoginContent";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";

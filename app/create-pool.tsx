@@ -1,7 +1,8 @@
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { CreatePoolButton } from "../components/ui/CreatePoolButton";
 import { CreatePoolHeader } from "../components/ui/CreatePoolHeader";
 import { IdentitySection } from "../components/ui/IdentitySection";

@@ -2,14 +2,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, typography } from "../../constants/theme";
 
 interface PrivacyPolicyModalProps {
