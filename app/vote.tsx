@@ -13,6 +13,7 @@ import { useRealtimeFoodOptions } from "../hooks/useRealtimeFoodOptions";
 import { useRealtimePool } from "../hooks/useRealtimePool";
 import { useRealtimeVotes } from "../hooks/useRealtimeVotes";
 import { castVote, endPool, getProfile, getUserVote, type Profile } from "../services/api";
+import { schedulePoolCompletionNotification } from "../services/NotificationService";
 
 export default function Vote() {
   const router = useRouter();
@@ -110,6 +111,11 @@ export default function Vote() {
 
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
+
+    // Schedule notification if pool is active
+    if (pool.status === "active") {
+      schedulePoolCompletionNotification(pool.id, pool.title, pool.ends_at);
+    }
 
     return () => clearInterval(interval);
   }, [pool]);

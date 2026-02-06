@@ -9,6 +9,7 @@ import { PoolDetailsForm } from "../components/ui/PoolDetailsForm";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { clonePoolOptions, createPool, getProfile, type Profile } from "../services/api";
+import { schedulePoolCompletionNotification } from "../services/NotificationService";
 
 export default function CreatePool() {
   const router = useRouter();
@@ -85,6 +86,9 @@ export default function CreatePool() {
     setCreating(true);
     try {
       const pool = await createPool(poolTitle, poolDescription, votingDuration);
+      
+      // Schedule notification
+      schedulePoolCompletionNotification(pool.id, pool.title, pool.ends_at);
       
       // If reactivating, clone options from the old pool
       const { reactivateFromId } = params;

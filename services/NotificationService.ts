@@ -50,8 +50,11 @@ export async function registerForPushNotificationsAsync() {
 
 export async function scheduleDailyNotification() {
   try {
-    // Cancel all existing notifications to avoid duplicates
-    await Notifications.cancelAllScheduledNotificationsAsync();
+    // Check if daily notification is already scheduled
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const hasDaily = scheduled.some(n => n.content.title === "🍔 Lunch Time!");
+
+    if (hasDaily) return;
 
     // Schedule notification for 12:00 PM every day
     await Notifications.scheduleNotificationAsync({
@@ -69,5 +72,46 @@ export async function scheduleDailyNotification() {
 
   } catch (error) {
     console.error("Error scheduling daily notification:", error);
+  }
+}
+
+export async function schedulePoolCompletionNotification(
+  poolId: string,
+  poolTitle: string,
+  endsAt: string
+) {
+  try {
+    const triggerDate = new Date(endsAt);
+    const now = new Date();
+
+    // If pool ends in the past or very soon (less than 10s), don't schedule
+    if (triggerDate.getTime() - now.getTime() < 10000) return;
+
+    // Check if already scheduled to avoid duplicates
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const isAlreadyScheduled = scheduled.some(
+      (n) => n.content.data?.poolId === poolId
+    );
+
+    if (isAlreadyScheduled) {
+       // Optional: Update it if time changed? For now, just skip.
+       return;
+    }
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Pool Complete! 🏁",
+        body: `"${poolTitle}" has ended. Tap to see the winner!`,
+        sound: true,
+        data: { url: `/winner?poolId=${poolId}`, poolId },
+      },
+      trigger: { 
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+        date: triggerDate 
+      },
+    });
+
+  } catch (error) {
+    console.error("Error scheduling pool completion notification:", error);
   }
 }
