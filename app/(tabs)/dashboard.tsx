@@ -12,8 +12,7 @@ import { PastPolls, type Poll } from "../../components/ui/PastPolls";
 import { getAvatarEmoji } from "../../constants/avatars";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
-import { getActivePool, getPastPolls, getProfile, getUserAchievements, type AchievementMedal, type Pool, type Profile } from "../../services/api";
-import { localStorage } from "../../services/localStorage";
+import { getActivePool, getPastPolls, getProfile, getUserAchievements, leavePool, type AchievementMedal, type Pool, type Profile } from "../../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -33,35 +32,33 @@ export default function Dashboard() {
   }, [user, authLoading]);
 
   // Load pool data
-  useEffect(() => {
-    async function loadPools() {
-      if (!user) return;
+  async function loadPools() {
+    if (!user) return;
 
-      try {
-        const [profileData, activePoolData, pastPollsData, achievementsData, hiddenIds] = await Promise.all([
-          getProfile(user.id),
-          getActivePool(user.id),
-          getPastPolls(user.id),
-          getUserAchievements(user.id),
-          localStorage.getHiddenPoolIds(),
-        ]);
+    try {
+      const [profileData, activePoolData, pastPollsData, achievementsData] = await Promise.all([
+        getProfile(user.id),
+        getActivePool(user.id),
+        getPastPolls(user.id),
+        getUserAchievements(user.id),
+      ]);
 
-        setProfile(profileData);
-        setActivePool(activePoolData);
-        // Filter out hidden pools
-        setPastPolls(pastPollsData.filter(p => !hiddenIds.includes(p.id)));
-        setAchievements(achievementsData);
-      } catch (error) {
-        console.error("Error loading pools:", error);
-      } finally {
-        setLoading(false);
-      }
+      setProfile(profileData);
+      setActivePool(activePoolData);
+      setPastPolls(pastPollsData);
+      setAchievements(achievementsData);
+    } catch (error) {
+      console.error("Error loading pools:", error);
+    } finally {
+      setLoading(false);
     }
+  }
 
+  useEffect(() => {
     if (!authLoading) {
       loadPools();
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   if (loading || authLoading) {
     return (
@@ -123,9 +120,15 @@ export default function Dashboard() {
           text: t('common.delete'),
           style: "destructive",
           onPress: async () => {
-            // Optimistic update
-            setPastPolls((current) => current.filter((p) => p.id !== poolId));
-            await localStorage.hidePool(poolId);
+            try {
+              // Optimistic update
+              setPastPolls((current) => current.filter((p) => p.id !== poolId));
+              await leavePool(poolId);
+            } catch (error) {
+              console.error("Failed to leave pool:", error);
+              // Revert optimistic update if failed
+              loadPools(); 
+            }
           },
         },
       ]

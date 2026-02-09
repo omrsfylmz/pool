@@ -71,7 +71,6 @@ export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll, onDelete
         )}
       </View>
     );
-    );
   };
 
   return (

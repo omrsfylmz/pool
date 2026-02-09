@@ -15,7 +15,6 @@ import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, shadows, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { getPastPolls, type Pool } from "../services/api";
-import { localStorage } from "../services/localStorage";
 
 export default function PastPools() {
   const router = useRouter();
@@ -32,15 +31,9 @@ export default function PastPools() {
     if (!user) return;
 
     try {
-      const [pastPools, hiddenIds] = await Promise.all([
-        getPastPolls(user.id, 100),
-        localStorage.getHiddenPoolIds(),
-      ]);
+      const pastPools = await getPastPolls(user.id, 100);
 
-      const visiblePools = pastPools.filter(
-        (p) => !hiddenIds.includes(p.id)
-      );
-      setPools(visiblePools);
+      setPools(pastPools);
     } catch (error) {
       console.error("Error loading past pools:", error);
     } finally {

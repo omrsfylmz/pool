@@ -186,27 +186,17 @@ export async function getPoolByJoinCode(joinCode: string): Promise<Pool | null> 
 }
 
 export async function getPastPolls(userId: string, limit: number = 10) {
-  // 1. Get pools created by user
-  const { data: created } = await supabase
-    .from("pools")
-    .select("id")
-    .eq("creator_id", userId)
-    .eq("status", "ended");
-
-  // 2. Get pools user joined
+  // Get pools user is a member of (including ones they created)
   const { data: joined } = await supabase
     .from("pool_members")
     .select("pool_id")
     .eq("user_id", userId);
 
-  const poolIds = [...new Set([
-    ...(created?.map(p => p.id) || []),
-    ...(joined?.map(p => p.pool_id) || [])
-  ])];
+  if (!joined || joined.length === 0) return [];
 
-  if (poolIds.length === 0) return [];
+  const poolIds = joined.map(p => p.pool_id);
 
-  // 3. Fetch pools with creator profile
+  // Fetch pools with creator profile
   const { data: pools } = await supabase
     .from("pools")
     .select(`
@@ -249,6 +239,22 @@ export async function getPastPolls(userId: string, limit: number = 10) {
   }));
 
   return poolsWithData;
+}
+
+/**
+ * Leave a pool (effectively deleting it from the user's history/dashboard)
+ */
+export async function leavePool(poolId: string) {
+  const user = (await supabase.auth.getUser()).data.user;
+  if (!user) throw new Error("Not authenticated");
+
+  const { error } = await supabase
+    .from("pool_members")
+    .delete()
+    .eq("pool_id", poolId)
+    .eq("user_id", user.id);
+
+  if (error) throw error;
 }
 
 
