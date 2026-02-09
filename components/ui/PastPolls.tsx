@@ -1,7 +1,8 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export interface Poll {
@@ -16,18 +17,60 @@ export interface Poll {
 interface PastPollsProps {
   polls: Poll[];
   onViewAll?: () => void;
+  onDelete?: (poolId: string) => void;
+  onReactivate?: (pool: Poll) => void;
+  onPress?: (poolId: string) => void;
 }
 
 /**
  * PastPolls Component
  * Displays a list of past poll cards
  */
-export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll }) => {
+export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll, onDelete, onReactivate, onPress }) => {
   const { t } = useTranslation();
   const getIconStyle = (color: "taco" | "pizza") => {
     return color === "taco"
       ? { backgroundColor: colors.accent.taco, color: colors.accent.tacoDark }
       : { backgroundColor: colors.accent.pizza, color: colors.accent.redIcon };
+  };
+
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>,
+    pool: Poll
+  ) => {
+    const scale = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [1, 0],
+      extrapolate: "clamp",
+    });
+
+    return (
+      <View style={styles.rightActionsContainer}>
+        {onReactivate && (
+          <TouchableOpacity
+            style={styles.reactivateAction}
+            onPress={() => onReactivate(pool)}
+          >
+            <Animated.View style={{ transform: [{ scale }] }}>
+              <FontAwesome5 name="redo" size={20} color={colors.primary.yellow} />
+              <Text style={styles.actionText}>{t('pastPools.reactivate')}</Text>
+            </Animated.View>
+          </TouchableOpacity>
+        )}
+        {onDelete && (
+          <TouchableOpacity
+            style={styles.deleteAction}
+            onPress={() => onDelete(pool.id)}
+          >
+            <Animated.View style={{ transform: [{ scale }] }}>
+              <FontAwesome5 name="trash-alt" size={20} color="#FFF" />
+              <Text style={styles.actionText}>{t('common.delete')}</Text>
+            </Animated.View>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
   };
 
   return (
@@ -41,8 +84,15 @@ export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll }) => {
 
       {polls.map((poll) => {
         const iconStyle = getIconStyle(poll.iconColor);
-        return (
-          <View key={poll.id} style={styles.pollCard}>
+        
+        // Wrap with Swipeable only if onDelete or onReactivate is provided
+        const content = (
+          <TouchableOpacity 
+            style={[styles.pollCard, { marginBottom: 0 }]}
+            onPress={() => onPress?.(poll.id)}
+            activeOpacity={onPress ? 0.7 : 1}
+            disabled={!onPress}
+          >
             <View style={[styles.pollIcon, { backgroundColor: iconStyle.backgroundColor }]}>
               <FontAwesome5
                 name={poll.icon as any}
@@ -67,8 +117,25 @@ export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll }) => {
                 </View>
               ))}
             </View>
-          </View>
+          </TouchableOpacity>
         );
+
+        if (onDelete || onReactivate) {
+          return (
+            <View key={poll.id} style={styles.pollCardContainer}>
+              <Swipeable
+                renderRightActions={(progress, dragX) => 
+                  renderRightActions(progress, dragX, poll)
+                }
+                overshootRight={false}
+              >
+                {content}
+              </Swipeable>
+            </View>
+          );
+        }
+
+        return <View key={poll.id} style={{ marginBottom: 16 }}>{content}</View>;
       })}
     </View>
   );
@@ -95,14 +162,18 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.bold,
   },
+  pollCardContainer: {
+    borderRadius: borderRadius.md,
+    overflow: 'hidden',
+    backgroundColor: colors.background.card,
+    ...shadows.card,
+    marginBottom: 16,
+  },
   pollCard: {
     backgroundColor: colors.background.card,
-    borderRadius: borderRadius.md,
     padding: 16,
-    marginBottom: 16,
     flexDirection: "row",
     alignItems: "center",
-    ...shadows.card,
   },
   pollIcon: {
     width: 50,
@@ -145,6 +216,29 @@ const styles = StyleSheet.create({
   },
   avatarEmoji: {
     fontSize: 18,
+  },
+  deleteAction: {
+    backgroundColor: colors.status.error,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 80,
+    height: "100%",
+  },
+  reactivateAction: {
+    backgroundColor: colors.primary.yellowLight,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 80,
+    height: "100%",
+  },
+  rightActionsContainer: {
+    flexDirection: 'row',
+  },
+  actionText: {
+    fontSize: 10,
+    fontWeight: "bold",
+    marginTop: 4,
+    textAlign: "center",
   },
 });
 

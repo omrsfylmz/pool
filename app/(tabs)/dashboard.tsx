@@ -2,7 +2,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivePoolCard } from "../../components/ui/ActivePoolCard";
 import { DashboardHeader } from "../../components/ui/DashboardHeader";
 import { FloatingActionButton } from "../../components/ui/FloatingActionButton";
@@ -12,6 +13,7 @@ import { getAvatarEmoji } from "../../constants/avatars";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
 import { getActivePool, getPastPolls, getProfile, getUserAchievements, type AchievementMedal, type Pool, type Profile } from "../../services/api";
+import { localStorage } from "../../services/localStorage";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -36,16 +38,18 @@ export default function Dashboard() {
       if (!user) return;
 
       try {
-        const [profileData, activePoolData, pastPollsData, achievementsData] = await Promise.all([
+        const [profileData, activePoolData, pastPollsData, achievementsData, hiddenIds] = await Promise.all([
           getProfile(user.id),
           getActivePool(user.id),
           getPastPolls(user.id),
           getUserAchievements(user.id),
+          localStorage.getHiddenPoolIds(),
         ]);
 
         setProfile(profileData);
         setActivePool(activePoolData);
-        setPastPolls(pastPollsData);
+        // Filter out hidden pools
+        setPastPolls(pastPollsData.filter(p => !hiddenIds.includes(p.id)));
         setAchievements(achievementsData);
       } catch (error) {
         console.error("Error loading pools:", error);
@@ -106,39 +110,79 @@ export default function Dashboard() {
     }
   };
 
+  const handleDelete = (poolId: string) => {
+    Alert.alert(
+      t('common.delete'),
+      "Are you sure you want to remove this pool from your history?",
+      [
+        {
+          text: t('common.cancel'),
+          style: "cancel",
+        },
+        {
+          text: t('common.delete'),
+          style: "destructive",
+          onPress: async () => {
+            // Optimistic update
+            setPastPolls((current) => current.filter((p) => p.id !== poolId));
+            await localStorage.hidePool(poolId);
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <DashboardHeader />
-
-        {/* Join Pool Button */}
-        <TouchableOpacity
-          style={styles.joinPoolButton}
-          onPress={() => router.push('/join-room')}
-          activeOpacity={0.8}
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <FontAwesome5 name="sign-in-alt" size={16} color={colors.text.dark} />
-          <Text style={styles.joinPoolButtonText}>{t('dashboard.joinPool')}</Text>
-        </TouchableOpacity>
+          <DashboardHeader />
 
-        <MedalDisplay achievements={achievements} />
+          {/* Join Pool Button */}
+          <TouchableOpacity
+            style={styles.joinPoolButton}
+            onPress={() => router.push('/join-room')}
+            activeOpacity={0.8}
+          >
+            <FontAwesome5 name="sign-in-alt" size={16} color={colors.text.dark} />
+            <Text style={styles.joinPoolButtonText}>{t('dashboard.joinPool')}</Text>
+          </TouchableOpacity>
 
-        {activePool && (
-          <ActivePoolCard
-            pool={activePool}
-            onPress={() => router.push(activePool.status === 'ended' ? `/results?poolId=${activePool.id}` : `/vote?poolId=${activePool.id}`)}
-            onTimerEnd={handleTimerEnd}
+          <MedalDisplay achievements={achievements} />
+
+          {activePool && (
+            <ActivePoolCard
+              pool={activePool}
+              onPress={() => router.push(activePool.status === 'ended' ? `/results?poolId=${activePool.id}` : `/vote?poolId=${activePool.id}`)}
+              onTimerEnd={handleTimerEnd}
+            />
+          )}
+
+          <PastPolls 
+            polls={polls} 
+            onViewAll={() => router.push("/past-pools")}
+            onDelete={handleDelete}
+            onPress={(poolId) => router.push(`/results?poolId=${poolId}`)}
+            onReactivate={(pool) => {
+              const originalPool = pastPolls.find(p => p.id === pool.id);
+              if (originalPool) {
+                router.push({
+                  pathname: "/create-pool",
+                  params: {
+                    initialTitle: originalPool.title,
+                    initialDescription: originalPool.description || "",
+                    initialDuration: originalPool.voting_duration_minutes.toString(),
+                    reactivateFromId: originalPool.id,
+                  },
+                });
+              }
+            }}
           />
-        )}
-
-        <PastPolls 
-          polls={polls} 
-          onViewAll={() => router.push("/past-pools")}
-        />
-      </ScrollView>
+        </ScrollView>
+      </GestureHandlerRootView>
 
       <FloatingActionButton onPress={handleFabPress} />
     </SafeAreaView>

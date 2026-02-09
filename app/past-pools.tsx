@@ -8,13 +8,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, shadows, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { getPastPolls, type Pool } from "../services/api";
+import { localStorage } from "../services/localStorage";
 
 export default function PastPools() {
   const router = useRouter();
@@ -24,22 +25,28 @@ export default function PastPools() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadPools() {
-      if (!user) return;
-
-      try {
-        // Load all past pools (no limit)
-        const pastPools = await getPastPolls(user.id, 100);
-        setPools(pastPools);
-      } catch (error) {
-        console.error("Error loading past pools:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadPools();
   }, [user]);
+
+  async function loadPools() {
+    if (!user) return;
+
+    try {
+      const [pastPools, hiddenIds] = await Promise.all([
+        getPastPolls(user.id, 100),
+        localStorage.getHiddenPoolIds(),
+      ]);
+
+      const visiblePools = pastPools.filter(
+        (p) => !hiddenIds.includes(p.id)
+      );
+      setPools(visiblePools);
+    } catch (error) {
+      console.error("Error loading past pools:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -195,6 +202,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border.light,
+    zIndex: 10,
+    backgroundColor: colors.background.main,
   },
   backButton: {
     width: 40,
@@ -212,6 +221,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
+    paddingBottom: 40,
   },
   emptyState: {
     flex: 1,
@@ -287,11 +297,6 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: typography.sizes.xs,
     color: colors.status.success,
-    fontWeight: typography.weights.medium,
-  },
-  poolCode: {
-    fontSize: typography.sizes.xs,
-    color: colors.text.grey,
     fontWeight: typography.weights.medium,
   },
   reactivateButton: {
