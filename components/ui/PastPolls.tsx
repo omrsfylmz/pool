@@ -53,8 +53,8 @@ export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll, onDelete
             onPress={() => onReactivate(pool)}
           >
             <Animated.View style={{ transform: [{ scale }] }}>
-              <FontAwesome5 name="redo" size={20} color={colors.primary.yellow} />
-              <Text style={styles.actionText}>{t('pastPools.reactivate')}</Text>
+              <FontAwesome5 name="redo" size={20} color={colors.text.dark} />
+              <Text style={[styles.actionText, { color: colors.text.dark }]}>{t('pastPools.reactivate')}</Text>
             </Animated.View>
           </TouchableOpacity>
         )}
@@ -65,11 +65,12 @@ export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll, onDelete
           >
             <Animated.View style={{ transform: [{ scale }] }}>
               <FontAwesome5 name="trash-alt" size={20} color="#FFF" />
-              <Text style={styles.actionText}>{t('common.delete')}</Text>
+              <Text style={[styles.actionText, { color: '#FFF' }]}>{t('common.delete')}</Text>
             </Animated.View>
           </TouchableOpacity>
         )}
       </View>
+    );
     );
   };
 
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   reactivateAction: {
-    backgroundColor: colors.primary.yellowLight,
+    backgroundColor: colors.primary.yellow,
     justifyContent: "center",
     alignItems: "center",
     width: 80,
