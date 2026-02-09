@@ -2,14 +2,14 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  Alert,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Alert,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AllBadgesModal } from "../../components/ui/AllBadgesModal";
@@ -194,6 +194,8 @@ export default function ProfileScreen() {
 
           <BadgesSection 
             badges={displayBadges} 
+            earnedCount={earnedBadgeIds.length}
+            totalCount={12}
             onViewAll={() => setShowBadgesModal(true)}
           />
           
