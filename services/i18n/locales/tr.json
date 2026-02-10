@@ -177,7 +177,9 @@
     "shareHint": "Katılmaları için bu kodu diğerleriyle paylaş",
     "addOptionTitle": "İlk Seçeneğini Ekle",
     "addOptionSubtitle": "Yemek önerisi eklemek için tıkla",
-    "shareMessage": "🍽️ Yemek oylamama katıl: \"{{title}}\"!\n\n📱 Katılım Kodu: {{code}}\n\nUygulamayı aç, \"Oylamaya Katıl\"a bas ve oy vermek için bu kodu gir!"
+    "shareMessage": "🍽️ Yemek oylamama katıl: \"{{title}}\"!\n\n📱 Katılım Kodu: {{code}}\n\nUygulamayı aç, \"Oylamaya Katıl\"a bas ve oy vermek için bu kodu gir!",
+    "copied": "Kod Kopyalandı!",
+    "copyHint": "Kodu kopyalamak için dokun"
   },
   "winner": {
     "calculating": "Sonuçlar hesaplanıyor...",

@@ -1,4 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import * as Clipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -56,6 +57,13 @@ export default function SharePool() {
     router.back();
   };
 
+  const handleCopyCode = async () => {
+    if (pool?.join_code) {
+      await Clipboard.setStringAsync(pool.join_code);
+      Alert.alert(t('common.success'), t('sharePool.copied'));
+    }
+  };
+
   const handleAddFirstOption = () => {
     // Navigate to new suggestion page to add food options
     if (poolId) {
@@ -109,14 +117,21 @@ export default function SharePool() {
             imageUri={require("../assets/images/share-pool-hero-simple.png")}
           />
 
-          {/* Join Code Display */}
-          <View style={styles.joinCodeContainer}>
-            <Text style={styles.joinCodeLabel}>{t('sharePool.joinCodeLabel')}</Text>
+          {/* Join Code Display - Tap to copy */}
+          <TouchableOpacity 
+            style={styles.joinCodeContainer}
+            onPress={handleCopyCode}
+            activeOpacity={0.8}
+          >
+            <View style={styles.joinCodeLabelRow}>
+              <Text style={styles.joinCodeLabel}>{t('sharePool.joinCodeLabel')}</Text>
+              <FontAwesome5 name="copy" size={12} color={colors.text.grey} style={{ marginLeft: 6 }} />
+            </View>
             <View style={styles.joinCodeBox}>
               <Text style={styles.joinCodeText}>{pool.join_code}</Text>
             </View>
-            <Text style={styles.joinCodeHint}>{t('sharePool.shareHint')}</Text>
-          </View>
+            <Text style={styles.joinCodeHint}>{t('sharePool.copyHint')}</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity 
             onPress={handleAddFirstOption}
@@ -173,10 +188,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.card,
     borderRadius: 16,
   },
+  joinCodeLabelRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    marginBottom: 8,
+  },
   joinCodeLabel: {
     fontSize: typography.sizes.sm,
     color: colors.text.grey,
-    marginBottom: 8,
   },
   joinCodeBox: {
     backgroundColor: colors.primary.yellowLight,

@@ -174,7 +174,9 @@
     "shareHint": "Share this code with others to join",
     "addOptionTitle": "Add Your First Option",
     "addOptionSubtitle": "Click here to add food suggestions",
-    "shareMessage": "🍽️ Join my lunch pool: \"{{title}}\"!\n\n📱 Join Code: {{code}}\n\nOpen the app, tap \"Join Pool\", and enter this code to vote!"
+    "shareMessage": "🍽️ Join my lunch pool: \"{{title}}\"!\n\n📱 Join Code: {{code}}\n\nOpen the app, tap \"Join Pool\", and enter this code to vote!",
+    "copied": "Code Copied!",
+    "copyHint": "Tap to copy code to clipboard"
   },
   "winner": {
     "calculating": "Calculating results...",
