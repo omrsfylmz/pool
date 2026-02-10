@@ -4,13 +4,15 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
-interface DashboardHeaderProps {}
+interface DashboardHeaderProps {
+  userName?: string;
+}
 
 /**
  * DashboardHeader Component
  * Header for the dashboard with logo
  */
-export const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
+export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ userName }) => {
   const { t } = useTranslation();
   return (
     <View style={styles.header}>
@@ -18,7 +20,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = () => {
         <View style={styles.logoCircle}>
           <FontAwesome5 name="paw" size={20} color={colors.primary.yellow} />
         </View>
-        <Text style={styles.appTitle}>{t('dashboard.title')}</Text>
+        <Text style={styles.appTitle}>
+          {userName ? t('dashboard.title', { name: userName }) : t('auth.welcomeBack')}
+        </Text>
       </View>
     </View>
   );

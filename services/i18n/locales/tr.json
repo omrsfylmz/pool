@@ -37,7 +37,7 @@
     }
   },
   "dashboard": {
-    "title": "Tekrar hoş geldin!",
+    "title": "Tekrar hoş geldin, {{name}}!",
     "joinPool": "Bir Oylamaya Katıl",
     "medals": "Madalyalarınız",
     "achievements": "Başarılar",

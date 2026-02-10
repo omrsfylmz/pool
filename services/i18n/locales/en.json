@@ -37,7 +37,7 @@
     }
   },
   "dashboard": {
-    "title": "Welcome back!",
+    "title": "Welcome back, {{name}}!",
     "joinPool": "Join a Pool",
     "medals": "Your Medals",
     "achievements": "Achievements",

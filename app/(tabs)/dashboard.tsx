@@ -142,7 +142,13 @@ export default function Dashboard() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <DashboardHeader />
+          {/* Debugging logs */}
+          {console.log('Dashboard Debug:', {
+            profileName: profile?.full_name,
+            metadataName: user?.user_metadata?.full_name,
+            email: user?.email
+          })}
+          <DashboardHeader userName={profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0]} />
 
           {/* Join Pool Button */}
           <TouchableOpacity
