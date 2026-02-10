@@ -3,14 +3,14 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JoinRoomHeader } from "../components/ui/JoinRoomHeader";
@@ -44,6 +44,18 @@ export default function JoinRoom() {
         Alert.alert(
           t('join.errors.notFound'),
           t('join.errors.notFoundMessage')
+        );
+        return;
+      }
+
+      // Check if pool is expired
+      const now = new Date();
+      const endsAt = new Date(pool.ends_at);
+      
+      if (pool.status === 'ended' || endsAt <= now) {
+        Alert.alert(
+          t('common.error'),
+          t('join.errors.expired') || "This poll has ended"
         );
         return;
       }

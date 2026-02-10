@@ -127,7 +127,13 @@ export default function Vote() {
   };
 
   const handleVote = async (foodId: string) => {
-    if (!poolId) return;
+    if (!poolId || !pool) return;
+
+    // Check if pool is expired
+    if (pool.status === 'ended' || new Date(pool.ends_at) <= new Date()) {
+      Alert.alert(t('common.error'), t('vote.errors.pollEnded') || "This poll has ended");
+      return;
+    }
 
     try {
       await castVote(poolId, foodId);

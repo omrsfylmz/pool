@@ -61,10 +61,10 @@
       "invalidLength": "Join code must be 6 characters",
       "notFound": "Pool Not Found",
       "notFoundMessage": "No pool found with this join code.",
-      "failed": "Failed to join pool"
+      "failed": "Failed to join pool",
+      "expired": "This poll has ended"
     }
   },
-
   "pastPools": {
     "title": "Past Pools",
     "emptyTitle": "No Past Pools",
@@ -146,7 +146,8 @@
     "errors": {
       "noPoolId": "No pool ID provided",
       "loadFailed": "Failed to load voting data",
-      "voteFailed": "Failed to cast vote. Please try again."
+      "voteFailed": "Failed to cast vote. Please try again.",
+      "pollEnded": "This poll has ended"
     }
   },
   "newSuggestion": {

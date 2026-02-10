@@ -63,10 +63,10 @@
       "invalidLength": "Katılım kodu 6 karakter olmalıdır",
       "notFound": "Oylama Bulunamadı",
       "notFoundMessage": "Bu kodla eşleşen oylama bulunamadı.",
-      "failed": "Oylamaya katılınamadı"
+      "failed": "Oylamaya katılınamadı",
+      "expired": "Bu oylama sona erdi"
     }
   },
-
   "pastPools": {
     "title": "Geçmiş Oylamalar",
     "emptyTitle": "Geçmiş Oylama Yok",
@@ -149,7 +149,8 @@
     "errors": {
       "noPoolId": "Oylama kimliği sağlanmadı",
       "loadFailed": "Oylama verileri yüklenemedi",
-      "voteFailed": "Oy kullanılamadı. Lütfen tekrar deneyin."
+      "voteFailed": "Oy kullanılamadı. Lütfen tekrar deneyin.",
+      "pollEnded": "Bu oylama sona erdi"
     }
   },
   "newSuggestion": {
