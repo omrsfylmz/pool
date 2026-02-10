@@ -2,7 +2,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ActivePoolCard } from "../../components/ui/ActivePoolCard";
 import { DashboardHeader } from "../../components/ui/DashboardHeader";
@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [pastPolls, setPastPolls] = useState<Pool[]>([]);
   const [achievements, setAchievements] = useState<AchievementMedal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -51,8 +52,14 @@ export default function Dashboard() {
       console.error("Error loading pools:", error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   }
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await loadPools();
+  };
 
   useEffect(() => {
     if (!authLoading) {
@@ -141,6 +148,9 @@ export default function Dashboard() {
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary.yellow} />
+          }
         >
           {/* Debugging logs */}
           {console.log('Dashboard Debug:', {
