@@ -1,4 +1,4 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ExpoClipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ export default function NewSuggestion() {
   const [pool, setPool] = useState<Pool | null>(null);
   const [suggestion, setSuggestion] = useState("");
   const [note, setNote] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState("utensils");
+  const [selectedIcon, setSelectedIcon] = useState("silverware-fork-knife");
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [existingSuggestions, setExistingSuggestions] = useState<FoodOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,7 +106,7 @@ export default function NewSuggestion() {
             onPress: () => {
               setSuggestion("");
               setNote("");
-              setSelectedIcon("utensils");
+              setSelectedIcon("silverware-fork-knife");
               // Reload suggestions
               getFoodOptions(poolId).then(setExistingSuggestions);
             },
@@ -183,8 +183,8 @@ export default function NewSuggestion() {
             >
               <View style={styles.iconPreview}>
                 <View style={styles.iconCircle}>
-                  <FontAwesome5
-                    name={selectedIcon}
+                  <MaterialCommunityIcons
+                    name={selectedIcon as any}
                     size={24}
                     color={colors.primary.yellow}
                   />
@@ -193,7 +193,7 @@ export default function NewSuggestion() {
                   {FOOD_ICONS.find(i => i.name === selectedIcon)?.label || 'Utensils'}
                 </Text>
               </View>
-              <FontAwesome5 name="chevron-right" size={16} color={colors.text.grey} />
+              <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.grey} />
             </TouchableOpacity>
           </View>
 

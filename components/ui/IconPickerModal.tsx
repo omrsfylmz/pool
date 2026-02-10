@@ -1,13 +1,13 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import {
-    Dimensions,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
@@ -18,22 +18,25 @@ export interface FoodIcon {
 }
 
 export const FOOD_ICONS: FoodIcon[] = [
-  { name: 'utensils', label: 'Utensils', emoji: '🍴' },
-  { name: 'pizza-slice', label: 'Pizza', emoji: '🍕' },
+  { name: 'silverware-fork-knife', label: 'Utensils', emoji: '🍴' },
+  { name: 'pizza', label: 'Pizza', emoji: '🍕' },
   { name: 'hamburger', label: 'Burger', emoji: '🍔' },
   { name: 'coffee', label: 'Coffee', emoji: '☕' },
   { name: 'ice-cream', label: 'Ice Cream', emoji: '🍦' },
   { name: 'fish', label: 'Sushi', emoji: '🍣' },
-  { name: 'apple-alt', label: 'Fruit', emoji: '🍎' },
-  { name: 'drumstick-bite', label: 'Chicken', emoji: '🍗' },
+  { name: 'apple', label: 'Fruit', emoji: '🍎' },
+  { name: 'food-drumstick', label: 'Chicken', emoji: '🍗' },
   { name: 'cheese', label: 'Cheese', emoji: '🧀' },
-  { name: 'hotdog', label: 'Hot Dog', emoji: '🌭' },
-  { name: 'pepper-hot', label: 'Spicy', emoji: '🌶️' },
+  { name: 'food-hot-dog', label: 'Hot Dog', emoji: '🌭' },
+  { name: 'chili-hot', label: 'Spicy', emoji: '🌶️' },
   { name: 'carrot', label: 'Veggie', emoji: '🥕' },
   { name: 'bread-slice', label: 'Bread', emoji: '🍞' },
   { name: 'cookie', label: 'Dessert', emoji: '🍪' },
-  { name: 'wine-glass', label: 'Drinks', emoji: '🍷' },
-  { name: 'lemon', label: 'Citrus', emoji: '🍋' },
+  { name: 'glass-cocktail', label: 'Drinks', emoji: '🍷' },
+  { name: 'fruit-citrus', label: 'Citrus', emoji: '🍋' },
+  { name: 'taco', label: 'Taco', emoji: '🌮' },
+  { name: 'food-steak', label: 'Doner/Kebab', emoji: '🥙' },
+  { name: 'noodles', label: 'Soup/Stew', emoji: '🍲' },
 ];
 
 interface IconPickerModalProps {
@@ -67,7 +70,7 @@ export const IconPickerModal: React.FC<IconPickerModalProps> = ({
           <View style={styles.header}>
             <Text style={styles.title}>Select an Icon</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <FontAwesome5 name="times" size={20} color={colors.text.grey} />
+              <MaterialCommunityIcons name="close" size={24} color={colors.text.grey} />
             </TouchableOpacity>
           </View>
 
@@ -95,24 +98,17 @@ export const IconPickerModal: React.FC<IconPickerModalProps> = ({
                     selectedIcon === icon.name && styles.iconCircleSelected,
                   ]}
                 >
-                  <FontAwesome5
-                    name={icon.name}
+                  <MaterialCommunityIcons
+                    name={icon.name as any}
                     size={28}
                     color={
                       selectedIcon === icon.name
-                        ? colors.text.dark
-                        : colors.primary.yellow
+                        ? '#FFFFFF' // White icon on yellow background
+                        : colors.primary.yellowDark
                     }
                   />
                 </View>
-                <Text
-                  style={[
-                    styles.iconLabel,
-                    selectedIcon === icon.name && styles.iconLabelSelected,
-                  ]}
-                >
-                  {icon.label}
-                </Text>
+
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -132,30 +128,30 @@ export const IconPickerModal: React.FC<IconPickerModalProps> = ({
 };
 
 const { width } = Dimensions.get('window');
-const iconSize = (width - 80) / 4; // 4 icons per row with padding
+const iconSize = (width - 60) / 4; // 4 icons per row
 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Darker overlay
+    justifyContent: 'flex-end', // Bottom sheet style
   },
   modalContainer: {
     backgroundColor: colors.background.card,
-    borderRadius: borderRadius.lg,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     width: '100%',
-    maxWidth: 400,
-    maxHeight: '80%',
+    maxHeight: '85%',
+    paddingBottom: 30, // Safe area
     ...shadows.card,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 10,
+    padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border.veryLight,
   },
   title: {
     fontSize: typography.sizes.lg,
@@ -163,48 +159,55 @@ const styles = StyleSheet.create({
     color: colors.text.dark,
   },
   closeButton: {
-    padding: 5,
+    padding: 8,
+    backgroundColor: colors.background.light,
+    borderRadius: 20,
   },
   subtitle: {
     fontSize: typography.sizes.sm,
     color: colors.text.grey,
-    paddingHorizontal: 20,
-    paddingBottom: 15,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    marginTop: -5,
   },
   scrollView: {
-    maxHeight: 400,
+    maxHeight: 500,
   },
   iconGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 15,
-    paddingTop: 5,
+    padding: 10,
+    justifyContent: 'flex-start',
   },
   iconButton: {
     width: iconSize,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 24,
   },
   iconButtonSelected: {
-    // Visual feedback for selected state (handled by iconCircle)
+    transform: [{ scale: 1.05 }], // Slight scale effect
   },
   iconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: colors.primary.yellowLight,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: colors.background.light,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,
-    borderWidth: 2,
+    marginBottom: 10,
+    ...shadows.button, // Add shadow
+    borderWidth: 1,
     borderColor: 'transparent',
   },
   iconCircleSelected: {
     backgroundColor: colors.primary.yellow,
-    borderColor: colors.primary.yellowDark,
+    shadowColor: colors.primary.yellow,
+    shadowOpacity: 0.5,
+    elevation: 8,
+    transform: [{ scale: 1.05 }],
   },
   iconLabel: {
-    fontSize: 11,
+    fontSize: 12,
     color: colors.text.grey,
     textAlign: 'center',
     fontWeight: typography.weights.medium,
@@ -214,19 +217,22 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.bold,
   },
   defaultButton: {
-    margin: 20,
+    margin: 24,
     marginTop: 10,
-    paddingVertical: 14,
+    paddingVertical: 16,
     paddingHorizontal: 20,
-    backgroundColor: colors.background.light,
+    backgroundColor: colors.background.main,
     borderRadius: borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
     borderWidth: 1,
     borderColor: colors.border.light,
-    alignItems: 'center',
   },
   defaultButtonText: {
     fontSize: typography.sizes.sm,
     fontWeight: typography.weights.bold,
-    color: colors.text.grey,
+    color: colors.text.dark,
   },
 });
