@@ -1,8 +1,7 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export interface Poll {
@@ -10,95 +9,37 @@ export interface Poll {
   title: string;
   date: string;
   icon: string;
-  iconColor: "taco" | "pizza";
   avatars: string[];
 }
 
 interface PastPollsProps {
   polls: Poll[];
-  onViewAll?: () => void;
-  onDelete?: (poolId: string) => void;
-  onReactivate?: (pool: Poll) => void;
-  onPress?: (poolId: string) => void;
+  onPollPress?: (pollId: string) => void;
 }
 
-/**
- * PastPolls Component
- * Displays a list of past poll cards
- */
-export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll, onDelete, onReactivate, onPress }) => {
+export const PastPolls: React.FC<PastPollsProps> = ({ polls, onPollPress }) => {
   const { t } = useTranslation();
-  const getIconStyle = (color: "taco" | "pizza") => {
-    return color === "taco"
-      ? { backgroundColor: colors.accent.taco, color: colors.accent.tacoDark }
-      : { backgroundColor: colors.accent.pizza, color: colors.accent.redIcon };
-  };
-
-  const renderRightActions = (
-    progress: Animated.AnimatedInterpolation<number>,
-    dragX: Animated.AnimatedInterpolation<number>,
-    pool: Poll
-  ) => {
-    const scale = dragX.interpolate({
-      inputRange: [-80, 0],
-      outputRange: [1, 0],
-      extrapolate: "clamp",
-    });
-
-    return (
-      <View style={styles.rightActionsContainer}>
-        {onReactivate && (
-          <TouchableOpacity
-            style={styles.reactivateAction}
-            onPress={() => onReactivate(pool)}
-          >
-            <Animated.View style={{ transform: [{ scale }] }}>
-              <FontAwesome5 name="redo" size={20} color={colors.text.dark} />
-              <Text style={[styles.actionText, { color: colors.text.dark }]}>{t('pastPools.reactivate')}</Text>
-            </Animated.View>
-          </TouchableOpacity>
-        )}
-        {onDelete && (
-          <TouchableOpacity
-            style={styles.deleteAction}
-            onPress={() => onDelete(pool.id)}
-          >
-            <Animated.View style={{ transform: [{ scale }] }}>
-              <FontAwesome5 name="trash-alt" size={20} color="#FFF" />
-              <Text style={[styles.actionText, { color: '#FFF' }]}>{t('common.delete')}</Text>
-            </Animated.View>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  };
 
   return (
     <View style={styles.container}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>{t('dashboard.pastPolls')}</Text>
-        <TouchableOpacity onPress={onViewAll} activeOpacity={0.7}>
-          <Text style={styles.viewAll}>{t('dashboard.viewAll')}</Text>
-        </TouchableOpacity>
       </View>
 
-      {polls.map((poll) => {
-        const iconStyle = getIconStyle(poll.iconColor);
-        
-        // Wrap with Swipeable only if onDelete or onReactivate is provided
-        const content = (
+      {polls.length === 0 ? (
+        <Text style={{ textAlign: 'center', color: colors.text.lightGrey, marginTop: 20 }}>
+          {t('pastPools.empty')}
+        </Text>
+      ) : (
+        polls.map((poll) => (
           <TouchableOpacity 
-            style={[styles.pollCard, { marginBottom: 0 }]}
-            onPress={() => onPress?.(poll.id)}
-            activeOpacity={onPress ? 0.7 : 1}
-            disabled={!onPress}
+            key={poll.id} 
+            style={styles.pollCard}
+            onPress={() => onPollPress?.(poll.id)}
+            activeOpacity={0.7}
           >
-            <View style={[styles.pollIcon, { backgroundColor: iconStyle.backgroundColor }]}>
-              <FontAwesome5
-                name={poll.icon as any}
-                size={20}
-                color={iconStyle.color}
-              />
+            <View style={styles.pollIcon}>
+              <MaterialCommunityIcons name={poll.icon as any} size={24} color={colors.primary.yellow} />
             </View>
             <View style={styles.pollInfo}>
               <Text style={styles.pollTitle}>{poll.title}</Text>
@@ -118,25 +59,8 @@ export const PastPolls: React.FC<PastPollsProps> = ({ polls, onViewAll, onDelete
               ))}
             </View>
           </TouchableOpacity>
-        );
-
-        if (onDelete || onReactivate) {
-          return (
-            <View key={poll.id} style={styles.pollCardContainer}>
-              <Swipeable
-                renderRightActions={(progress, dragX) => 
-                  renderRightActions(progress, dragX, poll)
-                }
-                overshootRight={false}
-              >
-                {content}
-              </Swipeable>
-            </View>
-          );
-        }
-
-        return <View key={poll.id} style={{ marginBottom: 16 }}>{content}</View>;
-      })}
+        ))
+      )}
     </View>
   );
 };
@@ -174,6 +98,9 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 16,
+    borderRadius: borderRadius.md,
+    ...shadows.card,
   },
   pollIcon: {
     width: 50,
@@ -182,6 +109,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 15,
+    backgroundColor: colors.primary.yellowLight, 
   },
   pollInfo: {
     flex: 1,
@@ -194,7 +122,7 @@ const styles = StyleSheet.create({
   },
   pollDate: {
     fontSize: typography.sizes.xs,
-    color: colors.text.lightGrey,
+    color: colors.text.grey,
   },
   avatarGroup: {
     flexDirection: "row",
@@ -241,4 +169,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

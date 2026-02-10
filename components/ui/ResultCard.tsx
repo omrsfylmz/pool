@@ -1,4 +1,4 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { ImageSourcePropType, StyleSheet, Text, View } from "react-native";
@@ -10,7 +10,7 @@ export interface ResultItem {
   rank: number;
   voteCount: number;
   popularity: number; // percentage
-  icon?: string; // FontAwesome5 icon name
+  icon?: string; // MaterialCommunityIcons icon name
   imageUri?: string | ImageSourcePropType;
   voters?: string[]; // Array of emoji avatars
   isWinner?: boolean;
@@ -49,8 +49,8 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
       <View style={styles.cardTop}>
         {/* Food Icon */}
         <View style={styles.iconContainer}>
-          <FontAwesome5
-            name={result.icon || "utensils"}
+          <MaterialCommunityIcons
+            name={result.icon as any || "silverware-fork-knife"}
             size={28}
             color={colors.primary.yellow}
           />
@@ -70,7 +70,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
             </View>
             <View style={styles.voteStat}>
               {result.isWinner && (
-                <FontAwesome5
+                <MaterialCommunityIcons
                   name="trophy"
                   size={14}
                   color={colors.primary.yellow}

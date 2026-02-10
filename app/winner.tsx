@@ -1,4 +1,4 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -157,8 +157,8 @@ export default function Winner() {
                 <View key={option.id} style={[styles.voteCard, isWinner && styles.voteCardWinner]}>
                   <View style={styles.cardHeader}>
                     <View style={styles.iconCircle}>
-                      <FontAwesome5 
-                        name={option.icon || "utensils"} 
+                      <MaterialCommunityIcons 
+                        name={option.icon as any || "silverware-fork-knife"} 
                         size={24} 
                         color={isWinner ? colors.primary.yellow : colors.text.grey} 
                       />

@@ -493,7 +493,7 @@ export async function getUserMedals(userId: string): Promise<FoodMedal[]> {
 
   pools.forEach((pool: any) => {
     const foodOption = pool.food_options;
-    if (foodOption && foodOption.icon && foodOption.icon !== "utensils") {
+    if (foodOption && foodOption.icon && foodOption.icon !== "silverware-fork-knife") {
       if (!medalCounts[foodOption.icon]) {
         medalCounts[foodOption.icon] = { name: foodOption.name, wins: 0 };
       }
@@ -668,7 +668,7 @@ export async function addFoodOption(
       creator_id: user.id,
       name,
       description,
-      icon: icon || 'utensils',
+      icon: icon || 'silverware-fork-knife',
     })
     .select()
     .single();

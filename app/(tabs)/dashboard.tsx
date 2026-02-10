@@ -91,7 +91,7 @@ export default function Dashboard() {
       hour: "numeric",
       minute: "2-digit",
     }),
-    icon: "utensils",
+    icon: "silverware-fork-knife",
     iconColor: "taco",
     avatars: (pool.participant_avatars || []).map((avatar: string) => getAvatarEmoji(avatar)),
   }));

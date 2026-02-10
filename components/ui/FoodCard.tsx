@@ -1,4 +1,4 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -32,8 +32,8 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
       <View style={styles.foodImgContainer}>
         {/* Food Icon */}
         <View style={styles.iconBackground}>
-          <FontAwesome5 
-            name={food.icon || 'utensils'} 
+          <MaterialCommunityIcons 
+            name={food.icon as any || 'silverware-fork-knife'} 
             size={48} 
             color={colors.primary.yellow} 
           />

@@ -116,7 +116,7 @@ export const IconPickerModal: React.FC<IconPickerModalProps> = ({
           {/* Use Default Button */}
           <TouchableOpacity
             style={styles.defaultButton}
-            onPress={() => handleSelectIcon('utensils')}
+            onPress={() => handleSelectIcon('silverware-fork-knife')}
             activeOpacity={0.8}
           >
             <Text style={styles.defaultButtonText}>Use Default (Utensils)</Text>
