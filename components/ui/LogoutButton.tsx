@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { borderRadius, colors, typography } from "../../constants/theme";
 
@@ -12,7 +13,9 @@ interface LogoutButtonProps {
  * LogoutButton Component
  * Logout button with red styling
  */
-export const LogoutButton: React.FC<LogoutButtonProps> = ({ onPress, text = "Log Out" }) => {
+export const LogoutButton: React.FC<LogoutButtonProps> = ({ onPress, text }) => {
+  const { t } = useTranslation();
+  const displayText = text || t('profile.logout');
   return (
     <TouchableOpacity
       style={styles.container}
@@ -20,7 +23,7 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({ onPress, text = "Log
       activeOpacity={0.7}
     >
       <FontAwesome5 name="sign-out-alt" size={20} color={colors.status.error} />
-      <Text style={styles.text}>{text}</Text>
+      <Text style={styles.buttonText}>{displayText}</Text>
     </TouchableOpacity>
   );
 };

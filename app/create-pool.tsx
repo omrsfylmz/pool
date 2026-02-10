@@ -80,7 +80,7 @@ export default function CreatePool() {
     }
 
     if (!votingDuration) {
-      Alert.alert(t('common.error'), "Please select a voting duration");
+      Alert.alert(t('common.error'), t('createPool.errors.missingDuration'));
       return;
     }
 

@@ -1,7 +1,8 @@
-import React from "react";
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, borderRadius, shadows, typography } from "../../constants/theme";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, shadows, typography } from "../../constants/theme";
 
 interface SubmitSuggestionButtonProps {
   onPress?: () => void;
@@ -15,9 +16,11 @@ interface SubmitSuggestionButtonProps {
  */
 export const SubmitSuggestionButton: React.FC<SubmitSuggestionButtonProps> = ({
   onPress,
-  text = "Add to Poll",
+  text,
   disabled = false,
 }) => {
+  const { t } = useTranslation();
+  const displayText = text || t('newSuggestion.submitButton');
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -26,11 +29,11 @@ export const SubmitSuggestionButton: React.FC<SubmitSuggestionButtonProps> = ({
         activeOpacity={0.8}
         disabled={disabled}
       >
-        <Text style={styles.buttonText}>{text}</Text>
+        <Text style={styles.buttonText}>{displayText}</Text>
         <FontAwesome5 name="paper-plane" size={16} color={colors.text.dark} />
       </TouchableOpacity>
       <Text style={styles.footerNote}>
-        YOUR SUGGESTION WILL BE ANONYMOUS 🤫
+        {t('newSuggestion.anonymousNote')}
       </Text>
     </View>
   );

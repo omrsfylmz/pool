@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
@@ -25,6 +26,7 @@ interface FoodCardProps {
  * Card displaying a food option with image, votes, and vote button
  */
 export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.card}>
       <View style={styles.foodImgContainer}>
@@ -38,7 +40,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
         </View>
         {food.isLeading && (
           <View style={styles.badgeLeading}>
-            <Text style={styles.badgeText}>Leading</Text>
+            <Text style={styles.badgeText}>{t('vote.leading')}</Text>
           </View>
         )}
       </View>
@@ -51,7 +53,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
               !food.isLeading && styles.voteCountSecondary,
             ]}
           >
-            {food.voteCount} {food.voteCount === 1 ? "vote" : "votes"}
+            {food.voteCount} {food.voteCount === 1 ? t('vote.vote') : t('vote.votes')}
           </Text>
           {food.voters && food.voters.length > 0 && (
             <View style={styles.avatarStack}>
@@ -91,7 +93,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
                 food.hasVoted && styles.btnVoteTextSecondary,
               ]}
             >
-              {food.hasVoted ? "Voted" : "Vote"}
+              {food.hasVoted ? t('vote.votedButton') : t('vote.voteButton')}
             </Text>
           </TouchableOpacity>
         </View>

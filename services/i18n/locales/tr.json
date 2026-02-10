@@ -48,12 +48,11 @@
       "endsIn": "Bitiş",
       "joinButton": "Oylamaya Katıl",
       "participants": "katılımcı"
-    }
+    },
+    "deleteConfirmation": "Bu oylamayı geçmişinden kaldırmak istediğine emin misin?"
   },
   "join": {
     "title": "Oylamaya Katıl",
-    "emptyText": "Henüz herhangi bir oylamaya katılmadınız. Başlamak için bir oylamaya katılın veya oluşturun!",
-    "reactivate": "Tekrar Başlat",
     "subtitle": "Öğle yemeği oylamasına katılmak için\n6 haneli kodu girin",
     "label": "Katılım Kodu",
     "button": "Oylamaya Katıl",
@@ -97,6 +96,8 @@
     "updateSuccess": "Profil başarıyla güncellendi",
     "deleteAccount": "Hesabı Sil",
     "deleteConfirmation": "Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+    "account": "Hesap",
+    "earned": "Kazanıldı",
     "errors": {
       "nameRequired": "İsim alanı boş bırakılamaz",
       "updateFailed": "Profil güncellenemedi",
@@ -112,6 +113,7 @@
     },
     "errors": {
       "missingTitle": "Lütfen bir oylama başlığı girin",
+      "missingDuration": "Lütfen oylama süresi seçin",
       "creationFailed": "Oylama oluşturulamadı",
       "loadProfileFailed": "Profil yüklenemedi"
     },
@@ -139,12 +141,16 @@
     "changeVote": "Oyu Değiştir",
     "castVote": "Oy Ver",
     "votes": "oy",
+    "vote": "oy",
     "leading": "Önde",
+    "votedButton": "Oy Verildi",
+    "voteButton": "Oy Ver",
     "emptyState": "Henüz yemek seçeneği yok!",
     "footerHint": "Oy verenler süre bitene kadar gizlidir. 🤫",
     "addIdeaButton": "+ Fikrini Ekle",
     "alerts": {
-      "search": "Arama özelliği yakında!"
+      "search": "Arama özelliği yakında!",
+      "searchTitle": "Arama"
     },
     "errors": {
       "noPoolId": "Oylama kimliği sağlanmadı",
@@ -169,7 +175,12 @@
     },
     "identityMessage": "Bugün öğle yemeğinde ne var?",
     "inputLabel": "Canın ne çekiyor?",
-    "iconLabel": "İkon (İsteğe bağlı)"
+    "iconLabel": "İkon (İsteğe bağlı)",
+    "submitButton": "Oylamaya Ekle",
+    "anonymousNote": "ÖNERİN ANONİM OLACAK 🤫",
+    "noteLabel": "Kısa not (İsteğe bağlı)",
+    "notePlaceholder": "Herkese bunun neden en iyi seçim olduğunu anlat...",
+    "previousSuggestions": "Önceki Öneriler"
   },
   "sharePool": {
     "successTag": "Başarılı! Oylaman Yayında",
@@ -192,7 +203,17 @@
       "subtitle": "Bir dahaki sefere bol şans"
     },
     "allOptions": "Tüm Seçenekler",
-    "backButton": "Ana Sayfaya Dön"
+    "backButton": "Ana Sayfaya Dön",
+    "winnerBanner": "✨ KAZANAN BELLİ!",
+    "officeSpoken": "Ofis kararını verdi! 🍕",
+    "voteBreakdown": "OY DAĞILIMI",
+    "totalVotes": "{{count}} Toplam Oy",
+    "winningChoice": "KAZANAN SEÇİM",
+    "tieBreaker": "{{name}} karşısında berabere galibiyeti! Her iki seçenek de {{count}} oy aldı.",
+    "whoParticipated": "KİMLER KATILDI",
+    "more": "DAHA",
+    "noResultsFound": "Sonuç bulunamadı",
+    "viewAllVoters": "TÜM {{count}} OY VERENİ GÖR"
   },
   "timer": {
     "endsIn": "Oylama Bitiş",
@@ -224,7 +245,9 @@
     },
     "joinCode": "Katılım Kodu",
     "copied": "Kod Kopyalandı!",
-    "copyHint": "Kodu panoya kopyalamak için dokunun"
+    "copyHint": "Kodu panoya kopyalamak için dokunun",
+    "popularity": "Popülerlik",
+    "resultsBreakdown": "Sonuç Detayı"
   },
   "shareButton": {
     "defaultText": "Oylama Linkini Paylaş"

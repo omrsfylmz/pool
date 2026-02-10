@@ -56,7 +56,7 @@ export default function ResultsBreakdown() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <Text style={styles.errorText}>No results found</Text>
+          <Text style={styles.errorText}>{t('winner.noResultsFound')}</Text>
         </View>
       </SafeAreaView>
     );
@@ -80,24 +80,24 @@ export default function ResultsBreakdown() {
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Text style={styles.closeIcon}>✕</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Results Breakdown</Text>
+          <Text style={styles.headerTitle}>{t('results.resultsBreakdown')}</Text>
           <View style={styles.headerSpacer} />
         </View>
 
         {/* Winner Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.winnerBanner}>
-            <Text style={styles.winnerBannerText}>✨ WINNER WINNER!</Text>
+            <Text style={styles.winnerBannerText}>{t('winner.winnerBanner')}</Text>
           </View>
           <Text style={styles.heroTitle}>{winner.name.toUpperCase()}!</Text>
-          <Text style={styles.heroSubtitle}>The Office has spoken! 🍕</Text>
+          <Text style={styles.heroSubtitle}>{t('winner.officeSpoken')}</Text>
         </View>
 
         {/* Vote Breakdown Header */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionLabel}>VOTE BREAKDOWN</Text>
+          <Text style={styles.sectionLabel}>{t('winner.voteBreakdown')}</Text>
           <View style={styles.totalVotesBadge}>
-            <Text style={styles.totalVotesText}>{poolData.totalVotes} Total Votes</Text>
+            <Text style={styles.totalVotesText}>{t('winner.totalVotes', { count: poolData.totalVotes })}</Text>
           </View>
         </View>
 
@@ -112,11 +112,11 @@ export default function ResultsBreakdown() {
                 <Text style={styles.itemIcon}>{result.icon || "�️"}</Text>
                 <View style={styles.itemInfo}>
                   <Text style={styles.itemName}>{result.name}</Text>
-                  {isWinner && <Text style={styles.winningLabel}>WINNING CHOICE</Text>}
+                  {isWinner && <Text style={styles.winningLabel}>{t('winner.winningChoice')}</Text>}
                 </View>
                 <View style={styles.voteCount}>
                   <Text style={styles.voteCountNumber}>{result.voteCount}</Text>
-                  <Text style={styles.voteCountLabel}>votes</Text>
+                  <Text style={styles.voteCountLabel}>{t('vote.votes')}</Text>
                 </View>
               </View>
 
@@ -138,7 +138,7 @@ export default function ResultsBreakdown() {
                 <View style={styles.tieAlert}>
                   <Text style={styles.tieIcon}>🔀</Text>
                   <Text style={styles.tieText}>
-                    Tie-breaker win against {runnerUp.name}! Both options received {winner.voteCount} votes.
+                    {t('winner.tieBreaker', { name: runnerUp.name, count: winner.voteCount })}
                   </Text>
                 </View>
               )}
@@ -148,7 +148,7 @@ export default function ResultsBreakdown() {
 
         {/* Participation Section */}
         <View style={styles.participationSection}>
-          <Text style={styles.sectionLabel}>WHO PARTICIPATED</Text>
+          <Text style={styles.sectionLabel}>{t('winner.whoParticipated')}</Text>
           
           <View style={styles.avatarStack}>
             {visibleVoters.map((emoji, index) => (
@@ -165,13 +165,13 @@ export default function ResultsBreakdown() {
             {remainingCount > 0 && (
               <View style={[styles.avatar, styles.moreCount]}>
                 <Text style={styles.moreCountText}>+{remainingCount}</Text>
-                <Text style={styles.moreCountLabel}>MORE</Text>
+                <Text style={styles.moreCountLabel}>{t('winner.more')}</Text>
               </View>
             )}
           </View>
 
           <TouchableOpacity style={styles.viewButton} onPress={handleViewAllVoters}>
-            <Text style={styles.viewButtonText}>VIEW ALL {totalVoters} VOTERS</Text>
+            <Text style={styles.viewButtonText}>{t('winner.viewAllVoters', { count: totalVoters })}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

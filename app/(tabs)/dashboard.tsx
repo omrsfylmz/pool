@@ -110,7 +110,7 @@ export default function Dashboard() {
   const handleDelete = (poolId: string) => {
     Alert.alert(
       t('common.delete'),
-      "Are you sure you want to remove this pool from your history?",
+      t('dashboard.deleteConfirmation'),
       [
         {
           text: t('common.cancel'),

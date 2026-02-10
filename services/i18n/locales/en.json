@@ -48,7 +48,8 @@
       "endsIn": "Ends in",
       "joinButton": "Join Voting",
       "participants": "participants"
-    }
+    },
+    "deleteConfirmation": "Are you sure you want to remove this pool from your history?"
   },
   "join": {
     "title": "Join a Pool",
@@ -70,7 +71,8 @@
     "emptyTitle": "No Past Pools",
     "emptyText": "You haven't participated in any pools yet. Join a pool or create one to get started!",
     "ended": "Ended",
-    "reactivate": "Reactivate"
+    "reactivate": "Reactivate",
+    "code": "Code: "
   },
   "nav": {
     "home": "Home",
@@ -94,6 +96,8 @@
     "updateSuccess": "Profile updated successfully",
     "deleteAccount": "Delete Account",
     "deleteConfirmation": "Are you sure you want to delete your account? This action cannot be undone.",
+    "account": "Account",
+    "earned": "Earned",
     "errors": {
       "nameRequired": "Name cannot be empty",
       "updateFailed": "Failed to update profile",
@@ -109,6 +113,7 @@
     },
     "errors": {
       "missingTitle": "Please enter a pool title",
+      "missingDuration": "Please select a voting duration",
       "creationFailed": "Failed to create pool",
       "loadProfileFailed": "Failed to load profile"
     },
@@ -136,12 +141,16 @@
     "changeVote": "Change Vote",
     "castVote": "Cast Vote",
     "votes": "votes",
+    "vote": "vote",
     "leading": "Leading",
+    "votedButton": "Voted",
+    "voteButton": "Vote",
     "emptyState": "No food options yet!",
     "footerHint": "Voters are hidden until the timer ends. 🤫",
     "addIdeaButton": "+ Add Your Idea",
     "alerts": {
-      "search": "Search functionality coming soon!"
+      "search": "Search functionality coming soon!",
+      "searchTitle": "Search"
     },
     "errors": {
       "noPoolId": "No pool ID provided",
@@ -166,7 +175,12 @@
     },
     "identityMessage": "What's for lunch today?",
     "inputLabel": "What are you craving?",
-    "iconLabel": "Icon (Optional)"
+    "iconLabel": "Icon (Optional)",
+    "submitButton": "Add to Poll",
+    "anonymousNote": "YOUR SUGGESTION WILL BE ANONYMOUS 🤫",
+    "noteLabel": "Small note (Optional)",
+    "notePlaceholder": "Tell everyone why this is the best choice...",
+    "previousSuggestions": "Previous Suggestions"
   },
   "sharePool": {
     "successTag": "Success! Your Pool is Live",
@@ -189,7 +203,17 @@
       "subtitle": "Better luck next time"
     },
     "allOptions": "All Options",
-    "backButton": "Back to Dashboard"
+    "backButton": "Back to Dashboard",
+    "winnerBanner": "✨ WINNER WINNER!",
+    "officeSpoken": "The Office has spoken! 🍕",
+    "voteBreakdown": "VOTE BREAKDOWN",
+    "totalVotes": "{{count}} Total Votes",
+    "winningChoice": "WINNING CHOICE",
+    "tieBreaker": "Tie-breaker win against {{name}}! Both options received {{count}} votes.",
+    "whoParticipated": "WHO PARTICIPATED",
+    "more": "MORE",
+    "noResultsFound": "No results found",
+    "viewAllVoters": "VIEW ALL {{count}} VOTERS"
   },
   "timer": {
     "endsIn": "Voting Ends In",
@@ -221,7 +245,9 @@
     },
     "joinCode": "Join Code",
     "copied": "Code Copied!",
-    "copyHint": "Tap to copy code to clipboard"
+    "copyHint": "Tap to copy code to clipboard",
+    "popularity": "Popularity",
+    "resultsBreakdown": "Results Breakdown"
   },
   "shareButton": {
     "defaultText": "Share Pool Link"

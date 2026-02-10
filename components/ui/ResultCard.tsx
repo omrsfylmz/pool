@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ImageSourcePropType, StyleSheet, Text, View } from "react-native";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
@@ -24,6 +25,7 @@ interface ResultCardProps {
  * Card displaying food option results with rank, votes, and progress bar
  */
 export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
+  const { t } = useTranslation();
   const maxAvatars = 4;
   const visibleVoters = result.voters?.slice(0, maxAvatars) || [];
   const remainingCount =
@@ -76,7 +78,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
                 />
               )}
               <Text style={styles.voteNum}>{result.voteCount}</Text>
-              <Text style={styles.voteLabel}>Votes</Text>
+              <Text style={styles.voteLabel}>{t('vote.votes')}</Text>
             </View>
           </View>
           {result.voters && result.voters.length > 0 && (
@@ -102,7 +104,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
 
       <View style={styles.progressSection}>
         <View style={styles.popLabelRow}>
-          <Text style={styles.popLabel}>Popularity</Text>
+          <Text style={styles.popLabel}>{t('results.popularity')}</Text>
           <Text
             style={[
               styles.popPercent,

@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { borderRadius, colors, typography } from "../../constants/theme";
 
 interface NoteTextareaProps {
   value?: string;
@@ -16,15 +17,18 @@ interface NoteTextareaProps {
 export const NoteTextarea: React.FC<NoteTextareaProps> = ({
   value,
   onChangeText,
-  placeholder = "Tell everyone why this is the best choice...",
-  label = "Small note (Optional)",
+  placeholder,
+  label,
 }) => {
+  const { t } = useTranslation();
+  const displayLabel = label || t('newSuggestion.noteLabel');
+  const displayPlaceholder = placeholder || t('newSuggestion.notePlaceholder');
   return (
     <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {displayLabel && <Text style={styles.label}>{displayLabel}</Text>}
       <TextInput
         style={styles.textarea}
-        placeholder={placeholder}
+        placeholder={displayPlaceholder}
         placeholderTextColor={colors.text.muted}
         multiline
         numberOfLines={4}

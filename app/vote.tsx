@@ -123,7 +123,7 @@ export default function Vote() {
 
 
   const handleSearch = () => {
-    Alert.alert("Search", t('vote.alerts.search'));
+    Alert.alert(t('vote.alerts.searchTitle'), t('vote.alerts.search'));
   };
 
   const handleVote = async (foodId: string) => {

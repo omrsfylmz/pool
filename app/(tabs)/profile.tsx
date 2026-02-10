@@ -2,14 +2,14 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    Alert,
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AllBadgesModal } from "../../components/ui/AllBadgesModal";
@@ -103,7 +103,7 @@ export default function ProfileScreen() {
     return {
       id: badgeId,
       title: badgeId.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
-      subtitle: "Earned",
+      subtitle: t('profile.earned'),
       icon: badge.icon,
       type: badge.type,
       earned: true,

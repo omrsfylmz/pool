@@ -1,5 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
@@ -15,11 +16,14 @@ interface LiveResultsHeaderProps {
  * Header with live indicator dot, title, and info button
  */
 export const LiveResultsHeader: React.FC<LiveResultsHeaderProps> = ({
-  title = "Live Results",
-  subtitle = "Office Lunch Selection",
+  title,
+  subtitle,
   onBack,
   onInfo,
 }) => {
+  const { t } = useTranslation();
+  const displayTitle = title || t('results.live');
+  const displaySubtitle = subtitle || t('headers.voteSubtitle');
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -32,9 +36,9 @@ export const LiveResultsHeader: React.FC<LiveResultsHeaderProps> = ({
       <View style={styles.headerCenter}>
         <View style={styles.headerTitleRow}>
           <View style={styles.liveDot} />
-          <Text style={styles.headerTitle}>{title}</Text>
+          <Text style={styles.headerTitle}>{displayTitle}</Text>
         </View>
-        <Text style={styles.headerSubtitle}>{subtitle}</Text>
+        <Text style={styles.headerSubtitle}>{displaySubtitle}</Text>
       </View>
       <TouchableOpacity
         onPress={onInfo}

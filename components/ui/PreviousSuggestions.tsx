@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { borderRadius, colors, typography } from "../../constants/theme";
 
 export interface PreviousSuggestion {
   id: string;
@@ -21,6 +22,7 @@ export const PreviousSuggestions: React.FC<PreviousSuggestionsProps> = ({
   suggestions = [],
   onSelect,
 }) => {
+  const { t } = useTranslation();
   if (suggestions.length === 0) {
     return null;
   }
@@ -29,7 +31,7 @@ export const PreviousSuggestions: React.FC<PreviousSuggestionsProps> = ({
     <View style={styles.container}>
       <View style={styles.suggestionsBox}>
         <View style={styles.suggestionsHeader}>
-          <Text style={styles.headerText}>Previous Suggestions</Text>
+          <Text style={styles.headerText}>{t('newSuggestion.previousSuggestions')}</Text>
         </View>
         {suggestions.map((suggestion) => (
           <TouchableOpacity

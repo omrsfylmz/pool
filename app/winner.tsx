@@ -117,7 +117,7 @@ export default function Winner() {
           <TouchableOpacity style={styles.closeButton} onPress={handleBackToDashboard}>
             <Text style={styles.closeIcon}>✕</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Results Breakdown</Text>
+          <Text style={styles.headerTitle}>{t('results.resultsBreakdown')}</Text>
           <View style={styles.headerSpacer} />
         </View>
 
@@ -125,10 +125,10 @@ export default function Winner() {
         {winner ? (
           <View style={styles.heroSection}>
             <View style={styles.winnerBanner}>
-              <Text style={styles.winnerBannerText}>✨ WINNER WINNER!</Text>
+              <Text style={styles.winnerBannerText}>{t('winner.winnerBanner')}</Text>
             </View>
             <Text style={styles.heroTitle}>{winner.foodOption.name.toUpperCase()}!</Text>
-            <Text style={styles.heroSubtitle}>The Office has spoken! 🍕</Text>
+            <Text style={styles.heroSubtitle}>{t('winner.officeSpoken')}</Text>
           </View>
         ) : (
           <View style={styles.noWinnerSection}>
@@ -142,9 +142,9 @@ export default function Winner() {
         {allOptions.length > 0 && (
           <>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionLabel}>VOTE BREAKDOWN</Text>
+              <Text style={styles.sectionLabel}>{t('winner.voteBreakdown')}</Text>
               <View style={styles.totalVotesBadge}>
-                <Text style={styles.totalVotesText}>{totalVotes} Total Votes</Text>
+                <Text style={styles.totalVotesText}>{t('winner.totalVotes', { count: totalVotes })}</Text>
               </View>
             </View>
 
@@ -165,11 +165,11 @@ export default function Winner() {
                     </View>
                     <View style={styles.itemInfo}>
                       <Text style={styles.itemName}>{option.name}</Text>
-                      {isWinner && <Text style={styles.winningLabel}>WINNING CHOICE</Text>}
+                      {isWinner && <Text style={styles.winningLabel}>{t('winner.winningChoice')}</Text>}
                     </View>
                     <View style={styles.voteCount}>
                       <Text style={styles.voteCountNumber}>{option.voteCount}</Text>
-                      <Text style={styles.voteCountLabel}>votes</Text>
+                      <Text style={styles.voteCountLabel}>{t('vote.votes')}</Text>
                     </View>
                   </View>
 
@@ -191,7 +191,7 @@ export default function Winner() {
                     <View style={styles.tieAlert}>
                       <Text style={styles.tieIcon}>🔀</Text>
                       <Text style={styles.tieText}>
-                        Tie-breaker win against {runnerUp.name}! Both options received {winner.voteCount} votes.
+                        {t('winner.tieBreaker', { name: runnerUp.name, count: winner.voteCount })}
                       </Text>
                     </View>
                   )}
@@ -201,7 +201,7 @@ export default function Winner() {
 
             {/* Participation Section */}
             <View style={styles.participationSection}>
-              <Text style={styles.sectionLabel}>WHO PARTICIPATED</Text>
+              <Text style={styles.sectionLabel}>{t('winner.whoParticipated')}</Text>
               
               <View style={styles.avatarStack}>
                 {visibleVoters.map((emoji, index) => (
@@ -218,7 +218,7 @@ export default function Winner() {
                 {remainingCount > 0 && (
                   <View style={[styles.avatar, styles.moreCount]}>
                     <Text style={styles.moreCountText}>+{remainingCount}</Text>
-                    <Text style={styles.moreCountLabel}>MORE</Text>
+                    <Text style={styles.moreCountLabel}>{t('winner.more')}</Text>
                   </View>
                 )}
               </View>
