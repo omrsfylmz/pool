@@ -152,12 +152,7 @@ export default function Dashboard() {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary.yellow} />
           }
         >
-          {/* Debugging logs */}
-          {console.log('Dashboard Debug:', {
-            profileName: profile?.full_name,
-            metadataName: user?.user_metadata?.full_name,
-            email: user?.email
-          })}
+
           <DashboardHeader userName={profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0]} />
 
           {/* Join Pool Button */}
