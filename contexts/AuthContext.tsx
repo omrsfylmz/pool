@@ -63,7 +63,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
       setLoading(false);
 
-      // Register for push notifications if logged in
+      // Skip heavy async work for USER_UPDATED events (e.g. password change)
+      // The updateUser() promise waits for this callback to finish, so doing
+      // async work here would cause a deadlock / infinite spinner.
+      if (event === 'USER_UPDATED') {
+        return;
+      }
+
+      // Register for push notifications if logged in (only on SIGNED_IN / TOKEN_REFRESHED)
       if (session?.user) {
         try {
           const token = await registerForPushNotificationsAsync();

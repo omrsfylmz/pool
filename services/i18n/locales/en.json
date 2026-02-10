@@ -233,12 +233,14 @@
     "enterNew": "Enter new password",
     "confirmNew": "Confirm new password",
     "requirements": "Password Requirements:",
-    "requirementText": "At least 6 characters",
+    "requirementText": "At least 8 characters",
     "updateButton": "Update Password",
     "error": {
       "fillAll": "Please fill in all fields",
       "mismatch": "New passwords do not match",
-      "length": "Password must be at least 6 characters",
+      "length": "Password must be at least 8 characters",
+      "incorrectCurrent": "Incorrect current password",
+      "sameAsOld": "New password cannot be the same as the old password",
       "failed": "Failed to update password"
     },
     "success": "Password updated successfully"

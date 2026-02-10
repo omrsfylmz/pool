@@ -236,12 +236,14 @@
     "enterNew": "Yeni şifreyi girin",
     "confirmNew": "Yeni şifreyi doğrulayın",
     "requirements": "Şifre Gereksinimleri:",
-    "requirementText": "En az 6 karakter",
+    "requirementText": "En az 8 karakter",
     "updateButton": "Şifreyi Güncelle",
     "error": {
       "fillAll": "Lütfen tüm alanları doldurun",
       "mismatch": "Yeni şifreler eşleşmiyor",
-      "length": "Şifre en az 6 karakter olmalıdır",
+      "length": "Şifre en az 8 karakter olmalıdır",
+      "incorrectCurrent": "Mevcut şifre hatalı",
+      "sameAsOld": "Yeni şifre eskisiyle aynı olamaz",
       "failed": "Şifre güncellenemedi"
     },
     "success": "Şifre başarıyla güncellendi"

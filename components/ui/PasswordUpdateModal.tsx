@@ -2,14 +2,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    Alert,
-    Modal,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { colors, typography } from "../../constants/theme";
 import { supabase } from "../../lib/supabase";
@@ -44,33 +44,61 @@ export const PasswordUpdateModal: React.FC<PasswordUpdateModalProps> = ({
       return;
     }
 
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       Alert.alert(t('common.error'), t('passwordUpdate.error.length'));
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      Alert.alert(t('common.error'), t('passwordUpdate.error.sameAsOld'));
       return;
     }
 
     setLoading(true);
 
     try {
-      // Update password in Supabase
+      // Update password - Supabase requires user to be authenticated
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
 
       if (error) throw error;
 
-      Alert.alert(t('common.success'), t('passwordUpdate.success'));
+      // Stop loading BEFORE showing success to prevent stuck spinner perception
+      setLoading(false);
+
+      Alert.alert(
+        t('common.success'), 
+        t('passwordUpdate.success'),
+        [
+          { 
+            text: "OK", 
+            onPress: () => {
+              // Clear fields and close modal only after user acknowledges
+              setCurrentPassword("");
+              setNewPassword("");
+              setConfirmPassword("");
+              onClose();
+            }
+          }
+        ]
+      );
       
-      // Clear fields and close modal
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      onClose();
     } catch (error: any) {
       console.error("Error updating password:", error);
-      Alert.alert(t('common.error'), error.message || t('passwordUpdate.error.failed'));
-    } finally {
       setLoading(false);
+      
+      // Handle specific "Same Password" error from Supabase
+      // Supabase returns: "New password should be different from the old password."
+      if (error.message?.toLowerCase().includes("same") || 
+          error.message?.toLowerCase().includes("different") ||
+          error.message?.toLowerCase().includes("new password should be")) {
+        Alert.alert(t('common.error'), t('passwordUpdate.error.sameAsOld'));
+      } else if (error.message?.toLowerCase().includes("timeout")) {
+        Alert.alert(t('common.error'), 'Request timeout. Please check your internet connection and try again.');
+      } else {
+        Alert.alert(t('common.error'), error.message || t('passwordUpdate.error.failed'));
+      }
     }
   };
 
