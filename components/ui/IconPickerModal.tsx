@@ -24,7 +24,7 @@ export const FOOD_ICONS: FoodIcon[] = [
   { name: 'coffee', label: 'Coffee', emoji: '☕' },
   { name: 'ice-cream', label: 'Ice Cream', emoji: '🍦' },
   { name: 'fish', label: 'Sushi', emoji: '🍣' },
-  { name: 'apple', label: 'Fruit', emoji: '🍎' },
+  { name: 'food-apple', label: 'Fruit', emoji: '🍎' },
   { name: 'food-drumstick', label: 'Chicken', emoji: '🍗' },
   { name: 'cheese', label: 'Cheese', emoji: '🧀' },
   { name: 'food-hot-dog', label: 'Hot Dog', emoji: '🌭' },

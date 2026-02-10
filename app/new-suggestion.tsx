@@ -3,16 +3,16 @@ import * as ExpoClipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FOOD_ICONS, IconPickerModal } from "../components/ui/IconPickerModal";
+import { IconPickerModal } from "../components/ui/IconPickerModal";
 import { IdentityBanner } from "../components/ui/IdentityBanner";
 import { NewSuggestionHeader } from "../components/ui/NewSuggestionHeader";
 import { NoteTextarea } from "../components/ui/NoteTextarea";
 import { PreviousSuggestions, type PreviousSuggestion } from "../components/ui/PreviousSuggestions";
 import { SubmitSuggestionButton } from "../components/ui/SubmitSuggestionButton";
 import { SuggestionInput } from "../components/ui/SuggestionInput";
-import { borderRadius, colors, typography } from "../constants/theme";
+import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { addFoodOption, getFoodOptions, getPoolResults, getProfile, type FoodOption, type Pool, type Profile } from "../services/api";
 
@@ -80,6 +80,9 @@ export default function NewSuggestion() {
 
   const handleSelectSuggestion = (suggestion: PreviousSuggestion) => {
     setSuggestion(suggestion.text);
+    if (suggestion.icon) {
+      setSelectedIcon(suggestion.icon);
+    }
   };
 
   const handleSubmit = async () => {
@@ -131,7 +134,7 @@ export default function NewSuggestion() {
   const previousSuggestions: PreviousSuggestion[] = existingSuggestions.map((option) => ({
     id: option.id,
     text: option.name,
-    emoji: "🍽️", // Default emoji, you can enhance this later
+    icon: option.icon || "silverware-fork-knife", // Use saved icon or default
   }));
 
   if (loading) {
@@ -167,34 +170,30 @@ export default function NewSuggestion() {
             message={`${profile.avatar_animal} ${t('newSuggestion.identityMessage')}`}
           />
 
-          <SuggestionInput
-            value={suggestion}
-            onChangeText={setSuggestion}
-            label={t('newSuggestion.inputLabel')}
-          />
-
-          {/* Icon Picker */}
-          <View style={styles.iconSection}>
-            <Text style={styles.iconLabel}>{t('newSuggestion.iconLabel')}</Text>
+          <View style={styles.inputRow}>
+            {/* Icon Picker */}
             <TouchableOpacity
               style={styles.iconPickerButton}
               onPress={() => setShowIconPicker(true)}
               activeOpacity={0.8}
             >
-              <View style={styles.iconPreview}>
-                <View style={styles.iconCircle}>
-                  <MaterialCommunityIcons
-                    name={selectedIcon as any}
-                    size={24}
-                    color={colors.primary.yellow}
-                  />
-                </View>
-                <Text style={styles.iconName}>
-                  {FOOD_ICONS.find(i => i.name === selectedIcon)?.label || 'Utensils'}
-                </Text>
+              <View style={styles.iconCircle}>
+                <MaterialCommunityIcons
+                  name={selectedIcon as any}
+                  size={26}
+                  color={colors.primary.yellow}
+                />
               </View>
-              <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.grey} />
             </TouchableOpacity>
+
+            {/* Input Field */}
+            <View style={styles.inputWrapper}>
+              <SuggestionInput
+                value={suggestion}
+                onChangeText={setSuggestion}
+                label={t('newSuggestion.inputLabel')}
+              />
+            </View>
           </View>
 
           {previousSuggestions.length > 0 && (
@@ -242,42 +241,31 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 30,
   },
-  iconSection: {
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start', // Align to top for precise spacing
     marginBottom: 20,
-  },
-  iconLabel: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.bold,
-    color: colors.text.dark,
-    marginBottom: 8,
-  },
-  iconPickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: colors.background.card,
-    borderRadius: borderRadius.md,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: colors.border.light,
-  },
-  iconPreview: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: 12,
   },
+  inputWrapper: {
+    flex: 1, // Take remaining space
+  },
+  iconSection: {
+    // Removed
+  },
+  iconPickerButton: {
+    // Removed card styling (bg, border, padding)
+  },
   iconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 50, // Match input height (approx 50px)
+    height: 50,
+    borderRadius: 12,
     backgroundColor: colors.primary.yellowLight,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  iconName: {
-    fontSize: typography.sizes.md,
-    fontWeight: typography.weights.medium,
-    color: colors.text.dark,
+    borderWidth: 1,
+    borderColor: colors.primary.yellow,
+    marginTop: 31, // Align with input field (approx label height + margin)
   },
   joinCodeContainer: {
     backgroundColor: colors.background.card,

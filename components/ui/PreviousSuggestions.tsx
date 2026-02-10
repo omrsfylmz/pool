@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -6,7 +7,7 @@ import { borderRadius, colors, typography } from "../../constants/theme";
 export interface PreviousSuggestion {
   id: string;
   text: string;
-  emoji: string;
+  icon: string;
 }
 
 interface PreviousSuggestionsProps {
@@ -40,7 +41,12 @@ export const PreviousSuggestions: React.FC<PreviousSuggestionsProps> = ({
             onPress={() => onSelect?.(suggestion)}
             activeOpacity={0.7}
           >
-            <Text style={styles.foodIcon}>{suggestion.emoji}</Text>
+            <MaterialCommunityIcons
+              name={suggestion.icon as any}
+              size={20}
+              color={colors.primary.yellow}
+              style={styles.foodIcon}
+            />
             <Text style={styles.suggestionText}>{suggestion.text}</Text>
           </TouchableOpacity>
         ))}
