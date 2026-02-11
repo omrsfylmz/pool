@@ -49,8 +49,11 @@ export function useRealtimeFoodOptions(poolId: string | null) {
             filter: `pool_id=eq.${poolId}`,
           },
           (payload) => {
-
-            setFoodOptions((prev) => [...prev, payload.new as FoodOption]);
+            const newOption = payload.new as FoodOption;
+            setFoodOptions((prev) => {
+              if (prev.some(item => item.id === newOption.id)) return prev;
+              return [...prev, newOption];
+            });
           }
         )
         .on(

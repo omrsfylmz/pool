@@ -117,7 +117,7 @@ export default function NewSuggestion() {
           },
           {
             text: t('newSuggestion.buttons.goToVote'),
-            onPress: () => router.push(`/vote?poolId=${poolId}`),
+            onPress: () => router.replace(`/vote?poolId=${poolId}`),
           },
         ]
       );
