@@ -10,7 +10,7 @@ import { TimerCard } from "../components/ui/TimerCard";
 import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { getPoolResults, type PoolResult, type Profile } from "../services/api";
+import { getPoolResults, getProfile, type PoolResult, type Profile } from "../services/api";
 
 export default function Results() {
   const router = useRouter();

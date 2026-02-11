@@ -3,14 +3,14 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JoinRoomHeader } from "../components/ui/JoinRoomHeader";
@@ -22,6 +22,12 @@ export default function JoinRoom() {
   const { t } = useTranslation();
   const [joinCode, setJoinCode] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // Mounted ref to prevent state updates if component unmounts (e.g. navigation happens)
+  let isMounted = true;
+  React.useEffect(() => {
+    return () => { isMounted = false; };
+  }, []);
 
   const handleClose = () => {
     router.back();
@@ -37,8 +43,19 @@ export default function JoinRoom() {
 
     setLoading(true);
 
+    // Helper to timeout potential hanging requests
+    const withTimeout = <T,>(promise: Promise<T>, ms: number = 10000): Promise<T> => {
+        return Promise.race([
+            promise,
+            new Promise<T>((_, reject) => 
+                setTimeout(() => reject(new Error("Request timed out")), ms)
+            )
+        ]);
+    };
+
     try {
-      const pool = await getPoolByJoinCode(code);
+      // 1. Get Pool with timeout
+      const pool = await withTimeout(getPoolByJoinCode(code));
 
       if (!pool) {
         Alert.alert(
@@ -60,16 +77,27 @@ export default function JoinRoom() {
         return;
       }
 
-      // Join the pool as a member
-      await joinPoolMember(pool.id);
+      // 2. Join the pool as a member with timeout
+      // "Recall" support: We try once, if it fails due to network, user can tap again.
+      // The timeout prevents the "infinite spinner" issue.
+      await withTimeout(joinPoolMember(pool.id));
 
       // Navigate to vote page with pool ID
       router.push(`/vote?poolId=${pool.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error joining pool:", error);
-      Alert.alert(t('common.error'), t('join.errors.failed'));
+      
+      let errorMessage = t('join.errors.failed');
+      
+      if (error.message === "Request timed out") {
+         errorMessage = t('join.errors.timeout') || "Connection timed out. Please check your internet and try again.";
+      }
+
+      Alert.alert(t('common.error'), errorMessage);
     } finally {
-      setLoading(false);
+      if (isMounted) {
+          setLoading(false);
+      }
     }
   };
 

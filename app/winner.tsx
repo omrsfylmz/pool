@@ -8,7 +8,7 @@ import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
-import { getFoodOptions, getVotesForPool, type FoodOption, type Profile } from "../services/api";
+import { getProfile, type FoodOption, type Profile } from "../services/api";
 
 interface WinnerData {
   foodOption: FoodOption;
