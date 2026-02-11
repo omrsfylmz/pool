@@ -945,18 +945,23 @@ export async function getProfile(userId: string) {
   return data as Profile;
 }
 
-export async function updateProfile(userId: string, updates: Partial<Profile>) {
+// Update user profile
+export const updateProfile = async (
+  userId: string, 
+  updates: { full_name?: string; avatar_url?: string; avatar_animal?: string }
+) => {
   const { data, error } = await supabase
     .from("profiles")
-    .update({ ...updates, updated_at: new Date().toISOString() })
+    .update(updates)
     .eq("id", userId)
     .select()
     .single();
 
   if (error) throw error;
-  return data as Profile;
-}
+  return data;
+};
 
 // ============================================
 // MEDAL OPERATIONS (Legacy - can be removed)
 // ============================================
+

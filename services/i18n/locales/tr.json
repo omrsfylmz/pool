@@ -6,6 +6,7 @@
     "error": "Hata",
     "success": "Başarılı",
     "delete": "Sil",
+    "close": "Kapat",
     "appTitle": "Öğle Yemeği Oylaması"
   },
   "auth": {
@@ -97,6 +98,7 @@
     "deleteAccount": "Hesabı Sil",
     "deleteConfirmation": "Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
     "account": "Hesap",
+    "selectAvatar": "Karakter Seç",
     "earned": "Kazanıldı",
     "errors": {
       "nameRequired": "İsim alanı boş bırakılamaz",

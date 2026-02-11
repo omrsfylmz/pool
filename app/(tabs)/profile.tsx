@@ -2,19 +2,20 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  Alert,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Alert,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AllBadgesModal } from "../../components/ui/AllBadgesModal";
 import { BadgesSection, type Badge } from "../../components/ui/BadgesSection";
 // BottomNav removed
+import { AvatarSelectionModal } from "../../components/ui/AvatarSelectionModal";
 import { LanguageSelectorModal } from "../../components/ui/LanguageSelectorModal";
 import { LogoutButton } from "../../components/ui/LogoutButton";
 import { MenuItem } from "../../components/ui/MenuItem";
@@ -25,7 +26,7 @@ import { ProfileInfo } from "../../components/ui/ProfileInfo";
 import { getAvatarEmoji } from "../../constants/avatars";
 import { colors, typography } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
-import { deleteAccount, getProfile, getUserAchievements, type Profile } from "../../services/api";
+import { deleteAccount, getProfile, getUserAchievements, updateProfile, type Profile } from "../../services/api";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export default function ProfileScreen() {
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showBadgesModal, setShowBadgesModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [earnedBadgeIds, setEarnedBadgeIds] = useState<string[]>([]);
 
   // Fetch user profile data
@@ -159,6 +161,25 @@ export default function ProfileScreen() {
       );
     };
 
+  const handleAvatarUpdate = async (newAvatar: string) => {
+    if (!user) return;
+    
+    // Optimistic update
+    setProfile(prev => prev ? { ...prev, avatar_animal: newAvatar } : null);
+    setShowAvatarModal(false);
+
+    try {
+      await updateProfile(user.id, { avatar_animal: newAvatar });
+      // Reload in background to ensure sync
+      loadData(); 
+    } catch (error) {
+      console.error("Error updating avatar:", error);
+      Alert.alert(t('common.error'), t('profile.errors.updateFailed'));
+      // Revert on error
+      loadData();
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -190,6 +211,7 @@ export default function ProfileScreen() {
             userEmail={profile?.email || ""}
             avatarAnimal={getAvatarEmoji(profile?.avatar_animal)}
             isVerified={true} // Assuming email verified for now
+            onEditAvatar={() => setShowAvatarModal(true)}
           />
 
           <BadgesSection 
@@ -260,6 +282,13 @@ export default function ProfileScreen() {
         onClose={() => setShowEditProfileModal(false)}
         currentName={profile?.full_name || ""}
         onUpdate={loadData}
+      />
+
+      <AvatarSelectionModal
+        visible={showAvatarModal}
+        onClose={() => setShowAvatarModal(false)}
+        onSelect={handleAvatarUpdate}
+        currentAvatar={profile?.avatar_animal || undefined}
       />
     </SafeAreaView>
   );

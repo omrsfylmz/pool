@@ -6,6 +6,7 @@
     "error": "Error",
     "success": "Success",
     "delete": "Delete",
+    "close": "Close",
     "appTitle": "Lunch Vote"
   },
   "auth": {
@@ -97,6 +98,7 @@
     "deleteAccount": "Delete Account",
     "deleteConfirmation": "Are you sure you want to delete your account? This action cannot be undone.",
     "account": "Account",
+    "selectAvatar": "Select Avatar",
     "earned": "Earned",
     "errors": {
       "nameRequired": "Name cannot be empty",
