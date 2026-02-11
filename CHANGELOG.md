@@ -1,5 +1,12 @@
 
 
+# [1.2.0](https://github.com/omrsfylmz/pool/compare/1.1.0...1.2.0) (2026-02-11)
+
+
+### Features
+
+* Add GITHUB_TOKEN to environment variables and update .gitignore to exclude the .env file. ([305ac6c](https://github.com/omrsfylmz/pool/commit/305ac6cf8cb710a8b410131f6802adcc9796af7e))
+
 # 1.1.0 (2026-02-11)
 
 
