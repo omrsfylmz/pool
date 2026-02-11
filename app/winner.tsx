@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
+import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
-import { getFoodOptions, getVotesForPool, type FoodOption } from "../services/api";
+import { getFoodOptions, getVotesForPool, type FoodOption, type Profile } from "../services/api";
 
 interface WinnerData {
   foodOption: FoodOption;
@@ -17,6 +19,7 @@ interface WinnerData {
 export default function Winner() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   
   const [winner, setWinner] = useState<WinnerData | null>(null);
@@ -24,6 +27,7 @@ export default function Winner() {
   const [loading, setLoading] = useState(true);
   const [totalVotes, setTotalVotes] = useState(0);
   const [voterAvatars, setVoterAvatars] = useState<string[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     async function loadResults() {
@@ -33,10 +37,23 @@ export default function Winner() {
       }
 
       try {
-        const [foodOptions, votes] = await Promise.all([
+        const promises: Promise<any>[] = [
           getFoodOptions(poolId),
           getVotesForPool(poolId),
-        ]);
+        ];
+
+        if (user) {
+          promises.push(getProfile(user.id));
+        }
+
+        const results = await Promise.all(promises);
+        const foodOptions = results[0];
+        const votes = results[1];
+        const profileData = user ? results[2] : null;
+
+        if (profileData) {
+          setProfile(profileData);
+        }
 
         // Calculate vote counts for each option
         const optionsWithVotes = foodOptions.map((option: FoodOption) => {
@@ -62,9 +79,9 @@ export default function Winner() {
         setTotalVotes(votes.length);
 
         // Fetch voter profiles to get their avatars
-        const uniqueVoterIds = [...new Set(votes.map((v: any) => v.user_id))];
+        const uniqueVoterIds = [...new Set(votes.map((v: any) => v.user_id))] as string[];
         const voterProfiles = await Promise.all(
-          uniqueVoterIds.map(async (userId: string) => {
+          uniqueVoterIds.map(async (userId) => {
             try {
               const { data } = await supabase
                 .from("profiles")
@@ -118,7 +135,17 @@ export default function Winner() {
             <Text style={styles.closeIcon}>✕</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{t('results.resultsBreakdown')}</Text>
-          <View style={styles.headerSpacer} />
+          <View style={styles.headerSpacer}>
+            {profile && (
+              <TouchableOpacity
+                onPress={() => router.push('/dashboard')}
+                activeOpacity={0.7}
+                style={styles.headerAvatar}
+              >
+                <Text style={styles.headerAvatarEmoji}>{getAvatarEmoji(profile.avatar_animal)}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
         {/* Winner Hero Section */}
@@ -280,6 +307,20 @@ const styles = StyleSheet.create({
   },
   headerSpacer: {
     width: 36,
+    alignItems: 'flex-end',
+  },
+  headerAvatar: {
+    width: 36,
+    height: 36,
+    backgroundColor: colors.primary.yellowLight,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: colors.primary.yellow,
+  },
+  headerAvatarEmoji: {
+    fontSize: 18,
   },
 
   // Hero Section

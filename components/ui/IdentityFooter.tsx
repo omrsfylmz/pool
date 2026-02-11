@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
 interface IdentityFooterProps {
@@ -15,13 +16,14 @@ export const IdentityFooter: React.FC<IdentityFooterProps> = ({
   emoji = "🦊",
   identityName,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <View style={styles.avatar}>
         <Text style={styles.emoji}>{emoji}</Text>
       </View>
       <Text style={styles.label}>
-        Your anonymous identity:{" "}
+        {t('sharePool.yourIdentity')}{" "}
         <Text style={styles.name}>{identityName}</Text>
       </Text>
     </View>

@@ -9,6 +9,29 @@
     "close": "Kapat",
     "appTitle": "Öğle Yemeği Oylaması"
   },
+  "animals": {
+    "lion": "Aslan",
+    "panda": "Panda",
+    "fox": "Tilki",
+    "koala": "Koala",
+    "tiger": "Kaplan",
+    "bear": "Ayı",
+    "rabbit": "Tavşan",
+    "cat": "Kedi",
+    "dog": "Köpek",
+    "mouse": "Fare",
+    "cow": "İnek",
+    "pig": "Domuz",
+    "frog": "Kurbağa",
+    "monkey": "Maymun",
+    "chicken": "Tavuk",
+    "penguin": "Penguen",
+    "bird": "Kuş",
+    "duck": "Ördek",
+    "eagle": "Kartal",
+    "owl": "Baykuş",
+    "default": "Bilinmeyen"
+  },
   "auth": {
     "login": "Giriş Yap",
     "createAccount": "Hesap Oluştur",
@@ -192,7 +215,9 @@
     "addOptionSubtitle": "Yemek önerisi eklemek için tıkla",
     "shareMessage": "🍽️ Yemek oylamama katıl: \"{{title}}\"!\n\n📱 Katılım Kodu: {{code}}\n\nUygulamayı aç, \"Oylamaya Katıl\"a bas ve oy vermek için bu kodu gir!",
     "copied": "Kod Kopyalandı!",
-    "copyHint": "Kodu kopyalamak için dokun"
+    "copyHint": "Kodu kopyalamak için dokun",
+    "waitingForOthers": "Diğerlerinin katılması bekleniyor...",
+    "yourIdentity": "Anonim kimliğin: "
   },
   "winner": {
     "calculating": "Sonuçlar hesaplanıyor...",
@@ -231,6 +256,9 @@
     "sharePool": "Oylamanı Paylaş",
     "newSuggestion": "Yeni Öneri",
     "resultsBreakdown": "Sonuç Detayı"
+  },
+  "identityBanner": {
+    "youAre": "Sen {{name}}"
   },
   "results": {
     "final": "Sonuçlar",

@@ -9,6 +9,29 @@
     "close": "Close",
     "appTitle": "Lunch Vote"
   },
+  "animals": {
+    "lion": "Lion",
+    "panda": "Panda",
+    "fox": "Fox",
+    "koala": "Koala",
+    "tiger": "Tiger",
+    "bear": "Bear",
+    "rabbit": "Rabbit",
+    "cat": "Cat",
+    "dog": "Dog",
+    "mouse": "Mouse",
+    "cow": "Cow",
+    "pig": "Pig",
+    "frog": "Frog",
+    "monkey": "Monkey",
+    "chicken": "Chicken",
+    "penguin": "Penguin",
+    "bird": "Bird",
+    "duck": "Duck",
+    "eagle": "Eagle",
+    "owl": "Owl",
+    "default": "Unknown"
+  },
   "auth": {
     "login": "Log In",
     "createAccount": "Create Account",
@@ -192,7 +215,9 @@
     "addOptionSubtitle": "Click here to add food suggestions",
     "shareMessage": "🍽️ Join my lunch pool: \"{{title}}\"!\n\n📱 Join Code: {{code}}\n\nOpen the app, tap \"Join Pool\", and enter this code to vote!",
     "copied": "Code Copied!",
-    "copyHint": "Tap to copy code to clipboard"
+    "copyHint": "Tap to copy code to clipboard",
+    "waitingForOthers": "Waiting for others to join...",
+    "yourIdentity": "Your anonymous identity: "
   },
   "winner": {
     "calculating": "Calculating results...",
@@ -231,6 +256,9 @@
     "sharePool": "Share Your Pool",
     "newSuggestion": "New Suggestion",
     "resultsBreakdown": "Results Breakdown"
+  },
+  "identityBanner": {
+    "youAre": "You are the {{name}}"
   },
   "results": {
     "final": "Final Results",

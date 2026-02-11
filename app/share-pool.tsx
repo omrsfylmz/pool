@@ -10,6 +10,7 @@ import { IdentityFooter } from "../components/ui/IdentityFooter";
 import { ShareButton } from "../components/ui/ShareButton";
 import { SharePoolHeader } from "../components/ui/SharePoolHeader";
 import { StatusPill } from "../components/ui/StatusPill";
+import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
@@ -152,8 +153,8 @@ export default function SharePool() {
           <StatusPill />
 
           <IdentityFooter
-            emoji={profile.avatar_animal}
-            identityName={profile.avatar_name}
+            emoji={getAvatarEmoji(profile.avatar_animal)}
+            identityName={t(`animals.${profile.avatar_animal}`, { defaultValue: profile.avatar_name })}
           />
         </View>
       </ScrollView>

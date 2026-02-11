@@ -9,13 +9,16 @@ import { ResultCard, type ResultItem } from "../components/ui/ResultCard";
 import { TimerCard } from "../components/ui/TimerCard";
 import { getAvatarEmoji } from "../constants/avatars";
 import { borderRadius, colors, typography } from "../constants/theme";
-import { getPoolResults, type PoolResult } from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
+import { getPoolResults, type PoolResult, type Profile } from "../services/api";
 
 export default function Results() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   const [poolData, setPoolData] = useState<PoolResult | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -29,8 +32,16 @@ export default function Results() {
       }
 
       try {
-        const data = await getPoolResults(poolId);
+        const promises: Promise<any>[] = [getPoolResults(poolId)];
+        if (user) {
+          promises.push(getProfile(user.id));
+        }
+
+        const [data, profileData] = await Promise.all(promises);
         setPoolData(data);
+        if (profileData) {
+          setProfile(profileData);
+        }
 
         // Calculate remaining time if pool is still active
         if (data.pool.status === "active") {
@@ -132,7 +143,17 @@ export default function Results() {
               {isEnded ? t('results.final') : t('results.live')}
             </Text>
           </View>
-          <View style={styles.headerSpacer} />
+          <View style={styles.headerSpacer}>
+            {profile && (
+              <TouchableOpacity
+                onPress={() => router.push('/dashboard')}
+                activeOpacity={0.7}
+                style={styles.headerAvatar}
+              >
+                <Text style={styles.headerAvatarEmoji}>{getAvatarEmoji(profile.avatar_animal)}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
         <View style={styles.main}>
@@ -231,6 +252,20 @@ const styles = StyleSheet.create({
   },
   headerSpacer: {
     width: 40,
+    alignItems: 'flex-end',
+  },
+  headerAvatar: {
+    width: 36,
+    height: 36,
+    backgroundColor: colors.primary.yellowLight,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: colors.primary.yellow,
+  },
+  headerAvatarEmoji: {
+    fontSize: 18,
   },
   main: {
     paddingHorizontal: 20,

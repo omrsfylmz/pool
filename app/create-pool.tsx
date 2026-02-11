@@ -7,6 +7,7 @@ import { CreatePoolButton } from "../components/ui/CreatePoolButton";
 import { CreatePoolHeader } from "../components/ui/CreatePoolHeader";
 import { IdentitySection } from "../components/ui/IdentitySection";
 import { PoolDetailsForm } from "../components/ui/PoolDetailsForm";
+import { getAvatarEmoji } from "../constants/avatars";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { clonePoolOptions, createPool, getProfile, type Profile } from "../services/api";
@@ -137,7 +138,10 @@ export default function CreatePool() {
         >
           <CreatePoolHeader onClose={handleClose} onHelp={handleHelp} />
 
-          <IdentitySection identityName={profile.avatar_name} />
+          <IdentitySection 
+            identityName={t(`animals.${profile.avatar_animal}`, { defaultValue: profile.avatar_name })}
+            identityEmoji={getAvatarEmoji(profile.avatar_animal)}
+          />
 
           <PoolDetailsForm
             onTitleChange={setPoolTitle}

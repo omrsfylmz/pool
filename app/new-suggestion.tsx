@@ -12,6 +12,7 @@ import { NoteTextarea } from "../components/ui/NoteTextarea";
 import { PreviousSuggestions, type PreviousSuggestion } from "../components/ui/PreviousSuggestions";
 import { SubmitSuggestionButton } from "../components/ui/SubmitSuggestionButton";
 import { SuggestionInput } from "../components/ui/SuggestionInput";
+import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { addFoodOption, getFoodOptions, getPoolResults, getProfile, type FoodOption, type Pool, type Profile } from "../services/api";
@@ -165,9 +166,8 @@ export default function NewSuggestion() {
           <NewSuggestionHeader onBack={() => router.push('/dashboard')} />
 
           <IdentityBanner
-            identityName={profile.avatar_name.replace("Anonymous ", "")}
-            identityEmoji={profile.avatar_animal}
-            message={`${profile.avatar_animal} ${t('newSuggestion.identityMessage')}`}
+            identityEmoji={getAvatarEmoji(profile.avatar_animal)}
+            message={t('newSuggestion.identityMessage')}
           />
 
           <View style={styles.inputRow}>

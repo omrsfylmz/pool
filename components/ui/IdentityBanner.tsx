@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import { useTranslation } from "react-i18next";
+import { StyleSheet, Text, View } from "react-native";
+import { borderRadius, colors, typography } from "../../constants/theme";
 
 interface IdentityBannerProps {
-  identityName?: string;
   identityEmoji?: string;
   message?: string;
 }
@@ -13,17 +13,16 @@ interface IdentityBannerProps {
  * Displays the user's anonymous identity with a banner
  */
 export const IdentityBanner: React.FC<IdentityBannerProps> = ({
-  identityName = "Lion",
   identityEmoji = "🦁",
   message = "Roar! What's for lunch today?",
 }) => {
+  const { t } = useTranslation(); // Add hook
   return (
     <View style={styles.banner}>
       <View style={styles.avatar}>
         <Text style={styles.emoji}>{identityEmoji}</Text>
       </View>
       <View style={styles.bannerText}>
-        <Text style={styles.bannerTitle}>You are the {identityName}</Text>
         <Text style={styles.bannerMessage}>{message}</Text>
       </View>
     </View>
@@ -65,14 +64,7 @@ const styles = StyleSheet.create({
   },
   bannerText: {
     flex: 1,
-  },
-  bannerTitle: {
-    fontSize: 12,
-    color: colors.banner.textYellow,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 4,
-    fontWeight: typography.weights.bold,
+    justifyContent: "center",
   },
   bannerMessage: {
     fontSize: typography.sizes.sm,

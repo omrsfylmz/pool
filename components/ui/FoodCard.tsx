@@ -2,6 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getAvatarEmoji } from "../../constants/avatars";
 import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 export interface FoodOption {
@@ -65,7 +66,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
                     index > 0 && styles.avatarOverlap,
                   ]}
                 >
-                  <Text style={styles.miniAvatarEmoji}>{avatar}</Text>
+                  <Text style={styles.miniAvatarEmoji}>{getAvatarEmoji(avatar)}</Text>
                 </View>
               ))}
             </View>

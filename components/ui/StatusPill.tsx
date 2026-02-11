@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import { useTranslation } from "react-i18next";
+import { Animated, StyleSheet, Text, View } from "react-native";
+import { colors, typography } from "../../constants/theme";
 
 interface StatusPillProps {
   message?: string;
@@ -11,8 +12,10 @@ interface StatusPillProps {
  * Status indicator with pulsing dot animation
  */
 export const StatusPill: React.FC<StatusPillProps> = ({
-  message = "Waiting for others to join...",
+  message,
 }) => {
+  const { t } = useTranslation();
+  const displayMessage = message || t('sharePool.waitingForOthers');
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -48,7 +51,7 @@ export const StatusPill: React.FC<StatusPillProps> = ({
           },
         ]}
       />
-      <Text style={styles.message}>{message}</Text>
+      <Text style={styles.message}>{displayMessage}</Text>
     </View>
   );
 };

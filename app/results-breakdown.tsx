@@ -3,14 +3,18 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
-import { getPoolResults, type PoolResult } from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
+import { getPoolResults, getProfile, type PoolResult, type Profile } from "../services/api";
 
 export default function ResultsBreakdown() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   const [poolData, setPoolData] = useState<PoolResult | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,8 +25,16 @@ export default function ResultsBreakdown() {
       }
 
       try {
-        const data = await getPoolResults(poolId);
+        const promises: Promise<any>[] = [getPoolResults(poolId)];
+        if (user) {
+          promises.push(getProfile(user.id));
+        }
+
+        const [data, profileData] = await Promise.all(promises);
         setPoolData(data);
+        if (profileData) {
+          setProfile(profileData);
+        }
       } catch (error) {
         console.error("Error loading results:", error);
       } finally {
@@ -81,7 +93,17 @@ export default function ResultsBreakdown() {
             <Text style={styles.closeIcon}>✕</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{t('results.resultsBreakdown')}</Text>
-          <View style={styles.headerSpacer} />
+          <View style={styles.headerSpacer}>
+            {profile && (
+              <TouchableOpacity
+                onPress={() => router.push('/dashboard')}
+                activeOpacity={0.7}
+                style={styles.headerAvatar}
+              >
+                <Text style={styles.headerAvatarEmoji}>{getAvatarEmoji(profile.avatar_animal)}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
         {/* Winner Hero Section */}
@@ -224,6 +246,20 @@ const styles = StyleSheet.create({
   },
   headerSpacer: {
     width: 36,
+    alignItems: 'flex-end',
+  },
+  headerAvatar: {
+    width: 36,
+    height: 36,
+    backgroundColor: colors.primary.yellowLight,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: colors.primary.yellow,
+  },
+  headerAvatarEmoji: {
+    fontSize: 18,
   },
 
   // Hero Section

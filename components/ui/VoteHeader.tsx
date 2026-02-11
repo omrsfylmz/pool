@@ -2,6 +2,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getAvatarEmoji } from "../../constants/avatars";
 import { colors, typography } from "../../constants/theme";
 
 interface VoteHeaderProps {
@@ -15,7 +16,7 @@ interface VoteHeaderProps {
  * Header for the vote page with user avatar, title, and search icon
  */
 export const VoteHeader: React.FC<VoteHeaderProps> = ({
-  userAvatar = "🦁",
+  userAvatar = "lion", // Default to key, not emoji
   onSearch,
   onAvatarPress,
 }) => {
@@ -27,7 +28,7 @@ export const VoteHeader: React.FC<VoteHeaderProps> = ({
         activeOpacity={0.7}
         style={styles.userAvatar}
       >
-        <Text style={styles.avatarEmoji}>{userAvatar}</Text>
+        <Text style={styles.avatarEmoji}>{getAvatarEmoji(userAvatar)}</Text>
       </TouchableOpacity>
       <View style={styles.headerCenter}>
         <Text style={styles.headerTitle}>{t('headers.voteTitle')}</Text>
@@ -60,8 +61,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderColor: colors.background.card,
+    borderWidth: 3,
+    borderColor: colors.primary.yellow,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

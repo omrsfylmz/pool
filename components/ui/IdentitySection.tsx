@@ -6,6 +6,7 @@ import { colors, typography } from "../../constants/theme";
 
 interface IdentitySectionProps {
   identityName?: string;
+  identityEmoji?: string;
 }
 
 /**
@@ -14,12 +15,17 @@ interface IdentitySectionProps {
  */
 export const IdentitySection: React.FC<IdentitySectionProps> = ({
   identityName = "Anonymous Lion",
+  identityEmoji,
 }) => {
   const { t } = useTranslation();
   return (
     <View style={styles.container}>
       <View style={styles.avatarCircle}>
-        <FontAwesome5 name="paw" size={36} color={colors.primary.yellow} />
+        {identityEmoji ? (
+          <Text style={{ fontSize: 40 }}>{identityEmoji}</Text>
+        ) : (
+          <FontAwesome5 name="paw" size={36} color={colors.primary.yellow} />
+        )}
       </View>
       <Text style={styles.identityText}>
         {t('createPool.identityPrefix')}{" "}
