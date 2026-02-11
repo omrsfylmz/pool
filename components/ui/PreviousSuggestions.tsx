@@ -42,7 +42,7 @@ export const PreviousSuggestions: React.FC<PreviousSuggestionsProps> = ({
             activeOpacity={0.7}
           >
             <MaterialCommunityIcons
-              name={suggestion.icon as any}
+              name={(suggestion.icon === 'pizza-slice' ? 'pizza' : suggestion.icon) as any}
               size={20}
               color={colors.primary.yellow}
               style={styles.foodIcon}
