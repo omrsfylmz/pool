@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Stack, useRouter, useSegments } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "../components/SplashScreen";
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import "../services/i18n"; // Initialize i18n
@@ -67,8 +68,10 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <InitialLayout />
-    </AuthProvider>
+    <SafeAreaProvider>
+      <AuthProvider>
+        <InitialLayout />
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
