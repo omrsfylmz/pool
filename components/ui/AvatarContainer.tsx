@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image, ImageSourcePropType } from "react-native";
+import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
 import { colors, shadows } from "../../constants/theme";
 
 interface AvatarContainerProps {
@@ -15,7 +15,7 @@ export const AvatarContainer: React.FC<AvatarContainerProps> = ({
   imageUri,
   size = 280,
 }) => {
-  const defaultImage = require("../../assets/images/react-logo.png");
+  const defaultImage = require("../../assets/images/splash-icon-new.png");
   const innerSize = size - 30; // Account for padding
 
   return (

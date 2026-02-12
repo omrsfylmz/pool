@@ -20,7 +20,7 @@ export const FirstPickCard: React.FC<FirstPickCardProps> = ({
   distance,
   imageUri,
 }) => {
-  const defaultImage = require("../../assets/images/react-logo.png");
+  const defaultImage = require("../../assets/images/splash-icon-new.png");
 
   return (
     <View style={styles.container}>

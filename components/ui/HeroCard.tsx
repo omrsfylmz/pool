@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
-import { colors, typography, borderRadius } from "../../constants/theme";
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from "react-native";
+import { borderRadius, colors, typography } from "../../constants/theme";
 
 interface HeroCardProps {
   imageUri?: string | ImageSourcePropType;
@@ -18,7 +18,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({
   poolName,
 }) => {
   // Default placeholder image
-  const defaultImage = require("../../assets/images/react-logo.png");
+  const defaultImage = require("../../assets/images/splash-icon-new.png");
 
   return (
     <View style={styles.container}>

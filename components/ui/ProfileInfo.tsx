@@ -24,7 +24,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   isVerified = true,
   onEditAvatar,
 }) => {
-  const defaultImage = require("../../assets/images/react-logo.png");
+  const defaultImage = require("../../assets/images/splash-icon-new.png");
 
   return (
     <View style={styles.container}>

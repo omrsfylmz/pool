@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import React from "react";
+import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 interface MapCardProps {
   restaurantName: string;
@@ -22,7 +22,7 @@ export const MapCard: React.FC<MapCardProps> = ({
   mapImageUri,
   onDirections,
 }) => {
-  const defaultImage = require("../../assets/images/react-logo.png");
+  const defaultImage = require("../../assets/images/splash-icon-new.png");
 
   return (
     <View style={styles.card}>

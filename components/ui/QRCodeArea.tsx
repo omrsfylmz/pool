@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType } from "react-native";
-import { colors, typography, borderRadius, shadows } from "../../constants/theme";
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from "react-native";
+import { borderRadius, colors, shadows, typography } from "../../constants/theme";
 
 interface QRCodeAreaProps {
   qrCodeUri?: string | ImageSourcePropType;
@@ -15,7 +15,7 @@ export const QRCodeArea: React.FC<QRCodeAreaProps> = ({
   qrCodeUri,
   description = "Or let others scan this code to join",
 }) => {
-  const defaultImage = require("../../assets/images/react-logo.png");
+  const defaultImage = require("../../assets/images/splash-icon-new.png");
 
   return (
     <View style={styles.container}>
