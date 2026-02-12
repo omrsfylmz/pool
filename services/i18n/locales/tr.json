@@ -335,5 +335,10 @@
       }
     },
     "footer": "Bu gizlilik politikası hakkında herhangi bir sorunuz varsa, lütfen privacy@foodpool.app adresinden bizimle iletişime geçin."
+  },
+  "liveActivity": {
+    "subtitle": "Süre dolmadan oy ver! 🍽️",
+    "complete": "🏁 Oylama Tamamlandı!",
+    "resultHint": "Sonuçları görmek için dokun!"
   }
 }

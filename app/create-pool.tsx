@@ -11,6 +11,7 @@ import { getAvatarEmoji } from "../constants/avatars";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { clonePoolOptions, createPool, getProfile, type Profile } from "../services/api";
+import { startPoolLiveActivity } from "../services/LiveActivityService";
 import { schedulePoolCompletionNotification } from "../services/NotificationService";
 
 export default function CreatePool() {
@@ -91,6 +92,9 @@ export default function CreatePool() {
       
       // Schedule notification
       schedulePoolCompletionNotification(pool.id, pool.title, pool.ends_at);
+      
+      // Start Live Activity countdown on Dynamic Island (iOS only, no-ops on Android)
+      startPoolLiveActivity(pool.title, pool.description || '', pool.ends_at);
       
       // If reactivating, clone options from the old pool
       const { reactivateFromId } = params;

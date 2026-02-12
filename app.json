@@ -12,7 +12,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.omrsfylmz.firstExpo",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSSupportsLiveActivities": true,
+        "NSSupportsLiveActivitiesFrequentUpdates": true
       }
     },
     "android": {
@@ -45,7 +47,8 @@
           }
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-live-activity"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -6,8 +6,8 @@
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "release": "release-it",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },
@@ -26,6 +26,7 @@
     "expo-haptics": "~15.0.8",
     "expo-image": "~3.0.11",
     "expo-linking": "~8.0.11",
+    "expo-live-activity": "^0.4.2",
     "expo-localization": "~17.0.8",
     "expo-notifications": "~0.32.16",
     "expo-router": "~6.0.23",

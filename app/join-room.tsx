@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { JoinRoomHeader } from "../components/ui/JoinRoomHeader";
 import { colors, typography } from "../constants/theme";
 import { getPoolByJoinCode, joinPoolMember } from "../services/api";
+import { startPoolLiveActivity } from "../services/LiveActivityService";
 
 export default function JoinRoom() {
   const router = useRouter();
@@ -81,6 +82,9 @@ export default function JoinRoom() {
       // "Recall" support: We try once, if it fails due to network, user can tap again.
       // The timeout prevents the "infinite spinner" issue.
       await withTimeout(joinPoolMember(pool.id));
+
+      // Start Live Activity countdown on Dynamic Island for the joiner (iOS only)
+      startPoolLiveActivity(pool.title, pool.description || '', pool.ends_at);
 
       // Navigate to vote page with pool ID
       router.push(`/vote?poolId=${pool.id}`);
