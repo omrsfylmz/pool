@@ -1,9 +1,10 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as Clipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Animated, { LinearTransition } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FoodCard, type FoodOption } from "../components/ui/FoodCard";
 import { TimerSection } from "../components/ui/TimerSection";
@@ -156,20 +157,6 @@ export default function Vote() {
     }
   };
 
-  if (loading || poolLoading || votesLoading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary.yellow} />
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (!profile || !pool) {
-    return null;
-  }
-
   // Transform food options to include vote data
   const foodOptionsWithVotes: FoodOption[] = foodOptions.map((option) => {
     const voteData = votes[option.id];
@@ -191,6 +178,34 @@ export default function Vote() {
       hasVoted: userVoteId === option.id,
     };
   });
+
+  // Sort by vote count for leaderboard effect
+  const sortedOptions = useMemo(() => {
+    return [...foodOptionsWithVotes].sort((a, b) => {
+      // Primary sort: Vote count (descending)
+      if (b.voteCount !== a.voteCount) {
+        return b.voteCount - a.voteCount;
+      }
+      // Secondary sort: Name (alphabetical) for stability
+      return a.name.localeCompare(b.name);
+    });
+  }, [foodOptionsWithVotes]);
+
+  if (loading || poolLoading || votesLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary.yellow} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!profile || !pool) {
+    return null;
+  }
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -241,13 +256,17 @@ export default function Vote() {
         <View style={styles.main}>
 
 
-          {foodOptionsWithVotes.map((food) => (
-            <View key={food.id} style={styles.foodCardWrapper}>
+          {sortedOptions.map((food) => (
+            <Animated.View 
+              key={food.id} 
+              layout={LinearTransition.springify().damping(20).mass(1).stiffness(90)}
+              style={styles.foodCardWrapper}
+            >
               <FoodCard food={food} onVote={handleVote} />
-            </View>
+            </Animated.View>
           ))}
 
-          {foodOptionsWithVotes.length === 0 && (
+          {sortedOptions.length === 0 && (
             <View style={styles.emptyState}>
               <Text style={styles.emptyText}>{t('vote.emptyState')}</Text>
             </View>
