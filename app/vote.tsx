@@ -123,9 +123,7 @@ export default function Vote() {
 
 
 
-  const handleSearch = () => {
-    Alert.alert(t('vote.alerts.searchTitle'), t('vote.alerts.search'));
-  };
+  // Removed handleSearch
 
   const handleVote = async (foodId: string) => {
     if (!poolId || !pool) return;
@@ -212,7 +210,6 @@ export default function Vote() {
       >
         <VoteHeader 
           userAvatar={profile.avatar_animal} 
-          onSearch={handleSearch}
           onAvatarPress={() => router.push('/dashboard')}
         />
 

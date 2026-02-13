@@ -5,7 +5,6 @@ import { ScreenHeader } from "./ScreenHeader";
 
 interface VoteHeaderProps {
   userAvatar?: string;
-  onSearch?: () => void;
   onAvatarPress?: () => void;
 }
 
@@ -15,7 +14,6 @@ interface VoteHeaderProps {
  */
 export const VoteHeader: React.FC<VoteHeaderProps> = ({
   userAvatar = "lion", // Default to key, not emoji
-  onSearch,
   onAvatarPress,
 }) => {
   const { t } = useTranslation();
@@ -26,8 +24,6 @@ export const VoteHeader: React.FC<VoteHeaderProps> = ({
       leftIcon="avatar"
       avatar={userAvatar}
       onLeftPress={onAvatarPress}
-      rightIcon="search"
-      onRightPress={onSearch}
     />
   );
 };
