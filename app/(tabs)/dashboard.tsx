@@ -1,6 +1,6 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -13,7 +13,7 @@ import { PastPolls, type Poll } from "../../components/ui/PastPolls";
 import { getAvatarEmoji } from "../../constants/avatars";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
-import { getActivePool, getPastPolls, getProfile, getUserAchievements, leavePool, type AchievementMedal, type Pool, type Profile } from "../../services/api";
+import { checkAndEndExpiredPools, getActivePool, getPastPolls, getProfile, getUserAchievements, leavePool, type AchievementMedal, type Pool, type Profile } from "../../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -38,6 +38,9 @@ export default function Dashboard() {
     if (!user) return;
 
     try {
+      // End any expired pools first so they appear in past polls immediately
+      await checkAndEndExpiredPools(user.id);
+
       const [profileData, activePoolData, pastPollsData, achievementsData] = await Promise.all([
         getProfile(user.id),
         getActivePool(user.id),
@@ -62,11 +65,13 @@ export default function Dashboard() {
     await loadPools();
   };
 
-  useEffect(() => {
-    if (!authLoading) {
-      loadPools();
-    }
-  }, [user, authLoading]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!authLoading && user) {
+        loadPools();
+      }
+    }, [user, authLoading])
+  );
 
   if (loading || authLoading) {
     return (
