@@ -8,7 +8,7 @@ import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
-import { getProfile, type FoodOption, type Profile } from "../services/api";
+import { getFoodOptions, getProfile, getVotesForPool, type FoodOption, type Profile } from "../services/api";
 
 interface WinnerData {
   foodOption: FoodOption;
@@ -239,7 +239,7 @@ export default function Winner() {
                       { backgroundColor: ["#d1f4ff", "#e2f0cb", "#ffd1dc", "#fff9db"][index % 4] }
                     ]}
                   >
-                    <Text style={styles.avatarEmoji}>{emoji}</Text>
+                    <Text style={styles.avatarEmoji}>{getAvatarEmoji(emoji)}</Text>
                   </View>
                 ))}
                 {remainingCount > 0 && (
