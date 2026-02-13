@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ActivePoolCard } from "../../components/ui/ActivePoolCard";
+import { ActivePoolsCarousel } from "../../components/ui/ActivePoolsCarousel";
 import { DashboardHeader } from "../../components/ui/DashboardHeader";
 import { FloatingActionButton } from "../../components/ui/FloatingActionButton";
 import { MedalDisplay } from "../../components/ui/MedalDisplay";
@@ -13,14 +13,14 @@ import { PastPolls, type Poll } from "../../components/ui/PastPolls";
 import { getAvatarEmoji } from "../../constants/avatars";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
-import { checkAndEndExpiredPools, getActivePool, getPastPolls, getProfile, getUserAchievements, leavePool, type AchievementMedal, type Pool, type Profile } from "../../services/api";
+import { checkAndEndExpiredPools, getAllActivePools, getPastPolls, getProfile, getUserAchievements, leavePool, type AchievementMedal, type Pool, type Profile } from "../../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [activePool, setActivePool] = useState<Pool | null>(null);
+  const [activePools, setActivePools] = useState<Pool[]>([]);
   const [pastPolls, setPastPolls] = useState<Pool[]>([]);
   const [achievements, setAchievements] = useState<AchievementMedal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,15 +41,15 @@ export default function Dashboard() {
       // End any expired pools first so they appear in past polls immediately
       await checkAndEndExpiredPools(user.id);
 
-      const [profileData, activePoolData, pastPollsData, achievementsData] = await Promise.all([
+      const [profileData, activePoolsData, pastPollsData, achievementsData] = await Promise.all([
         getProfile(user.id),
-        getActivePool(user.id),
+        getAllActivePools(user.id),
         getPastPolls(user.id),
         getUserAchievements(user.id),
       ]);
 
       setProfile(profileData);
-      setActivePool(activePoolData);
+      setActivePools(activePoolsData);
       setPastPolls(pastPollsData);
       setAchievements(achievementsData);
     } catch (error) {
@@ -109,15 +109,8 @@ export default function Dashboard() {
   };
 
   const handleTimerEnd = async () => {
-    // Refresh active pool status when timer ends
-    try {
-      if (user) {
-        const active = await getActivePool(user.id);
-        setActivePool(active);
-      }
-    } catch (error) {
-      console.error("Error refreshing active pool:", error);
-    }
+    // Refresh all pools when any timer ends
+    await loadPools();
   };
 
   const handleDelete = (poolId: string) => {
@@ -173,13 +166,11 @@ export default function Dashboard() {
 
           <MedalDisplay achievements={achievements} />
 
-          {activePool && (
-            <ActivePoolCard
-              pool={activePool}
-              onPress={() => router.push(activePool.status === 'ended' ? `/results?poolId=${activePool.id}` : `/vote?poolId=${activePool.id}`)}
-              onTimerEnd={handleTimerEnd}
-            />
-          )}
+          <ActivePoolsCarousel
+            pools={activePools}
+            onPoolPress={(pool) => router.push(pool.status === 'ended' ? `/results?poolId=${pool.id}` : `/vote?poolId=${pool.id}`)}
+            onTimerEnd={handleTimerEnd}
+          />
 
           <PastPolls 
             polls={polls} 

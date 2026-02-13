@@ -165,6 +165,53 @@ export async function getActivePool(userId: string) {
 }
 
 /**
+ * Get ALL active pools for a user (created + joined), sorted by newest first.
+ * Used by the dashboard to show multiple active pools in a carousel.
+ */
+export async function getAllActivePools(userId: string): Promise<Pool[]> {
+  const now = new Date().toISOString();
+
+  // 1. Get active pools created by user
+  const { data: createdPools } = await supabase
+    .from("pools")
+    .select("*")
+    .eq("creator_id", userId)
+    .eq("status", "active")
+    .gt("ends_at", now)
+    .order("created_at", { ascending: false });
+
+  // 2. Get active pools user is a member of
+  const { data: memberPools } = await supabase
+    .from("pool_members")
+    .select("pool_id, pools(*)")
+    .eq("user_id", userId);
+
+  let joinedPools: Pool[] = [];
+  if (memberPools && memberPools.length > 0) {
+    joinedPools = memberPools
+      .map((mp: any) => mp.pools)
+      .filter((p: Pool) =>
+        p.status === "active" &&
+        new Date(p.ends_at) > new Date()
+      );
+  }
+
+  // 3. Combine and deduplicate by pool ID
+  const poolMap = new Map<string, Pool>();
+  for (const pool of [...(createdPools || []), ...joinedPools]) {
+    if (!poolMap.has(pool.id)) {
+      poolMap.set(pool.id, pool);
+    }
+  }
+
+  // 4. Sort by creation date descending
+  const allPools = Array.from(poolMap.values());
+  allPools.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+  return allPools;
+}
+
+/**
  * Find a pool by its join code
  */
 export async function getPoolByJoinCode(joinCode: string): Promise<Pool | null> {
