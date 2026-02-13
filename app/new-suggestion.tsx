@@ -127,6 +127,16 @@ export default function NewSuggestion() {
       return;
     }
 
+    const normalizedSuggestion = suggestion.trim().toLowerCase();
+    const isDuplicate = existingSuggestions.some(
+      (option) => option.name.toLowerCase() === normalizedSuggestion
+    );
+
+    if (isDuplicate) {
+      Alert.alert(t('common.error'), t('newSuggestion.errors.duplicate', { defaultValue: 'This option already exists!' }));
+      return;
+    }
+
     setSubmitting(true);
     try {
       await addFoodOption(poolId, suggestion.trim(), note.trim(), selectedIcon);
