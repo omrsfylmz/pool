@@ -148,6 +148,17 @@ export default function SharePool() {
             </View>
           </TouchableOpacity>
 
+          <TouchableOpacity 
+            onPress={() => {
+              if (poolId) router.push(`/vote?poolId=${poolId}`);
+            }}
+            activeOpacity={0.8}
+            style={styles.liveResultsButton}
+          >
+            <Text style={styles.liveResultsText}>{t('sharePool.viewLiveResults', { defaultValue: 'Go to Live Results' })}</Text>
+            <FontAwesome5 name="vote-yea" size={16} color={colors.primary.yellow} style={{ marginLeft: 8 }} />
+          </TouchableOpacity>
+
           <ShareButton onPress={handleSharePool} />
 
           <StatusPill />
@@ -245,6 +256,19 @@ const styles = StyleSheet.create({
   addOptionSubtitle: {
     fontSize: typography.sizes.sm,
     color: colors.text.grey,
+  },
+  liveResultsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    marginBottom: 20,
+    marginTop: -10,
+  },
+  liveResultsText: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    color: colors.primary.yellow,
   },
 });
 
