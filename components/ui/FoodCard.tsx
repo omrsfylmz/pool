@@ -35,7 +35,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
         <View style={styles.iconBackground}>
           <MaterialCommunityIcons 
             name={(food.icon === 'pizza-slice' ? 'pizza' : food.icon) as any || 'silverware-fork-knife'} 
-            size={48} 
+            size={32} 
             color={colors.primary.yellow} 
           />
         </View>
@@ -108,21 +108,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.card,
     borderRadius: borderRadius.md,
     overflow: "hidden",
-    marginBottom: 25,
+    marginBottom: 16,
     ...shadows.card,
   },
   foodImgContainer: {
     width: "100%",
-    height: 180,
+    height: 120, // Reduced from 180
     position: "relative",
     backgroundColor: colors.primary.yellowLight,
     justifyContent: "center",
     alignItems: "center",
   },
   iconBackground: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 70, // Reduced from 100
+    height: 70, // Reduced from 100
+    borderRadius: 35, // Reduced from 50
     backgroundColor: colors.background.card,
     justifyContent: "center",
     alignItems: "center",
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
       height: 4,
     },
     shadowOpacity: 0.3,
-    shadowRadius: 10,
+    shadowRadius: 8,
     elevation: 5,
   },
   foodImg: {
@@ -141,11 +141,11 @@ const styles = StyleSheet.create({
   },
   badgeLeading: {
     position: "absolute",
-    top: 15,
-    left: 15,
+    top: 10,
+    left: 10,
     backgroundColor: colors.primary.yellow,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
     borderRadius: 20,
     shadowColor: "#000",
     shadowOffset: {
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: colors.text.dark,
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: typography.weights.bold,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   cardBody: {
-    padding: 16,
+    padding: 12, // Reduced from 16
   },
   votesRow: {
     flexDirection: "row",
@@ -210,20 +210,20 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   foodName: {
-    fontSize: typography.sizes.lg,
+    fontSize: typography.sizes.md, // Reduced from lg
     fontWeight: typography.weights.bold,
-    marginBottom: 6,
+    marginBottom: 4,
     color: colors.text.dark,
   },
   foodDesc: {
-    fontSize: 13,
+    fontSize: 12, // Reduced from 13
     color: colors.text.grey,
-    lineHeight: 19,
-    marginBottom: 15,
+    lineHeight: 18,
+    marginBottom: 10,
   },
   btnVote: {
-    paddingVertical: 10,
-    paddingHorizontal: 24,
+    paddingVertical: 8, // Reduced from 10
+    paddingHorizontal: 16, // Reduced from 24
     borderRadius: borderRadius.sm,
     fontWeight: typography.weights.bold,
     fontSize: typography.sizes.sm,
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     borderColor: colors.pill.borderYellow,
   },
   btnVoteText: {
-    fontSize: typography.sizes.sm,
+    fontSize: typography.sizes.xs, // Reduced from sm
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
   },

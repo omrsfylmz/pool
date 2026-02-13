@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   suggestionItem: {
-    paddingVertical: 14,
+    paddingVertical: 10,
     paddingHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
