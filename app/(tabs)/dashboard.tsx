@@ -85,8 +85,8 @@ export default function Dashboard() {
     return null;
   }
 
-  // Convert past pools to Poll format
-  const polls: Poll[] = pastPolls.map((pool: any) => ({
+  // Convert past pools to Poll format (limit to 3 for dashboard)
+  const polls: Poll[] = pastPolls.slice(0, 3).map((pool: any) => ({
     id: pool.id,
     title: pool.title,
     date: new Date(pool.created_at).toLocaleDateString("en-US", {
