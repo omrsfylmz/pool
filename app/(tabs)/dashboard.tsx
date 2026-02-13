@@ -8,12 +8,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivePoolsCarousel } from "../../components/ui/ActivePoolsCarousel";
 import { DashboardHeader } from "../../components/ui/DashboardHeader";
 import { FloatingActionButton } from "../../components/ui/FloatingActionButton";
-import { MedalDisplay } from "../../components/ui/MedalDisplay";
+
 import { PastPolls, type Poll } from "../../components/ui/PastPolls";
 import { getAvatarEmoji } from "../../constants/avatars";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
-import { checkAndEndExpiredPools, getAllActivePools, getPastPolls, getProfile, getUserAchievements, leavePool, type AchievementMedal, type Pool, type Profile } from "../../services/api";
+import { checkAndEndExpiredPools, getAllActivePools, getPastPolls, getProfile, leavePool, type Pool, type Profile } from "../../services/api";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [activePools, setActivePools] = useState<Pool[]>([]);
   const [pastPolls, setPastPolls] = useState<Pool[]>([]);
-  const [achievements, setAchievements] = useState<AchievementMedal[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -41,17 +41,15 @@ export default function Dashboard() {
       // End any expired pools first so they appear in past polls immediately
       await checkAndEndExpiredPools(user.id);
 
-      const [profileData, activePoolsData, pastPollsData, achievementsData] = await Promise.all([
+      const [profileData, activePoolsData, pastPollsData] = await Promise.all([
         getProfile(user.id),
         getAllActivePools(user.id),
         getPastPolls(user.id),
-        getUserAchievements(user.id),
       ]);
 
       setProfile(profileData);
       setActivePools(activePoolsData);
       setPastPolls(pastPollsData);
-      setAchievements(achievementsData);
     } catch (error) {
       console.error("Error loading pools:", error);
     } finally {
@@ -164,7 +162,7 @@ export default function Dashboard() {
             <Text style={styles.joinPoolButtonText}>{t('dashboard.joinPool')}</Text>
           </TouchableOpacity>
 
-          <MedalDisplay achievements={achievements} />
+
 
           <ActivePoolsCarousel
             pools={activePools}
