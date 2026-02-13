@@ -82,11 +82,29 @@ export default function NewSuggestion() {
   const handleSelectSuggestion = (suggestion: PreviousSuggestion) => {
     setSuggestion(suggestion.text);
     if (suggestion.icon) {
-      setSelectedIcon(suggestion.icon);
+      // Fix for legacy 'pizza-slice' icon which isn't in MaterialCommunityIcons
+      const iconName = suggestion.icon === 'pizza-slice' ? 'pizza' : suggestion.icon;
+      setSelectedIcon(iconName);
     }
   };
 
   const handleDeleteSuggestion = async (suggestionId: string) => {
+// ... existing code ...
+
+// ... inside render ...
+            <TouchableOpacity
+              style={styles.iconPickerButton}
+              onPress={() => setShowIconPicker(true)}
+              activeOpacity={0.8}
+            >
+              <View style={styles.iconCircle}>
+                <MaterialCommunityIcons
+                  name={(selectedIcon === 'pizza-slice' ? 'pizza' : selectedIcon) as any}
+                  size={26}
+                  color={colors.primary.yellow}
+                />
+              </View>
+            </TouchableOpacity>
     Alert.alert(
       t('common.delete'),
       t('newSuggestion.deleteConfirmation', { defaultValue: 'Are you sure you want to delete this option?' }),
