@@ -1,9 +1,9 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ExpoClipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconPickerModal } from "../components/ui/IconPickerModal";
 import { IdentityBanner } from "../components/ui/IdentityBanner";
@@ -15,7 +15,7 @@ import { SuggestionInput } from "../components/ui/SuggestionInput";
 import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { addFoodOption, getFoodOptions, getPoolResults, getProfile, type FoodOption, type Pool, type Profile } from "../services/api";
+import { addFoodOption, getFoodOptions, getPoolResults, getProfile, removeFoodOption, type FoodOption, type Pool, type Profile } from "../services/api";
 
 export default function NewSuggestion() {
   const router = useRouter();
@@ -86,6 +86,36 @@ export default function NewSuggestion() {
     }
   };
 
+  const handleDeleteSuggestion = async (suggestionId: string) => {
+    Alert.alert(
+      t('common.delete'),
+      t('newSuggestion.deleteConfirmation', { defaultValue: 'Are you sure you want to delete this option?' }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await removeFoodOption(suggestionId);
+              // Reload suggestions
+              if (poolId) {
+                const updatedOptions = await getFoodOptions(poolId);
+                setExistingSuggestions(updatedOptions);
+              }
+            } catch (error: any) {
+              console.error("Error deleting suggestion:", error);
+              Alert.alert(t('common.error'), error.message || "Failed to delete suggestion");
+            } finally {
+              setLoading(false);
+            }
+          }
+        }
+      ]
+    );
+  };
+
   const handleSubmit = async () => {
     if (!suggestion.trim()) {
       Alert.alert(t('common.error'), t('newSuggestion.errors.missingSuggestion'));
@@ -136,6 +166,7 @@ export default function NewSuggestion() {
     id: option.id,
     text: option.name,
     icon: option.icon || "silverware-fork-knife", // Use saved icon or default
+    creatorId: option.creator_id,
   }));
 
   if (loading) {
@@ -200,6 +231,8 @@ export default function NewSuggestion() {
             <PreviousSuggestions
               suggestions={previousSuggestions}
               onSelect={handleSelectSuggestion}
+              onDelete={handleDeleteSuggestion}
+              currentUserId={user?.id}
             />
           )}
 
@@ -212,6 +245,17 @@ export default function NewSuggestion() {
             onPress={handleSubmit}
             disabled={!isFormValid || submitting}
           />
+
+          <TouchableOpacity 
+            onPress={() => {
+              if (poolId) router.push(`/vote?poolId=${poolId}`);
+            }}
+            activeOpacity={0.8}
+            style={styles.liveResultsButton}
+          >
+            <Text style={styles.liveResultsText}>{t('sharePool.viewLiveResults', { defaultValue: 'Go to Live Results' })}</Text>
+            <FontAwesome5 name="vote-yea" size={16} color={colors.primary.yellow} style={{ marginLeft: 8 }} />
+          </TouchableOpacity>
 
           {/* Icon Picker Modal */}
           <IconPickerModal
@@ -298,5 +342,18 @@ const styles = StyleSheet.create({
   joinCodeHint: {
     fontSize: 12,
     color: colors.text.disabled,
+  },
+  liveResultsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  liveResultsText: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    color: colors.primary.yellow,
   },
 });

@@ -738,7 +738,8 @@ export async function getFoodOptions(poolId: string) {
   return data as FoodOption[];
 }
 
-export async function deleteFoodOption(optionId: string) {
+// Force refresh
+export async function removeFoodOption(optionId: string) {
   const { error } = await supabase
     .from("food_options")
     .delete()
