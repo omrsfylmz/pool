@@ -84,7 +84,7 @@ export default function JoinRoom() {
       await withTimeout(joinPoolMember(pool.id));
 
       // Start Live Activity countdown on Dynamic Island for the joiner (iOS only)
-      startPoolLiveActivity(pool.title, pool.description || '', pool.ends_at);
+      await startPoolLiveActivity(pool.title, pool.description || '', pool.ends_at);
 
       // Navigate to vote page with pool ID
       router.push(`/vote?poolId=${pool.id}`);

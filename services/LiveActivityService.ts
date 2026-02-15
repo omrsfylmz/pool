@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as LiveActivity from 'expo-live-activity';
 import { Platform } from 'react-native';
 
+const ACTIVITY_ID_KEY = 'live_activity_id';
 let currentActivityId: string | null = null;
 
 /**
@@ -8,11 +10,11 @@ let currentActivityId: string | null = null;
  * Shows on Lock Screen and Dynamic Island (iPhone 14 Pro+).
  * No-ops gracefully on Android and iOS < 16.2.
  */
-export function startPoolLiveActivity(
+export async function startPoolLiveActivity(
   poolTitle: string,
   poolDescription: string,
   endsAt: string
-): string | undefined {
+): Promise<string | undefined> {
   if (Platform.OS !== 'ios') return undefined;
 
   try {
@@ -38,8 +40,11 @@ export function startPoolLiveActivity(
       timerType: 'digital',
     };
 
-    const activityId = LiveActivity.startActivity(state, config);
-    currentActivityId = activityId ? String(activityId) : null;
+    const activityId = await LiveActivity.startActivity(state, config);
+    if (activityId) {
+      currentActivityId = String(activityId);
+      await AsyncStorage.setItem(ACTIVITY_ID_KEY, currentActivityId);
+    }
     return activityId ? String(activityId) : undefined;
   } catch (error) {
     console.log('Failed to start Live Activity:', error);
@@ -50,15 +55,19 @@ export function startPoolLiveActivity(
 /**
  * Update the Live Activity with new pool info (e.g. title change).
  */
-export function updatePoolLiveActivity(
+export async function updatePoolLiveActivity(
   title: string,
   subtitle: string,
   endsAt: string
 ) {
+  if (!currentActivityId) {
+    await restoreState();
+  }
+  
   if (!currentActivityId || Platform.OS !== 'ios') return;
 
   try {
-    LiveActivity.updateActivity(currentActivityId, {
+    await LiveActivity.updateActivity(currentActivityId, {
       title,
       subtitle,
       progressBar: { date: new Date(endsAt).getTime() },
@@ -74,11 +83,15 @@ export function updatePoolLiveActivity(
  * Stop the Live Activity and show a completion message.
  * The final state persists briefly on the Lock Screen before auto-dismissing.
  */
-export function stopPoolLiveActivity(winnerMessage?: string) {
+export async function stopPoolLiveActivity(winnerMessage?: string) {
+  if (!currentActivityId) {
+    await restoreState();
+  }
+
   if (!currentActivityId || Platform.OS !== 'ios') return;
 
   try {
-    LiveActivity.stopActivity(currentActivityId, {
+    await LiveActivity.stopActivity(currentActivityId, {
       title: '🏁 Pool Complete!',
       subtitle: winnerMessage || 'Tap to see the results!',
       progressBar: { progress: 1.0 },
@@ -86,6 +99,7 @@ export function stopPoolLiveActivity(winnerMessage?: string) {
       dynamicIslandImageName: 'pool_icon_di',
     });
     currentActivityId = null;
+    await AsyncStorage.removeItem(ACTIVITY_ID_KEY);
   } catch (error) {
     console.log('Failed to stop Live Activity:', error);
   }
@@ -96,6 +110,22 @@ export function stopPoolLiveActivity(winnerMessage?: string) {
  */
 export function getCurrentActivityId(): string | null {
   return currentActivityId;
+}
+
+/**
+ * Restore the Live Activity state from storage.
+ * Call this on app launch to regain control of any existing activity.
+ */
+export async function restoreState() {
+  if (Platform.OS !== 'ios') return;
+  try {
+    const id = await AsyncStorage.getItem(ACTIVITY_ID_KEY);
+    if (id) {
+      currentActivityId = id;
+    }
+  } catch (error) {
+    console.log('Failed to restore Live Activity state:', error);
+  }
 }
 
 /**
@@ -112,6 +142,7 @@ export function addActivityStateListener(
       callback(event.activityState);
       if (event.activityState === 'ended' || event.activityState === 'dismissed') {
         currentActivityId = null;
+        AsyncStorage.removeItem(ACTIVITY_ID_KEY).catch(console.error);
       }
     });
   } catch (error) {

@@ -94,7 +94,7 @@ export default function CreatePool() {
       schedulePoolCompletionNotification(pool.id, pool.title, pool.ends_at);
       
       // Start Live Activity countdown on Dynamic Island (iOS only, no-ops on Android)
-      startPoolLiveActivity(pool.title, pool.description || '', pool.ends_at);
+      await startPoolLiveActivity(pool.title, pool.description || '', pool.ends_at);
       
       // If reactivating, clone options from the old pool
       const { reactivateFromId } = params;

@@ -14,6 +14,7 @@ import { getAvatarEmoji } from "../../constants/avatars";
 import { colors } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
 import { checkAndEndExpiredPools, getAllActivePools, getPastPolls, getProfile, leavePool, type Pool, type Profile } from "../../services/api";
+import * as LiveActivityService from "../../services/LiveActivityService";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -38,6 +39,9 @@ export default function Dashboard() {
     if (!user) return;
 
     try {
+      // Restore Live Activity state in case app was restarted
+      await LiveActivityService.restoreState();
+
       // End any expired pools first so they appear in past polls immediately
       await checkAndEndExpiredPools(user.id);
 
@@ -50,6 +54,26 @@ export default function Dashboard() {
       setProfile(profileData);
       setActivePools(activePoolsData);
       setPastPolls(pastPollsData);
+
+      // If no active pools, ensure no Live Activity is stuck running
+      if (activePoolsData.length === 0) {
+        const currentActivityId = LiveActivityService.getCurrentActivityId();
+        if (currentActivityId) {
+          console.log("Stopping stale Live Activity via Dashboard cleanup");
+          await LiveActivityService.stopPoolLiveActivity();
+        }
+      } else {
+        // Optional: If we have an active pool, we could ensure the Live Activity matches it.
+        // For now, we assume the one running is correct or will be updated by other events.
+        const mostRecentPool = activePoolsData[0];
+        // We could call updatePoolLiveActivity here to ensure it's in sync
+         await LiveActivityService.updatePoolLiveActivity(
+          mostRecentPool.title,
+          mostRecentPool.description || 'Vote before time runs out! 🍽️',
+          mostRecentPool.ends_at
+        );
+      }
+
     } catch (error) {
       console.error("Error loading pools:", error);
     } finally {
