@@ -367,7 +367,7 @@ export async function sendPoolCompletionNotification(poolId: string) {
       sound: 'default',
       title: "Pool Complete! 🏁",
       body: `"${pool.title}" is complete. Check the results!`,
-      data: { url: `/winner?poolId=${poolId}` },
+      data: { url: `/results?poolId=${poolId}` },
     }));
 
     // Send in batches (Expo limit is 100)

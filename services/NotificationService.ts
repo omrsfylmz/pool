@@ -116,7 +116,7 @@ export async function schedulePoolCompletionNotification(
         title: "Pool Complete! 🏁",
         body: `"${poolTitle}" has ended. Tap to see the winner!`,
         sound: true,
-        data: { url: `/winner?poolId=${poolId}`, poolId },
+        data: { url: `/results?poolId=${poolId}`, poolId },
       },
       trigger: { 
         type: Notifications.SchedulableTriggerInputTypes.DATE,

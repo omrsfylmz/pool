@@ -49,14 +49,26 @@ export default function RootLayout() {
       // Basic setup
       await registerForPushNotificationsAsync();
       await scheduleDailyNotification();
+      
+      // Handle cold start notification
+      const response = await Notifications.getLastNotificationResponseAsync();
+      if (response) {
+        const url = response.notification.request.content.data.url;
+        if (url) {
+          // Add a small delay to allow auth to settle/hydration to complete
+          setTimeout(() => {
+             router.push(url as any);
+          }, 1000); 
+        }
+      }
     }
     setupNotifications();
 
-    // Handle notification clicks
+    // Handle notification clicks while app is in foreground/background
     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
       const url = response.notification.request.content.data.url;
       if (url) {
-        router.push(url);
+        router.push(url as any);
       }
     });
 
