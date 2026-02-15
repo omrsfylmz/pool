@@ -16,6 +16,8 @@ interface LanguageSelectorModalProps {
   onClose: () => void;
 }
 
+import { scheduleDailyNotification } from "../../services/NotificationService";
+
 export const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({
   visible,
   onClose,
@@ -25,6 +27,8 @@ export const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({
   const changeLanguage = async (lang: string) => {
     await i18n.changeLanguage(lang);
     await AsyncStorage.setItem("user-language", lang);
+    // Reschedule notifications with new language
+    await scheduleDailyNotification();
     onClose();
   };
 

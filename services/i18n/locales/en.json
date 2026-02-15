@@ -340,5 +340,15 @@
     "subtitle": "Vote before time runs out! 🍽️",
     "complete": "🏁 Pool Complete!",
     "resultHint": "Tap to see the results!"
+  },
+  "notifications": {
+    "lunch": {
+      "title": "🍔 Lunch Time!",
+      "body": "Don't forget to vote for today's lunch pool!"
+    },
+    "poolComplete": {
+      "title": "Pool Complete! 🏁",
+      "body": "\"{{poolTitle}}\" has ended. Tap to see the winner!"
+    }
   }
 }

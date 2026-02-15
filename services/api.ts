@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import i18n from "./i18n";
 import { stopPoolLiveActivity } from "./LiveActivityService";
 
 // ============================================
@@ -365,8 +366,8 @@ export async function sendPoolCompletionNotification(poolId: string) {
     const notifications = tokens.map(token => ({
       to: token,
       sound: 'default',
-      title: "Pool Complete! 🏁",
-      body: `"${pool.title}" is complete. Check the results!`,
+      title: i18n.t("notifications.poolComplete.title"),
+      body: i18n.t("notifications.poolComplete.body", { poolTitle: pool.title }),
       data: { url: `/results?poolId=${poolId}` },
     }));
 

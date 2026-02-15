@@ -2,6 +2,7 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+import i18n from './i18n';
 
 // Configure how notifications behave when the app is in the foreground
 Notifications.setNotificationHandler({
@@ -65,23 +66,33 @@ export async function scheduleDailyNotification() {
   try {
     // Check if daily notification is already scheduled
     const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-    const hasDaily = scheduled.some(n => n.content.title === "🍔 Lunch Time!");
+    const lunchNotifications = scheduled.filter(n => n.content.title === "🍔 Lunch Time!");
 
-    if (hasDaily) return;
+    // If we have 5 notifications, assume we are already set up correctly for weekdays
+    // If we have fewer (e.g. 1 from old daily system) or more, reset them.
+    if (lunchNotifications.length === 5) return;
 
-    // Schedule notification for 12:00 PM every day
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "🍔 Lunch Time!",
-        body: "Don't forget to vote for today's lunch pool!",
-        sound: true,
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.DAILY,
-        hour: 11,
-        minute: 45,
-      },
-    });
+    // Clear existing/old notifications
+    for (const n of lunchNotifications) {
+      await Notifications.cancelScheduledNotificationAsync(n.identifier);
+    }
+
+    // Schedule for Mon (2) to Fri (6)
+    for (let weekday = 2; weekday <= 6; weekday++) {
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: i18n.t("notifications.lunch.title"),
+          body: i18n.t("notifications.lunch.body"),
+          sound: true,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+          weekday: weekday,
+          hour: 11,
+          minute: 45,
+        },
+      });
+    }
 
   } catch (error) {
     console.error("Error scheduling daily notification:", error);
@@ -113,8 +124,8 @@ export async function schedulePoolCompletionNotification(
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Pool Complete! 🏁",
-        body: `"${poolTitle}" has ended. Tap to see the winner!`,
+        title: i18n.t("notifications.poolComplete.title"),
+        body: i18n.t("notifications.poolComplete.body", { poolTitle }),
         sound: true,
         data: { url: `/results?poolId=${poolId}`, poolId },
       },

@@ -340,5 +340,15 @@
     "subtitle": "Süre dolmadan oy ver! 🍽️",
     "complete": "🏁 Oylama Tamamlandı!",
     "resultHint": "Sonuçları görmek için dokun!"
+  },
+  "notifications": {
+    "lunch": {
+      "title": "🍔 Öğle Yemeği Vakti!",
+      "body": "Bugünün öğle yemeği oylamasına katılmayı unutmayın!"
+    },
+    "poolComplete": {
+      "title": "Oylama Tamamlandı! 🏁",
+      "body": "\"{{poolTitle}}\" sona erdi. Kazananı görmek için dokunun!"
+    }
   }
 }
