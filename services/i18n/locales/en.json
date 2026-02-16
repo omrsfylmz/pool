@@ -342,11 +342,6 @@
     },
     "footer": "If you have any questions about this privacy policy, please contact us at privacy@foodpool.app"
   },
-  "liveActivity": {
-    "subtitle": "Vote before time runs out! 🍽️",
-    "complete": "🏁 Pool Complete!",
-    "resultHint": "Tap to see the results!"
-  },
   "notifications": {
     "lunch": {
       "title": "🍔 Lunch Time!",

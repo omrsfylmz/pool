@@ -1,6 +1,5 @@
 import { supabase } from "../lib/supabase";
 import i18n from "./i18n";
-import { stopPoolLiveActivity } from "./LiveActivityService";
 
 // ============================================
 // POOL OPERATIONS
@@ -432,8 +431,6 @@ export async function endPool(poolId: string) {
 
   // Only send notifications if we were the one who effectively ended the pool
   if (data && data.length > 0) {
-    // Stop the Dynamic Island Live Activity with completion message
-    stopPoolLiveActivity('Voting has ended! Tap to see results.');
     await sendPoolCompletionNotification(poolId);
   }
 }
@@ -1016,4 +1013,3 @@ export const updateProfile = async (
 // ============================================
 // MEDAL OPERATIONS (Legacy - can be removed)
 // ============================================
-

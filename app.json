@@ -11,14 +11,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.omrsfylmz.firstExpo",
-      "entitlements": {
-        "com.apple.developer.activitykit": true
-      },
       "deploymentTarget": "16.2",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSSupportsLiveActivities": true,
-        "NSSupportsLiveActivitiesFrequentUpdates": true,
         "UIBackgroundModes": [
           "remote-notification"
         ]
@@ -55,7 +50,6 @@
         }
       ],
       "expo-localization",
-      "expo-live-activity",
       "expo-notifications"
     ],
     "experiments": {
