@@ -1,5 +1,35 @@
 
 
+# [1.3.0](https://github.com/omrsfylmz/pool/compare/1.2.0...1.3.0) (2026-02-16)
+
+
+### Bug Fixes
+
+* Add validation and explicit error for missing Supabase environment variables. ([d71ce54](https://github.com/omrsfylmz/pool/commit/d71ce54c213729e7c94e91ee816a1c2f20396960))
+* Map legacy 'pizza-slice' icon to 'pizza' for MaterialCommunityIcons. ([b93cf65](https://github.com/omrsfylmz/pool/commit/b93cf651aaabf1b58489127924b5357fb3c56c64))
+
+
+### Features
+
+* Add `getFoodOptions` and `getVotesForPool` imports to winner screen. ([23d12d8](https://github.com/omrsfylmz/pool/commit/23d12d85e1ede25253cce01fa70aa8ff8183b930))
+* Add `preview-simulator` EAS build profile for iOS simulator. ([18d90cf](https://github.com/omrsfylmz/pool/commit/18d90cf4db04f3e856fbe059ec12e4c651abcd94))
+* Add a "Go to Live Results" button to the share pool screen. ([7c4aea3](https://github.com/omrsfylmz/pool/commit/7c4aea394a3f4c7d90250a1a3b88066b5fb8351d))
+* add babel.config.js to configure Babel for Expo with the Reanimated plugin. ([c0d555d](https://github.com/omrsfylmz/pool/commit/c0d555d2bc4c30a19a14f21f37317337173d5b4c))
+* Add i18n support for all notifications and refine daily lunch notification scheduling to be weekly and update on language change. ([fd58511](https://github.com/omrsfylmz/pool/commit/fd585119a690d5c2663982074cec6041655fbf34))
+* Add initial website documentation pages including privacy, support, homepage, and global styling. ([9642e84](https://github.com/omrsfylmz/pool/commit/9642e8461afcaf55b9a0aff2e63d69a8d3afee0a))
+* Add iOS deployment target and expo-notifications plugin. ([cfe2911](https://github.com/omrsfylmz/pool/commit/cfe291108895e38774ded6ab1d6f34ded0a1bf53))
+* Add Live Activity support for pools, displaying countdowns on Dynamic Island and Lock Screen. ([6fa33f6](https://github.com/omrsfylmz/pool/commit/6fa33f6e103246cad14afe56d0921e4f3ba77ccf))
+* Add new translation keys for connection timeout, empty past pools, and pool-related errors. ([a194067](https://github.com/omrsfylmz/pool/commit/a194067a6cd93fc9c6a6054856cc917d11eda741))
+* Add validation to prevent duplicate food suggestions before adding new options. ([b333175](https://github.com/omrsfylmz/pool/commit/b333175b7f99351acb678c7a65f1a0d9209e1b04))
+* display multiple active pools in a carousel on the dashboard, supported by a new API function to fetch all active pools. ([0911b83](https://github.com/omrsfylmz/pool/commit/0911b83b9d734b2d7cec47b98d6aead072ef8e8a))
+* Enable users to delete their own previous suggestions with a confirmation dialog. ([495aea4](https://github.com/omrsfylmz/pool/commit/495aea4d55f3cdff2668e2cbdf84fbe0059367b9))
+* Implement animated sorting of food options by vote count using `useMemo` and `react-native-reanimated`'s `LinearTransition`. ([2e7f7e7](https://github.com/omrsfylmz/pool/commit/2e7f7e7ea74a7f2eeca501e7a5e8c6885389c375))
+* Implement cold start notification handling and update pool result deep link paths from `/winner` to `/results`. ([c8c00c6](https://github.com/omrsfylmz/pool/commit/c8c00c689e0f77b9b764dd760374cfa7ffa61b2a))
+* Introduce Supabase and GitHub environment variables and update `.gitignore` to track the `.env` file. ([ba632d9](https://github.com/omrsfylmz/pool/commit/ba632d9c14ee4a2eea7007a56ef8c591f6585a7c))
+* limit past polls displayed on dashboard to 3 ([d54fbbd](https://github.com/omrsfylmz/pool/commit/d54fbbd31a029d059cd40ea370c3ffc09637aab1))
+* Persist Live Activity IDs using AsyncStorage, making service functions asynchronous, and implementing state restoration and cleanup across the app. ([c402799](https://github.com/omrsfylmz/pool/commit/c402799750defe60341f18a1e39399ad472d40fa))
+* Replace old `react-logo` and `splash-icon` images with `splash-icon-new.png` across app configuration and UI components. ([7147dcd](https://github.com/omrsfylmz/pool/commit/7147dcd00bdca7faa43b6a21b58e7dee4d660c89))
+
 # [1.2.0](https://github.com/omrsfylmz/pool/compare/1.1.0...1.2.0) (2026-02-11)
 
 
