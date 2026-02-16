@@ -87,7 +87,8 @@
       "notFound": "Pool Not Found",
       "notFoundMessage": "No pool found with this join code.",
       "failed": "Failed to join pool",
-      "expired": "This poll has ended"
+      "expired": "This poll has ended",
+      "timeout": "Connection timed out"
     }
   },
   "pastPools": {
@@ -96,7 +97,8 @@
     "emptyText": "You haven't participated in any pools yet. Join a pool or create one to get started!",
     "ended": "Ended",
     "reactivate": "Reactivate",
-    "code": "Code: "
+    "code": "Code: ",
+    "empty": "No past pools yet"
   },
   "nav": {
     "home": "Home",
@@ -217,7 +219,11 @@
     "copied": "Code Copied!",
     "copyHint": "Tap to copy code to clipboard",
     "waitingForOthers": "Waiting for others to join...",
-    "yourIdentity": "Your anonymous identity: "
+    "yourIdentity": "Your anonymous identity: ",
+    "errors": {
+      "loadFailed": "Failed to load pool",
+      "shareFailed": "Failed to share pool"
+    }
   },
   "winner": {
     "calculating": "Calculating results...",

@@ -87,7 +87,8 @@
       "notFound": "Oylama Bulunamadı",
       "notFoundMessage": "Bu kodla eşleşen oylama bulunamadı.",
       "failed": "Oylamaya katılınamadı",
-      "expired": "Bu oylama sona erdi"
+      "expired": "Bu oylama sona erdi",
+      "timeout": "Bağlantı zaman aşımına uğradı"
     }
   },
   "pastPools": {
@@ -96,7 +97,8 @@
     "emptyText": "Katıldığınız oylamalar burada görünecek",
     "ended": "Tamamlandı",
     "reactivate": "Tekrar Başlat",
-    "code": "Kod: "
+    "code": "Kod: ",
+    "empty": "Henüz geçmiş oylama yok"
   },
   "nav": {
     "home": "Ana Sayfa",
@@ -217,7 +219,11 @@
     "copied": "Kod Kopyalandı!",
     "copyHint": "Kodu kopyalamak için dokun",
     "waitingForOthers": "Diğerlerinin katılması bekleniyor...",
-    "yourIdentity": "Anonim kimliğin: "
+    "yourIdentity": "Anonim kimliğin: ",
+    "errors": {
+      "loadFailed": "Oylama yüklenemedi",
+      "shareFailed": "Oylama paylaşılamadı"
+    }
   },
   "winner": {
     "calculating": "Sonuçlar hesaplanıyor...",
