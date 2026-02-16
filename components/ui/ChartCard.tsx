@@ -24,9 +24,6 @@ export const ChartCard: React.FC<ChartCardProps> = ({ total, data }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  // Calculate cumulative percentages for conic gradient effect
-  let currentPercentage = 0;
-
   // Calculate stroke dash for each segment
   let currentOffset = 0;
   const segments = data.map((item) => {
@@ -137,4 +134,3 @@ const styles = StyleSheet.create({
     color: colors.text.dark,
   },
 });
-

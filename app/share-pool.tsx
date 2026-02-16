@@ -29,7 +29,7 @@ export default function SharePool() {
   useEffect(() => {
     async function loadData() {
       if (!user || !poolId) {
-        router.replace("/");
+        router.replace('/');
         return;
       }
 
@@ -52,7 +52,7 @@ export default function SharePool() {
     }
 
     loadData();
-  }, [user, poolId]);
+  }, [poolId, router, t, user]);
 
   const handleBack = () => {
     router.back();
@@ -271,4 +271,3 @@ const styles = StyleSheet.create({
     color: colors.primary.yellow,
   },
 });
-

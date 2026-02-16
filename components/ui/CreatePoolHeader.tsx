@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
 import { ScreenHeader } from "./ScreenHeader";
 
 interface CreatePoolHeaderProps {
@@ -27,6 +26,3 @@ export const CreatePoolHeader: React.FC<CreatePoolHeaderProps> = ({
     />
   );
 };
-
-const styles = StyleSheet.create({});
-

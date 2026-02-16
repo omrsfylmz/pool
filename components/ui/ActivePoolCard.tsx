@@ -64,7 +64,7 @@ export function ActivePoolCard({ pool, onPress, onTimerEnd }: ActivePoolCardProp
     pulse.start();
 
     return () => pulse.stop();
-  }, []);
+  }, [pulseAnim]);
 
   const formatTime = (value: number) => value.toString().padStart(2, "0");
 

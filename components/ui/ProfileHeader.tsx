@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, ImageSourcePropType, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ImageSourcePropType, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { typography, colors, shadows } from "../../constants/theme";
+import { typography, colors } from "../../constants/theme";
 
 interface ProfileHeaderProps {
   userName?: string;
@@ -49,4 +49,3 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 });
-

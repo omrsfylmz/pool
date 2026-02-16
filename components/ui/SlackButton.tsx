@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { colors, borderRadius, shadows, typography } from "../../constants/theme";
+import { colors, shadows, typography } from "../../constants/theme";
 
 interface SlackButtonProps {
   onPress?: () => void;
@@ -52,4 +52,3 @@ const styles = StyleSheet.create({
     color: colors.background.card,
   },
 });
-

@@ -45,7 +45,7 @@ export default function CreatePool() {
     }
 
     loadProfile();
-  }, [user]);
+  }, [user, router, t]);
 
   // Pre-fill form if reactivating
   const params = useGlobalSearchParams();

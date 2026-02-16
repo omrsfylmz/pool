@@ -1,5 +1,4 @@
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ExpoClipboard from 'expo-clipboard';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,7 +14,7 @@ import { SuggestionInput } from "../components/ui/SuggestionInput";
 import { getAvatarEmoji } from "../constants/avatars";
 import { colors, typography } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
-import { addFoodOption, getFoodOptions, getPoolResults, getProfile, removeFoodOption, type FoodOption, type Pool, type Profile } from "../services/api";
+import { addFoodOption, getFoodOptions, getProfile, removeFoodOption, type FoodOption, type Profile } from "../services/api";
 
 export default function NewSuggestion() {
   const router = useRouter();
@@ -24,7 +23,6 @@ export default function NewSuggestion() {
   const { user } = useAuth();
   
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [pool, setPool] = useState<Pool | null>(null);
   const [suggestion, setSuggestion] = useState("");
   const [note, setNote] = useState("");
   const [selectedIcon, setSelectedIcon] = useState("silverware-fork-knife");
@@ -37,7 +35,7 @@ export default function NewSuggestion() {
   useEffect(() => {
     async function loadData() {
       if (!user) {
-        router.replace("/");
+        router.replace('/');
         return;
       }
 
@@ -48,15 +46,13 @@ export default function NewSuggestion() {
       }
 
       try {
-        const [profileData, foodOptions, poolData] = await Promise.all([
+        const [profileData, foodOptions] = await Promise.all([
           getProfile(user.id),
           getFoodOptions(poolId),
-          getPoolResults(poolId),
         ]);
         
         setProfile(profileData);
         setExistingSuggestions(foodOptions);
-        setPool(poolData.pool);
       } catch (error) {
         console.error("Error loading data:", error);
         Alert.alert(t('common.error'), t('newSuggestion.errors.loadFailed'));
@@ -66,18 +62,7 @@ export default function NewSuggestion() {
     }
 
     loadData();
-  }, [user, poolId]);
-
-  const handleBack = () => {
-    router.back();
-  };
-
-  const handleCopyCode = async () => {
-    if (pool?.join_code) {
-      await ExpoClipboard.setStringAsync(pool.join_code);
-      Alert.alert(t('common.success'), t('results.copied'));
-    }
-  };
+  }, [user, poolId, router, t]);
 
   const handleSelectSuggestion = (suggestion: PreviousSuggestion) => {
     setSuggestion(suggestion.text);
@@ -89,22 +74,6 @@ export default function NewSuggestion() {
   };
 
   const handleDeleteSuggestion = async (suggestionId: string) => {
-// ... existing code ...
-
-// ... inside render ...
-            <TouchableOpacity
-              style={styles.iconPickerButton}
-              onPress={() => setShowIconPicker(true)}
-              activeOpacity={0.8}
-            >
-              <View style={styles.iconCircle}>
-                <MaterialCommunityIcons
-                  name={(selectedIcon === 'pizza-slice' ? 'pizza' : selectedIcon) as any}
-                  size={26}
-                  color={colors.primary.yellow}
-                />
-              </View>
-            </TouchableOpacity>
     Alert.alert(
       t('common.delete'),
       t('newSuggestion.deleteConfirmation', { defaultValue: 'Are you sure you want to delete this option?' }),

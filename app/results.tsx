@@ -27,7 +27,7 @@ export default function Results() {
   useEffect(() => {
     async function loadResults() {
       if (!poolId) {
-        router.back();
+        router.replace('/');
         return;
       }
 
@@ -62,8 +62,10 @@ export default function Results() {
       }
     }
 
-    loadResults();
-  }, [poolId]);
+    if (poolId) {
+      loadResults();
+    }
+  }, [poolId, router, user]);
 
   // Timer countdown - navigate to breakdown when finished
   useEffect(() => {
@@ -83,7 +85,7 @@ export default function Results() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [minutes, seconds, poolData, router]);
+  }, [minutes, poolData, poolId, router]);
 
   if (loading) {
     return (
@@ -333,4 +335,3 @@ const styles = StyleSheet.create({
     color: colors.text.disabled,
   },
 });
-

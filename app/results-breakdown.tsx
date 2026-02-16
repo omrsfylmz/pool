@@ -20,7 +20,7 @@ export default function ResultsBreakdown() {
   useEffect(() => {
     async function loadResults() {
       if (!poolId) {
-        router.back();
+        router.replace('/');
         return;
       }
 
@@ -43,7 +43,7 @@ export default function ResultsBreakdown() {
     }
 
     loadResults();
-  }, [poolId]);
+  }, [poolId, router, user]);
 
   const handleClose = () => {
     router.back();

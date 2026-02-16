@@ -35,13 +35,13 @@ export default function Vote() {
   // Real-time subscriptions
   const { votes, loading: votesLoading } = useRealtimeVotes(poolId || null);
   const { pool, loading: poolLoading } = useRealtimePool(poolId || null);
-  const { foodOptions, loading: foodOptionsLoading } = useRealtimeFoodOptions(poolId || null);
+  const { foodOptions } = useRealtimeFoodOptions(poolId || null);
 
   // Load initial data
   useEffect(() => {
     async function loadData() {
       if (!user) {
-        router.replace("/");
+        router.replace('/');
         return;
       }
 
@@ -68,7 +68,7 @@ export default function Vote() {
     }
 
     loadData();
-  }, [user, poolId]);
+  }, [poolId, router, t, user]);
 
   // Calculate timer from pool end time
   useEffect(() => {
@@ -120,7 +120,7 @@ export default function Vote() {
     }
 
     return () => clearInterval(interval);
-  }, [pool]);
+  }, [pool, router]);
 
 
 

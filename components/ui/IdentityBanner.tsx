@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import { borderRadius, colors, typography } from "../../constants/theme";
 
@@ -16,7 +15,6 @@ export const IdentityBanner: React.FC<IdentityBannerProps> = ({
   identityEmoji = "🦁",
   message = "Roar! What's for lunch today?",
 }) => {
-  const { t } = useTranslation(); // Add hook
   return (
     <View style={styles.banner}>
       <View style={styles.avatar}>
@@ -72,4 +70,3 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.regular,
   },
 });
-

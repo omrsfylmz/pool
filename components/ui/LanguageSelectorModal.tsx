@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import { borderRadius, colors, typography } from "../../constants/theme";
 
+import { scheduleDailyNotification } from "../../services/NotificationService";
+
 interface LanguageSelectorModalProps {
   visible: boolean;
   onClose: () => void;
 }
-
-import { scheduleDailyNotification } from "../../services/NotificationService";
 
 export const LanguageSelectorModal: React.FC<LanguageSelectorModalProps> = ({
   visible,

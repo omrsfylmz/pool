@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
 import { ScreenHeader } from "./ScreenHeader";
 
 interface SharePoolHeaderProps {
@@ -23,6 +22,3 @@ export const SharePoolHeader: React.FC<SharePoolHeaderProps> = ({
     />
   );
 };
-
-const styles = StyleSheet.create({});
-

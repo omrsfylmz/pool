@@ -16,7 +16,6 @@ function InitialLayout() {
   useEffect(() => {
     if (loading) return;
 
-    const inTabsGroup = segments[0] === '(tabs)';
     // Check if the current route is in the public group (index, login, signup)
     // segments is empty for root index
     const inPublicGroup = segments.length === 0 || segments[0] === 'login' || segments[0] === 'signup';
@@ -28,7 +27,7 @@ function InitialLayout() {
       // Redirect to index if not logged in and not in a public route
       router.replace('/');
     }
-  }, [session, loading, segments]);
+  }, [session, loading, segments, router]);
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
@@ -73,7 +72,7 @@ export default function RootLayout() {
     });
 
     return () => subscription.remove();
-  }, []);
+  }, [router]);
 
   if (showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;

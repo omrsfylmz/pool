@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
 interface FooterLinkProps {
@@ -43,4 +43,3 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.bold,
   },
 });
-

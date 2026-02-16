@@ -3,14 +3,14 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JoinRoomHeader } from "../components/ui/JoinRoomHeader";
@@ -25,9 +25,11 @@ export default function JoinRoom() {
   const [loading, setLoading] = useState(false);
   
   // Mounted ref to prevent state updates if component unmounts (e.g. navigation happens)
-  let isMounted = true;
-  React.useEffect(() => {
-    return () => { isMounted = false; };
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; };
   }, []);
 
   const handleClose = () => {

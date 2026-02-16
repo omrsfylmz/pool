@@ -23,7 +23,7 @@ export default function Winner() {
   const { poolId } = useLocalSearchParams<{ poolId: string }>();
   
   const [winner, setWinner] = useState<WinnerData | null>(null);
-  const [allOptions, setAllOptions] = useState<Array<FoodOption & { voteCount: number }>>([]);
+  const [allOptions, setAllOptions] = useState<(FoodOption & { voteCount: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalVotes, setTotalVotes] = useState(0);
   const [voterAvatars, setVoterAvatars] = useState<string[]>([]);
@@ -103,7 +103,7 @@ export default function Winner() {
     }
 
     loadResults();
-  }, [poolId]);
+  }, [poolId, router, user]);
 
   const handleBackToDashboard = () => {
     router.replace("/dashboard");

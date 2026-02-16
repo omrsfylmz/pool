@@ -1,6 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, typography } from "../../constants/theme";
 
@@ -137,8 +136,6 @@ const ALL_BADGES: BadgeDefinition[] = [
 ];
 
 export function AllBadgesModal({ visible, onClose, earnedBadgeIds }: AllBadgesModalProps) {
-  const { t } = useTranslation();
-
   const isBadgeEarned = (badgeId: string) => earnedBadgeIds.includes(badgeId);
 
   return (

@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
@@ -44,12 +44,7 @@ export default function ProfileScreen() {
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [earnedBadgeIds, setEarnedBadgeIds] = useState<string[]>([]);
 
-  // Fetch user profile data
-  useEffect(() => {
-    loadData();
-  }, [user, authLoading]);
-
-  async function loadData() {
+  const loadData = useCallback(async () => {
     // Wait for auth to finish loading
     if (authLoading) {
       return;
@@ -77,7 +72,12 @@ export default function ProfileScreen() {
       setLoading(false);
       setRefreshing(false);
     }
-  }
+  }, [authLoading, user, router]);
+
+  // Fetch user profile data
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const onRefresh = async () => {
     setRefreshing(true);

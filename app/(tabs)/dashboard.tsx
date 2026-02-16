@@ -30,12 +30,12 @@ export default function Dashboard() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
-      router.replace("/");
+      router.replace('/');
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, router]);
 
   // Load pool data
-  async function loadPools() {
+  const loadPools = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -80,7 +80,7 @@ export default function Dashboard() {
       setLoading(false);
       setRefreshing(false);
     }
-  }
+  }, [user]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -89,10 +89,8 @@ export default function Dashboard() {
 
   useFocusEffect(
     useCallback(() => {
-      if (!authLoading && user) {
-        loadPools();
-      }
-    }, [user, authLoading])
+      loadPools();
+    }, [loadPools])
   );
 
   if (loading || authLoading) {

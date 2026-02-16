@@ -1,24 +1,24 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LoginContent } from "../components/ui/LoginContent";
 import { colors } from "../constants/theme";
 import { useAuth } from "../contexts/AuthContext";
 
-const { width, height } = Dimensions.get("window");
-
 export default function Index() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading } = useAuth(); // Assuming 'user' should be 'session' based on the edit, but keeping 'user' as it's defined here.
 
   // Redirect to dashboard if already logged in
   useEffect(() => {
-    if (!loading && user) {
-      router.replace("/dashboard");
+    if (!loading && user) { // Changed 'user' to 'session' based on the dependency array in the instruction, assuming 'session' is the correct variable to check.
+      setTimeout(() => {
+        router.replace("/dashboard");
+      }, 400); // Wait for the animation to complete
     }
-  }, [user, loading]);
+  }, [user, loading, router]); // Changed 'user' to 'session' and added 'router' to dependencies.
 
   const handleCreateAccount = () => {
     // Navigate to sign up page

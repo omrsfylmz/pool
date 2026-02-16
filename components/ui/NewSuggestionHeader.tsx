@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
 import { ScreenHeader } from "./ScreenHeader";
 
 interface NewSuggestionHeaderProps {
@@ -23,6 +22,3 @@ export const NewSuggestionHeader: React.FC<NewSuggestionHeaderProps> = ({
     />
   );
 };
-
-const styles = StyleSheet.create({});
-

@@ -1,14 +1,14 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAvatarEmoji } from "../constants/avatars";
@@ -23,23 +23,23 @@ export default function PastPools() {
   const [pools, setPools] = useState<Pool[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadPools();
-  }, [user]);
-
-  async function loadPools() {
+  const loadPools = useCallback(async () => {
     if (!user) return;
 
     try {
-      const pastPools = await getPastPolls(user.id, 100);
+      const pastPools = await getPastPolls(user.id); // Changed from getPastPolls(user.id, 100)
 
-      setPools(pastPools);
+      setPools(pastPools); // Kept original variable name 'pastPools'
     } catch (error) {
       console.error("Error loading past pools:", error);
     } finally {
       setLoading(false);
     }
-  }
+  }, [user]);
+
+  useEffect(() => {
+    loadPools();
+  }, [loadPools]);
 
   if (loading) {
     return (

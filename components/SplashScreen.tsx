@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Dimensions, Image, StyleSheet, View } from "react-native";
-
-const { width, height } = Dimensions.get("window");
+import { Animated, Image, StyleSheet, View } from "react-native";
 
 interface SplashScreenProps {
   onFinish: () => void;
@@ -46,7 +44,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [fadeAnim, onFinish, scaleAnim]);
 
   return (
     <View style={styles.container}>
