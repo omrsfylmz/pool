@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - FoodPool</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* Accordion Styles */
+    details {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: var(--spacing-sm);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    details:hover {
+      border-color: var(--accent-color);
+    }
+
+    details[open] {
+      border-color: var(--accent-color);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    summary {
+      padding: var(--spacing-md);
+      cursor: pointer;
+      font-weight: 600;
+      list-style: none;
+      /* Hide default triangle */
+      position: relative;
+      padding-right: 40px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: '+';
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      transition: transform 0.3s ease;
+    }
+
+    details[open] summary::after {
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .faq-content {
+      padding: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
+      color: var(--text-secondary);
+      border-top: 1px solid transparent;
+    }
+
+    details[open] .faq-content {
+      border-top-color: var(--border-color);
+      padding-top: var(--spacing-sm);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <div class="logo"><a href="index.html">Food<span>Pool</span></a></div>
+      <div class="nav-links">
+        <a href="index.html#how-it-works">How it Works</a>
+        <a href="index.html#features">Features</a>
+        <a href="support.html">Support</a>
+        <a href="privacy.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Privacy</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container section" style="padding-top: 120px; max-width: 800px;">
+    <h1 class="fade-in">Help Center</h1>
+    <p class="fade-in delay-100" style="margin-bottom: var(--spacing-lg);">Having trouble? Find answers to commonly
+      asked questions.</p>
+
+    <section class="fade-in delay-200">
+      <h2 style="margin-bottom: var(--spacing-md);">Frequently Asked Questions</h2>
+
+      <details>
+        <summary>How do I join a pool?</summary>
+        <div class="faq-content">
+          Enter the unique code shared by the host on the home screen to join their room instantly. No account is
+          required for guests.
+        </div>
+      </details>
+
+      <details>
+        <summary>How is the winner decided?</summary>
+        <div class="faq-content">
+          The restaurant or dish with the most votes at the end of the voting session wins. In case of a tie, the app
+          may prompt for a revote or choose randomly depending on your room settings.
+        </div>
+      </details>
+
+      <details>
+        <summary>Can I change my vote?</summary>
+        <div class="faq-content">
+          Yes, you can change your vote as long as the voting phase is still active. Once the timer runs out, votes are
+          locked.
+        </div>
+      </details>
+
+      <details>
+        <summary>How do I delete my account?</summary>
+        <div class="faq-content">
+          Please contact our support team at <a href="mailto:omrsfylmz@gmail.com"
+            style="color: var(--accent-color);">omrsfylmz@gmail.com</a> to request account deletion.
+        </div>
+      </details>
+
+    </section>
+
+    <section class="fade-in delay-300" style="margin-top: var(--spacing-xl); text-align: center;">
+      <h2>Still need help?</h2>
+      <p>We are just an email away.</p>
+      <a href="mailto:omrsfylmz@gmail.com" class="btn btn-primary" style="margin-top: var(--spacing-sm);">Contact
+        Support</a>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-col">
+          <div class="logo">Food<span>Pool</span></div>
+          <p style="font-size: 0.9rem; margin-top: 1rem;">Making group dining decisions easy, democratic, and delicious.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#how-it-works">How it Works</a></li>
+            <li><a href="index.html#features">Features</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal & Support</h4>
+          <ul>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="support.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2024 FoodPool. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.fade-in').forEach((el) => {
+      el.style.opacity = 0;
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+
+      // Trigger animation after load
+      setTimeout(() => {
+        el.style.opacity = 1;
+        el.style.transform = 'translateY(0)';
+      }, 100);
+    });
+  </script>
+</body>
+
+</html>

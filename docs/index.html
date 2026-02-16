@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodPool - Stop Arguing Over Dinner</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Placeholder for icons, or use SVG -->
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">Food<span>Pool</span></div>
+            <div class="nav-links">
+                <a href="#how-it-works">How it Works</a>
+                <a href="#features">Features</a>
+                <a href="support.html">Support</a>
+                <a href="privacy.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Privacy</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container hero-content fade-in">
+            <h1>Stop Arguing Over <br> <span style="color: var(--accent-color);">Dinner.</span></h1>
+            <p style="margin-top: 1rem; font-size: 1.25rem;">The democratic way to dine. Vote, eat, enjoy.</p>
+            
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">Download Beta</a>
+                <a href="#how-it-works" class="btn btn-outline">Learn More</a>
+            </div>
+
+            <!-- Placeholder for App Screenshot -->
+            <div class="hero-image delay-200">
+                <div style="background: #2a2a2a; height: 400px; display: flex; align-items: center; justify-content: center; color: #555;">
+                    <i class="fas fa-mobile-alt" style="font-size: 5rem;"></i>
+                    <p>App Mockup Placeholder</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: var(--spacing-xl);">How it Works</h2>
+            
+            <!-- Step 1 -->
+            <div class="step">
+                <div class="step-content fade-in">
+                    <span class="step-number">01</span>
+                    <div class="step-icon">👨‍🍳</div>
+                    <h3>Host a Pool</h3>
+                    <p>Create a room in seconds. Pick a cuisine, set a timer, and get ready to rumble.</p>
+                </div>
+                <div style="flex: 1; background: #1a1a1a; height: 300px; border-radius: 16px;"></div> <!-- Image Placeholder -->
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step">
+                <div class="step-content fade-in delay-100">
+                    <span class="step-number">02</span>
+                    <div class="step-icon">🔗</div>
+                    <h3>Invite Friends</h3>
+                    <p>Share a simple 6-digit code. No account needed for guests. Just join and vote.</p>
+                </div>
+                <div style="flex: 1; background: #1a1a1a; height: 300px; border-radius: 16px;"></div> <!-- Image Placeholder -->
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step">
+                <div class="step-content fade-in delay-200">
+                    <span class="step-number">03</span>
+                    <div class="step-icon">🗳️</div>
+                    <h3>Vote & Eat</h3>
+                    <p>Swipe right on what looks good. Real-time results reveal the winner instantly.</p>
+                </div>
+                <div style="flex: 1; background: #1a1a1a; height: 300px; border-radius: 16px;"></div> <!-- Image Placeholder -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section" style="background: rgba(255,255,255,0.02);">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">Why FoodPool?</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <h3>⚡ Real-time Sync</h3>
+                    <p>Watch votes come in live as they happen. No refreshing needed.</p>
+                </div>
+                <div class="feature-card fade-in delay-100">
+                    <h3>🕵️ Anonymous Voting</h3>
+                    <p>Vote your stomach without peer pressure. The majority rules.</p>
+                </div>
+                <div class="feature-card fade-in delay-200">
+                    <h3>🍽️ Restaurant Discovery</h3>
+                    <p>Find new local spots you've never tried before.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <div class="logo">Food<span>Pool</span></div>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Making group dining decisions easy, democratic, and delicious.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Links</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#how-it-works">How it Works</a></li>
+                        <li><a href="#features">Features</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal & Support</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="support.html">Support Center</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2024 FoodPool. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple intersection observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.fade-in').forEach((el) => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
