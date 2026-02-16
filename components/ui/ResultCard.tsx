@@ -50,7 +50,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ result }) => {
         {/* Food Icon */}
         <View style={styles.iconContainer}>
           <MaterialCommunityIcons
-            name={(result.icon === 'pizza-slice' ? 'pizza' : result.icon) as any || "silverware-fork-knife"}
+            name={(result.icon === 'pizza-slice' ? 'pizza' : result.icon === 'utensils' ? 'silverware-fork-knife' : result.icon) as any || "silverware-fork-knife"}
             size={28}
             color={colors.primary.yellow}
           />

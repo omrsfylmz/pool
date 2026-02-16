@@ -34,7 +34,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onVote }) => {
         {/* Food Icon */}
         <View style={styles.iconBackground}>
           <MaterialCommunityIcons 
-            name={(food.icon === 'pizza-slice' ? 'pizza' : food.icon) as any || 'silverware-fork-knife'} 
+            name={(food.icon === 'pizza-slice' ? 'pizza' : food.icon === 'utensils' ? 'silverware-fork-knife' : food.icon) as any || 'silverware-fork-knife'} 
             size={32} 
             color={colors.primary.yellow} 
           />
