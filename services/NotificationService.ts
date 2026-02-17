@@ -4,6 +4,20 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import i18n from './i18n';
 
+const LOG_PREFIX = '[NotificationService]';
+
+function getIOSMajorVersion(): number | null {
+  if (Platform.OS !== 'ios') return null;
+  if (typeof Platform.Version === 'number') return Platform.Version;
+  const parsed = Number.parseInt(Platform.Version, 10);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function isIOS16OrNewer(): boolean {
+  const major = getIOSMajorVersion();
+  return major === null || major >= 16;
+}
+
 // Configure how notifications behave when the app is in the foreground
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -16,23 +30,46 @@ Notifications.setNotificationHandler({
 });
 
 export async function registerForPushNotificationsAsync() {
-  let token;
+  let token: string | undefined;
+
+  if (!isIOS16OrNewer()) {
+    console.warn(`${LOG_PREFIX} iOS version is below 16, skipping push registration.`);
+    return;
+  }
 
   if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
+    try {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    } catch (error) {
+      console.error(`${LOG_PREFIX} Error setting Android notification channel:`, error);
+      return;
+    }
   }
 
   if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let existingStatus: Notifications.PermissionStatus;
+    try {
+      const permissions = await Notifications.getPermissionsAsync();
+      existingStatus = permissions.status;
+    } catch (error) {
+      console.error(`${LOG_PREFIX} Error reading notification permissions:`, error);
+      return;
+    }
+
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+      try {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      } catch (error) {
+        console.error(`${LOG_PREFIX} Error requesting notification permissions:`, error);
+        return;
+      }
     }
     if (finalStatus !== 'granted') {
       return;
@@ -51,22 +88,28 @@ export async function registerForPushNotificationsAsync() {
       const tokenData = await Notifications.getExpoPushTokenAsync({ projectId: '0c0fcc48-2ce4-4bb4-abda-0cde3df99941' });
       token = tokenData.data;
     } catch (error) {
-       console.log('Error getting push token:', error);
+       console.error(`${LOG_PREFIX} Error getting push token:`, error);
        // Suppress error in dev/Expo Go if it happens
     }
 
   } else {
-    console.log('Must use physical device for Push Notifications');
+    console.log(`${LOG_PREFIX} Must use physical device for Push Notifications`);
   }
 
   return token;
 }
 
 export async function scheduleDailyNotification() {
+  if (!isIOS16OrNewer()) {
+    console.warn(`${LOG_PREFIX} iOS version is below 16, skipping daily notifications.`);
+    return;
+  }
+
   try {
     // Check if daily notification is already scheduled
     const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-    const lunchNotifications = scheduled.filter(n => n.content.title === "🍔 Lunch Time!");
+    const lunchTitle = i18n.t("notifications.lunch.title");
+    const lunchNotifications = scheduled.filter(n => n.content.title === lunchTitle);
 
     // If we have 5 notifications, assume we are already set up correctly for weekdays
     // If we have fewer (e.g. 1 from old daily system) or more, reset them.
@@ -79,23 +122,27 @@ export async function scheduleDailyNotification() {
 
     // Schedule for Mon (2) to Fri (6)
     for (let weekday = 2; weekday <= 6; weekday++) {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: i18n.t("notifications.lunch.title"),
-          body: i18n.t("notifications.lunch.body"),
-          sound: true,
-        },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
-          weekday: weekday,
-          hour: 11,
-          minute: 45,
-        },
-      });
+      try {
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: lunchTitle,
+            body: i18n.t("notifications.lunch.body"),
+            sound: true,
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+            weekday: weekday,
+            hour: 11,
+            minute: 45,
+          },
+        });
+      } catch (error) {
+        console.error(`${LOG_PREFIX} Error scheduling daily notification for weekday ${weekday}:`, error);
+      }
     }
 
   } catch (error) {
-    console.error("Error scheduling daily notification:", error);
+    console.error(`${LOG_PREFIX} Error scheduling daily notification:`, error);
   }
 }
 
@@ -104,8 +151,19 @@ export async function schedulePoolCompletionNotification(
   poolTitle: string,
   endsAt: string
 ) {
+  if (!isIOS16OrNewer()) {
+    console.warn(`${LOG_PREFIX} iOS version is below 16, skipping pool completion scheduling.`);
+    return;
+  }
+
   try {
-    const triggerDate = new Date(endsAt);
+    const parsedDate = Date.parse(endsAt);
+    if (Number.isNaN(parsedDate)) {
+      console.error(`${LOG_PREFIX} Invalid endsAt date for pool completion notification:`, endsAt);
+      return;
+    }
+
+    const triggerDate = new Date(parsedDate);
     const now = new Date();
 
     // If pool ends in the past or very soon (less than 10s), don't schedule
@@ -136,6 +194,6 @@ export async function schedulePoolCompletionNotification(
     });
 
   } catch (error) {
-    console.error("Error scheduling pool completion notification:", error);
+    console.error(`${LOG_PREFIX} Error scheduling pool completion notification:`, error);
   }
 }

@@ -5,7 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "../components/SplashScreen";
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import "../services/i18n"; // Initialize i18n
-import { registerForPushNotificationsAsync, scheduleDailyNotification } from "../services/NotificationService";
+import { scheduleDailyNotification } from "../services/NotificationService";
 
 
 function InitialLayout() {
@@ -43,31 +43,47 @@ export default function RootLayout() {
   const [showSplash, setShowSplash] = useState(true);
   const router = useRouter();
 
+  function getNotificationUrl(response: Notifications.NotificationResponse | null): string | null {
+    const data = response?.notification?.request?.content?.data;
+    if (!data || typeof data !== 'object') return null;
+    const maybeUrl = (data as Record<string, unknown>).url;
+    return typeof maybeUrl === 'string' ? maybeUrl : null;
+  }
+
   useEffect(() => {
     async function setupNotifications() {
-      // Basic setup
-      await registerForPushNotificationsAsync();
-      await scheduleDailyNotification();
-      
-      // Handle cold start notification
-      const response = await Notifications.getLastNotificationResponseAsync();
-      if (response) {
-        const url = response.notification.request.content.data.url;
-        if (url) {
-          // Add a small delay to allow auth to settle/hydration to complete
-          setTimeout(() => {
-             router.push(url as any);
-          }, 1000); 
-        }
+      try {
+        await scheduleDailyNotification();
+      } catch (error) {
+        console.error('[RootLayout] Error scheduling daily notifications:', error);
+      }
+
+      try {
+        // Handle cold start notification
+        const response = await Notifications.getLastNotificationResponseAsync();
+        const url = getNotificationUrl(response);
+        if (!url) return;
+
+        // Add a small delay to allow auth to settle/hydration to complete
+        setTimeout(() => {
+          router.push(url as any);
+        }, 1000);
+      } catch (error) {
+        console.error('[RootLayout] Error handling cold-start notification:', error);
       }
     }
+
     setupNotifications();
 
     // Handle notification clicks while app is in foreground/background
     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-      const url = response.notification.request.content.data.url;
-      if (url) {
-        router.push(url as any);
+      try {
+        const url = getNotificationUrl(response);
+        if (url) {
+          router.push(url as any);
+        }
+      } catch (error) {
+        console.error('[RootLayout] Error handling notification response:', error);
       }
     });
 
