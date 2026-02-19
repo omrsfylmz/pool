@@ -86,6 +86,8 @@ export async function registerForPushNotificationsAsync() {
       // We wrap this in try-catch because on some devices/configs it might still throw or warn aggressively.
       const tokenData = await Notifications.getExpoPushTokenAsync({ projectId: '0c0fcc48-2ce4-4bb4-abda-0cde3df99941' });
       token = tokenData.data;
+      console.log("🚀 EXPO TOKEN (TESTFLIGHT):", token);
+
     } catch (error) {
        console.error(`${LOG_PREFIX} Error getting push token:`, error);
        // Suppress error in dev/Expo Go if it happens
