@@ -58,6 +58,19 @@
     },
     "success": {
       "accountCreated": "Account created successfully. Please check your email to verify your account."
+    },
+    "verification": {
+      "title": "Verify Email",
+      "subtitle": "We sent a 6-digit confirmation code to",
+      "enterCode": "Please enter the 6-digit code.",
+      "invalidCode": "Invalid code. Please try again.",
+      "verifying": "Verifying...",
+      "verifyButton": "Verify Code",
+      "didntReceive": "Didn't receive the code?",
+      "resend": "Resend",
+      "resendNotReady": "Not Available",
+      "resendNotReadyMsg": "Resend will be available when connected to Supabase.",
+      "resendSuccess": "A new verification code has been sent to your email."
     }
   },
   "dashboard": {

@@ -58,6 +58,19 @@
     },
     "success": {
       "accountCreated": "Hesap başarıyla oluşturuldu. Hesabınızı doğrulamak için lütfen e-postanızı kontrol edin."
+    },
+    "verification": {
+      "title": "E-posta Doğrulama",
+      "subtitle": "6 haneli doğrulama kodunu gönderdik",
+      "enterCode": "Lütfen 6 haneli kodu girin.",
+      "invalidCode": "Geçersiz kod. Lütfen tekrar deneyin.",
+      "verifying": "Doğrulanıyor...",
+      "verifyButton": "Kodu Doğrula",
+      "didntReceive": "Kodu almadınız mı?",
+      "resend": "Tekrar Gönder",
+      "resendNotReady": "Kullanılamıyor",
+      "resendNotReadyMsg": "Tekrar gönder özelliği Supabase bağlantısı kurulduğunda aktif olacaktır.",
+      "resendSuccess": "Yeni bir doğrulama kodu e-postanıza gönderildi."
     }
   },
   "dashboard": {
