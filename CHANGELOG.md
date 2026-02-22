@@ -1,5 +1,16 @@
 
 
+# [1.5.0](https://github.com/omrsfylmz/pool/compare/1.3.0...1.5.0) (2026-02-22)
+
+
+### Features
+
+* add iOS ActivityKit entitlement and remote notification background mode ([da85306](https://github.com/omrsfylmz/pool/commit/da85306b5484b62e0005a1b651800f5749226931))
+* Enable new architecture by setting `newArchEnabled` to true. ([19a98b6](https://github.com/omrsfylmz/pool/commit/19a98b6f8bb079555489a68f74e6eba48cd96e86))
+* Initialize Expo React Native project with native configurations for Android and iOS. ([469e5a6](https://github.com/omrsfylmz/pool/commit/469e5a6850d596fb422a83bb2c467937ccb725c5))
+* Map 'utensils' icon to 'silverware-fork-knife' in food display components. ([44eb13b](https://github.com/omrsfylmz/pool/commit/44eb13b709254312019e78dd7eab024563e8e627))
+* remove Live Activity support and related configurations ([46ff349](https://github.com/omrsfylmz/pool/commit/46ff34981e47d8f42528eaf09acfcc39e413877a))
+
 # [1.3.0](https://github.com/omrsfylmz/pool/compare/1.2.0...1.3.0) (2026-02-16)
 
 
