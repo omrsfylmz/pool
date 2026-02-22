@@ -1,5 +1,12 @@
 
 
+## [1.5.2](https://github.com/omrsfylmz/pool/compare/1.5.1...1.5.2) (2026-02-22)
+
+
+### Features
+
+* Implement badge progress tracking with circular UI and update badge definitions. ([fdbf6a0](https://github.com/omrsfylmz/pool/commit/fdbf6a05d20707d1ac037adcb9e95ce900331ee8))
+
 ## [1.5.1](https://github.com/omrsfylmz/pool/compare/1.5.0...1.5.1) (2026-02-22)
 
 
