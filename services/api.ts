@@ -1,4 +1,5 @@
 import { supabase } from "../lib/supabase";
+import { checkCreationBadges, checkPoolEndedBadges, checkVotingBadges } from "./badgeService";
 import i18n from "./i18n";
 
 // ============================================
@@ -36,7 +37,7 @@ export async function createPool(
   if (!user) throw new Error("Not authenticated");
 
   const endsAt = new Date();
-  
+
   // Handle fractional minutes (e.g., 0.1667 for 10 seconds)
   if (durationMinutes < 1) {
     // Convert to seconds and add
@@ -52,7 +53,7 @@ export async function createPool(
   // Generate unique join code
   let joinCode = generateJoinCode();
   let isUnique = false;
-  
+
   // Ensure code is unique (retry if collision)
   while (!isUnique) {
     const { data: existing } = await supabase
@@ -60,7 +61,7 @@ export async function createPool(
       .select('id')
       .eq('join_code', joinCode)
       .single();
-    
+
     if (!existing) {
       isUnique = true;
     } else {
@@ -88,6 +89,9 @@ export async function createPool(
   if (data) {
     await joinPoolMember(data.id);
   }
+
+  // Badge check: pool_creator (fire-and-forget)
+  checkCreationBadges(user.id, "pool").catch(() => { });
 
   return data as Pool;
 }
@@ -125,7 +129,7 @@ export async function joinPoolMember(poolId: string) {
  */
 export async function getActivePool(userId: string) {
   const now = new Date().toISOString();
-  
+
   // 1. Get pools created by user
   const { data: createdPools } = await supabase
     .from("pools")
@@ -147,20 +151,20 @@ export async function getActivePool(userId: string) {
     // Filter manually for active status since it's a join
     joinedPools = memberPools
       .map((mp: any) => mp.pools)
-      .filter((p: Pool) => 
-        p.status === "active" && 
+      .filter((p: Pool) =>
+        p.status === "active" &&
         new Date(p.ends_at) > new Date()
       );
   }
 
   // Combine and find the most recent one
   const allPools = [...(createdPools || []), ...joinedPools];
-  
+
   if (allPools.length === 0) return null;
 
   // Sort by creation date descending
   allPools.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-  
+
   return allPools[0];
 }
 
@@ -273,7 +277,7 @@ export async function getPastPolls(userId: string, limit: number = 10) {
       .limit(3);
 
     const memberAvatars = members?.map((m: any) => m.profiles?.avatar_animal).filter(Boolean) || [];
-    
+
     // Add creator avatar if available and not already in list
     const creatorAvatar = pool.creator?.avatar_animal;
     const allAvatars = creatorAvatar ? [creatorAvatar, ...memberAvatars] : memberAvatars;
@@ -317,8 +321,8 @@ export async function updatePushToken(token: string) {
     .eq("id", user.id);
 
   if (error) {
-     console.error("Error updating push token:", error);
-     throw error;
+    console.error("Error updating push token:", error);
+    throw error;
   }
 
 }
@@ -360,7 +364,7 @@ export async function sendPoolCompletionNotification(poolId: string) {
 
     // 4. Send notifications
     const tokens = profiles.map(p => p.expo_push_token).filter(Boolean);
-    
+
     // Prepare notifications
     const notifications = tokens.map(token => ({
       to: token,
@@ -419,9 +423,9 @@ export async function endPool(poolId: string) {
   // Update pool with winner and ended status
   const { data, error } = await supabase
     .from("pools")
-    .update({ 
+    .update({
       status: "ended",
-      winner_id: winnerId 
+      winner_id: winnerId
     })
     .eq("id", poolId)
     .eq("status", "active") // Guard against race conditions
@@ -432,6 +436,9 @@ export async function endPool(poolId: string) {
   // Only send notifications if we were the one who effectively ended the pool
   if (data && data.length > 0) {
     await sendPoolCompletionNotification(poolId);
+
+    // Badge check: winner_winner (fire-and-forget)
+    checkPoolEndedBadges(poolId).catch(() => { });
   }
 }
 
@@ -442,9 +449,9 @@ export async function endPool(poolId: string) {
 export async function checkAndEndExpiredPools(userId: string) {
   try {
     const now = new Date().toISOString();
-    
+
     // 1. Find all active pools involving this user that have expired
-    
+
     // Get pools created by user
     const { data: createdPools } = await supabase
       .from("pools")
@@ -463,9 +470,9 @@ export async function checkAndEndExpiredPools(userId: string) {
 
     // Combine pool IDs
     const poolIdsToProcess = new Set<string>();
-    
+
     createdPools?.forEach(p => poolIdsToProcess.add(p.id));
-    
+
     memberPools?.forEach((mp: any) => {
       // The inner join filter might return the structure differently depending on supabase client version,
       // but typically with !inner and filtering on relation, we get the hits.
@@ -677,10 +684,10 @@ export async function checkAndAwardFirstWinAchievements(
   if (winnerIcon === 'utensils') return;
 
   const achievementType = `first_${winnerIcon.replace('-', '_')}_win`;
-  
+
   // Check if user already has this achievement
   const hasAchievement = await checkAchievement(userId, achievementType);
-  
+
   if (!hasAchievement) {
     await awardAchievement(userId, achievementType, winnerIcon, winnerName);
   }
@@ -722,6 +729,10 @@ export async function addFoodOption(
     .single();
 
   if (error) throw error;
+
+  // Badge check: idea_generator (fire-and-forget)
+  checkCreationBadges(user.id, "food_option").catch(() => { });
+
   return data as FoodOption;
 }
 
@@ -753,7 +764,7 @@ export async function clonePoolOptions(oldPoolId: string, newPoolId: string) {
   // 1. Get old pool options
   const start = Date.now();
   const options = await getFoodOptions(oldPoolId);
-  
+
   if (!options || options.length === 0) return;
 
   // 2. Prepare new options
@@ -807,6 +818,21 @@ export async function castVote(poolId: string, foodOptionId: string) {
     .single();
 
   if (error) throw error;
+
+  // Badge check: voting badges (fire-and-forget)
+  // Fetch the food option icon to determine category badges
+  Promise.resolve(
+    supabase
+      .from("food_options")
+      .select("icon")
+      .eq("id", foodOptionId)
+      .single()
+  )
+    .then(({ data: option }) => {
+      checkVotingBadges(user.id, option?.icon).catch(() => { });
+    })
+    .catch(() => { });
+
   return data as Vote;
 }
 
@@ -934,7 +960,7 @@ export async function getPoolResults(poolId: string): Promise<PoolResult> {
   votes?.forEach((vote: any) => {
     const optionId = vote.food_option_id;
     voteCounts[optionId] = (voteCounts[optionId] || 0) + 1;
-    
+
     // Collect avatar
     if (vote.profiles?.avatar_animal) {
       if (!voteAvatars[optionId]) voteAvatars[optionId] = [];
@@ -996,7 +1022,7 @@ export async function getProfile(userId: string) {
 
 // Update user profile
 export const updateProfile = async (
-  userId: string, 
+  userId: string,
   updates: { full_name?: string; avatar_url?: string; avatar_animal?: string }
 ) => {
   const { data, error } = await supabase

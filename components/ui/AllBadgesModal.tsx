@@ -1,7 +1,9 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Svg, { Circle } from "react-native-svg";
 import { colors, typography } from "../../constants/theme";
+import type { BadgeProgress } from "../../services/badgeService";
 
 export interface BadgeDefinition {
   id: string;
@@ -17,16 +19,17 @@ interface AllBadgesModalProps {
   visible: boolean;
   onClose: () => void;
   earnedBadgeIds: string[];
+  badgeProgress: Record<string, BadgeProgress>;
 }
 
-// All 12 available badges
+// All 10 available badges with updated descriptions
 const ALL_BADGES: BadgeDefinition[] = [
   // Welcome Badge
   {
     id: "newcomer",
     icon: "user-plus",
     name: "Newcomer",
-    description: "Joined FoodPool!",
+    description: "Hesap açıldığında kazanılır",
     type: "achievement",
     color: "#7c3aed",
     backgroundColor: "#ede9fe",
@@ -36,7 +39,7 @@ const ALL_BADGES: BadgeDefinition[] = [
     id: "burger_monster",
     icon: "hamburger",
     name: "Burger Monster",
-    description: "Won 5 burger votes",
+    description: "Burger seçeneğine ilk oy",
     type: "food",
     color: "#92400e",
     backgroundColor: "#fef3c7",
@@ -45,7 +48,7 @@ const ALL_BADGES: BadgeDefinition[] = [
     id: "salad_sultan",
     icon: "leaf",
     name: "Salad Sultan",
-    description: "Chose healthy 5 times",
+    description: "Salata seçeneğine ilk oy",
     type: "food",
     color: "#166534",
     backgroundColor: "#dcfce7",
@@ -54,7 +57,7 @@ const ALL_BADGES: BadgeDefinition[] = [
     id: "pizza_pro",
     icon: "pizza-slice",
     name: "Pizza Pro",
-    description: "Won 5 pizza votes",
+    description: "Pizza seçeneğine ilk oy",
     type: "food",
     color: "#991b1b",
     backgroundColor: "#fee2e2",
@@ -63,7 +66,7 @@ const ALL_BADGES: BadgeDefinition[] = [
     id: "taco_titan",
     icon: "pepper-hot",
     name: "Taco Titan",
-    description: "Won 5 taco votes",
+    description: "Acı biberli seçeneğe ilk oy",
     type: "food",
     color: "#ea580c",
     backgroundColor: "#ffedd5",
@@ -73,7 +76,7 @@ const ALL_BADGES: BadgeDefinition[] = [
     id: "early_bird",
     icon: "sun",
     name: "Early Bird",
-    description: "First to vote 3 times",
+    description: "Saat 11:00'den önce oy ver",
     type: "participation",
     color: "#1e40af",
     backgroundColor: "#dbeafe",
@@ -82,25 +85,16 @@ const ALL_BADGES: BadgeDefinition[] = [
     id: "consistent_voter",
     icon: "check-circle",
     name: "Consistent Voter",
-    description: "Voted in 10 pools",
+    description: "Toplamda 5 oy kullan",
     type: "participation",
     color: "#7c3aed",
     backgroundColor: "#ede9fe",
   },
   {
-    id: "streak_master",
-    icon: "fire",
-    name: "Streak Master",
-    description: "5-day voting streak",
-    type: "participation",
-    color: "#dc2626",
-    backgroundColor: "#fee2e2",
-  },
-  {
     id: "pool_creator",
     icon: "plus-circle",
     name: "Pool Creator",
-    description: "Created 5 pools",
+    description: "İlk havuzunu oluştur",
     type: "participation",
     color: "#059669",
     backgroundColor: "#d1fae5",
@@ -110,33 +104,135 @@ const ALL_BADGES: BadgeDefinition[] = [
     id: "winner_winner",
     icon: "trophy",
     name: "Winner Winner",
-    description: "Your choice won 10x",
+    description: "Oyun 3 kez birinci olsun",
     type: "achievement",
     color: "#ca8a04",
     backgroundColor: "#fef9c3",
   },
   {
-    id: "tie_breaker",
-    icon: "dice",
-    name: "Tie Breaker",
-    description: "Broke 3 ties",
-    type: "achievement",
-    color: "#4338ca",
-    backgroundColor: "#e0e7ff",
-  },
-  {
     id: "idea_generator",
     icon: "lightbulb",
     name: "Idea Generator",
-    description: "Added 10 suggestions",
+    description: "Toplam 5 yemek seçeneği ekle",
     type: "achievement",
     color: "#d97706",
     backgroundColor: "#fef3c7",
   },
 ];
 
-export function AllBadgesModal({ visible, onClose, earnedBadgeIds }: AllBadgesModalProps) {
+// Circular progress ring component
+function CircularProgress({
+  size,
+  strokeWidth,
+  progress,
+  color,
+  bgColor,
+}: {
+  size: number;
+  strokeWidth: number;
+  progress: number; // 0-1
+  color: string;
+  bgColor: string;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference * (1 - Math.min(progress, 1));
+
+  return (
+    <Svg width={size} height={size} style={styles.progressRing}>
+      {/* Background circle */}
+      <Circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        stroke={bgColor}
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      {/* Progress arc */}
+      <Circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        stroke={color}
+        strokeWidth={strokeWidth}
+        fill="none"
+        strokeDasharray={`${circumference}`}
+        strokeDashoffset={strokeDashoffset}
+        strokeLinecap="round"
+        rotation="-90"
+        origin={`${size / 2}, ${size / 2}`}
+      />
+    </Svg>
+  );
+}
+
+export function AllBadgesModal({
+  visible,
+  onClose,
+  earnedBadgeIds,
+  badgeProgress,
+}: AllBadgesModalProps) {
   const isBadgeEarned = (badgeId: string) => earnedBadgeIds.includes(badgeId);
+
+  const getProgress = (badgeId: string) => {
+    const p = badgeProgress[badgeId];
+    return p || { current: 0, target: 1 };
+  };
+
+  const renderBadge = (badge: BadgeDefinition) => {
+    const earned = isBadgeEarned(badge.id);
+    const progress = getProgress(badge.id);
+    const progressRatio = progress.target > 0 ? progress.current / progress.target : 0;
+
+    return (
+      <View key={badge.id} style={styles.badgeCard}>
+        <View style={styles.badgeWrapper}>
+          {/* SVG circular progress bar */}
+          <CircularProgress
+            size={82}
+            strokeWidth={3.5}
+            progress={progressRatio}
+            color={earned ? badge.color : "#d1d5db"}
+            bgColor={earned ? `${badge.color}20` : "#f3f4f6"}
+          />
+          {/* Icon in center */}
+          <View
+            style={[
+              styles.badgeCircle,
+              {
+                backgroundColor: earned ? badge.backgroundColor : "#f3f4f6",
+              },
+            ]}
+          >
+            <FontAwesome5
+              name={badge.icon as any}
+              size={26}
+              color={earned ? badge.color : "#9ca3af"}
+            />
+            {!earned && (
+              <View style={styles.lockOverlay}>
+                <FontAwesome5 name="lock" size={14} color="#6b7280" />
+              </View>
+            )}
+          </View>
+        </View>
+        <Text style={[styles.badgeName, !earned && styles.unearnedText]}>
+          {badge.name}
+        </Text>
+        <Text style={styles.badgeDescription}>{badge.description}</Text>
+        {/* Progress text */}
+        <Text
+          style={[
+            styles.progressLabel,
+            earned && styles.progressLabelEarned,
+          ]}
+        >
+          {earned ? "✓" : `${progress.current}/${progress.target}`}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <Modal
@@ -177,141 +273,27 @@ export function AllBadgesModal({ visible, onClose, earnedBadgeIds }: AllBadgesMo
           {/* Newcomer Badge */}
           <Text style={styles.categoryTitle}>🎉 Welcome</Text>
           <View style={styles.badgesGrid}>
-            {ALL_BADGES.filter((b) => b.id === "newcomer").map((badge) => {
-              const earned = isBadgeEarned(badge.id);
-              return (
-                <View key={badge.id} style={styles.badgeCard}>
-                  <View
-                    style={[
-                      styles.badgeCircle,
-                      {
-                        backgroundColor: earned ? badge.backgroundColor : "#f3f4f6",
-                      },
-                    ]}
-                  >
-                    <FontAwesome5
-                      name={badge.icon as any}
-                      size={28}
-                      color={earned ? badge.color : "#9ca3af"}
-                    />
-                    {!earned && (
-                      <View style={styles.lockOverlay}>
-                        <FontAwesome5 name="lock" size={16} color="#6b7280" />
-                      </View>
-                    )}
-                  </View>
-                  <Text style={[styles.badgeName, !earned && styles.unearnedText]}>
-                    {badge.name}
-                  </Text>
-                  <Text style={styles.badgeDescription}>{badge.description}</Text>
-                </View>
-              );
-            })}
+            {ALL_BADGES.filter((b) => b.id === "newcomer").map(renderBadge)}
           </View>
 
           {/* Food Badges */}
           <Text style={styles.categoryTitle}>🍔 Food Preferences</Text>
           <View style={styles.badgesGrid}>
-            {ALL_BADGES.filter((b) => b.type === "food").map((badge) => {
-              const earned = isBadgeEarned(badge.id);
-              return (
-                <View key={badge.id} style={styles.badgeCard}>
-                  <View
-                    style={[
-                      styles.badgeCircle,
-                      {
-                        backgroundColor: earned ? badge.backgroundColor : "#f3f4f6",
-                      },
-                    ]}
-                  >
-                    <FontAwesome5
-                      name={badge.icon as any}
-                      size={28}
-                      color={earned ? badge.color : "#9ca3af"}
-                    />
-                    {!earned && (
-                      <View style={styles.lockOverlay}>
-                        <FontAwesome5 name="lock" size={16} color="#6b7280" />
-                      </View>
-                    )}
-                  </View>
-                  <Text style={[styles.badgeName, !earned && styles.unearnedText]}>
-                    {badge.name}
-                  </Text>
-                  <Text style={styles.badgeDescription}>{badge.description}</Text>
-                </View>
-              );
-            })}
+            {ALL_BADGES.filter((b) => b.type === "food").map(renderBadge)}
           </View>
 
           {/* Participation Badges */}
           <Text style={styles.categoryTitle}>🎯 Participation</Text>
           <View style={styles.badgesGrid}>
-            {ALL_BADGES.filter((b) => b.type === "participation").map((badge) => {
-              const earned = isBadgeEarned(badge.id);
-              return (
-                <View key={badge.id} style={styles.badgeCard}>
-                  <View
-                    style={[
-                      styles.badgeCircle,
-                      {
-                        backgroundColor: earned ? badge.backgroundColor : "#f3f4f6",
-                      },
-                    ]}
-                  >
-                    <FontAwesome5
-                      name={badge.icon as any}
-                      size={28}
-                      color={earned ? badge.color : "#9ca3af"}
-                    />
-                    {!earned && (
-                      <View style={styles.lockOverlay}>
-                        <FontAwesome5 name="lock" size={16} color="#6b7280" />
-                      </View>
-                    )}
-                  </View>
-                  <Text style={[styles.badgeName, !earned && styles.unearnedText]}>
-                    {badge.name}
-                  </Text>
-                  <Text style={styles.badgeDescription}>{badge.description}</Text>
-                </View>
-              );
-            })}
+            {ALL_BADGES.filter((b) => b.type === "participation").map(renderBadge)}
           </View>
 
           {/* Achievement Badges */}
           <Text style={styles.categoryTitle}>🏆 Achievements</Text>
           <View style={styles.badgesGrid}>
-            {ALL_BADGES.filter((b) => b.type === "achievement").map((badge) => {
-              const earned = isBadgeEarned(badge.id);
-              return (
-                <View key={badge.id} style={styles.badgeCard}>
-                  <View
-                    style={[
-                      styles.badgeCircle,
-                      {
-                        backgroundColor: earned ? badge.backgroundColor : "#f3f4f6",
-                      },
-                    ]}
-                  >
-                    <FontAwesome5
-                      name={badge.icon as any}
-                      size={28}
-                      color={earned ? badge.color : "#9ca3af"}
-                    />
-                    {!earned && (
-                      <View style={styles.lockOverlay}>
-                        <FontAwesome5 name="lock" size={16} color="#6b7280" />
-                      </View>
-                    )}
-                  </View>
-                  <Text style={[styles.badgeName, !earned && styles.unearnedText]}>
-                    {badge.name}
-                  </Text>
-                  <Text style={styles.badgeDescription}>{badge.description}</Text>
-                </View>
-              );
-            })}
+            {ALL_BADGES.filter(
+              (b) => b.type === "achievement" && b.id !== "newcomer"
+            ).map(renderBadge)}
           </View>
 
           <View style={styles.bottomSpacer} />
@@ -387,13 +369,22 @@ const styles = StyleSheet.create({
     width: "30%",
     alignItems: "center",
   },
-  badgeCircle: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+  badgeWrapper: {
+    width: 82,
+    height: 82,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 8,
+  },
+  progressRing: {
+    position: "absolute",
+  },
+  badgeCircle: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    alignItems: "center",
+    justifyContent: "center",
     position: "relative",
   },
   lockOverlay: {
@@ -414,7 +405,7 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
     textAlign: "center",
-    marginBottom: 4,
+    marginBottom: 2,
   },
   unearnedText: {
     color: "#9ca3af",
@@ -423,6 +414,16 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: colors.text.muted,
     textAlign: "center",
+    marginBottom: 4,
+  },
+  progressLabel: {
+    fontSize: 11,
+    fontWeight: typography.weights.bold,
+    color: "#9ca3af",
+    textAlign: "center",
+  },
+  progressLabelEarned: {
+    color: "#059669",
   },
   bottomSpacer: {
     height: 40,

@@ -27,6 +27,7 @@ import { getAvatarEmoji } from "../../constants/avatars";
 import { colors, typography } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
 import { deleteAccount, getProfile, getUserAchievements, updateProfile, type Profile } from "../../services/api";
+import { getBadgeProgress, type BadgeProgress } from "../../services/badgeService";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -43,6 +44,7 @@ export default function ProfileScreen() {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [earnedBadgeIds, setEarnedBadgeIds] = useState<string[]>([]);
+  const [badgeProgress, setBadgeProgress] = useState<Record<string, BadgeProgress>>({});
 
   const loadData = useCallback(async () => {
     // Wait for auth to finish loading
@@ -57,15 +59,17 @@ export default function ProfileScreen() {
     }
 
     try {
-      const [profileData, achievements] = await Promise.all([
+      const [profileData, achievements, progress] = await Promise.all([
         getProfile(user.id),
         getUserAchievements(user.id),
+        getBadgeProgress(user.id),
       ]);
       setProfile(profileData);
       
       // Map achievements to badge IDs
       const badgeIds = achievements.map((a: any) => a.achievement_type);
       setEarnedBadgeIds(badgeIds);
+      setBadgeProgress(progress);
     } catch (error) {
       console.error("Error loading profile:", error);
     } finally {
@@ -94,10 +98,8 @@ export default function ProfileScreen() {
       taco_titan: { icon: "pepper-hot", type: "burger" },
       early_bird: { icon: "sun", type: "sun" },
       consistent_voter: { icon: "check-circle", type: "sun" },
-      streak_master: { icon: "fire", type: "burger" },
       pool_creator: { icon: "plus-circle", type: "salad" },
       winner_winner: { icon: "trophy", type: "sun" },
-      tie_breaker: { icon: "dice", type: "sun" },
       idea_generator: { icon: "lightbulb", type: "sun" },
     };
 
@@ -217,7 +219,7 @@ export default function ProfileScreen() {
           <BadgesSection 
             badges={displayBadges} 
             earnedCount={earnedBadgeIds.length}
-            totalCount={12}
+            totalCount={10}
             onViewAll={() => setShowBadgesModal(true)}
           />
           
@@ -275,6 +277,7 @@ export default function ProfileScreen() {
         visible={showBadgesModal}
         onClose={() => setShowBadgesModal(false)}
         earnedBadgeIds={earnedBadgeIds}
+        badgeProgress={badgeProgress}
       />
       
       <ProfileEditModal
