@@ -1,5 +1,13 @@
 
 
+## [1.5.1](https://github.com/omrsfylmz/pool/compare/1.5.0...1.5.1) (2026-02-22)
+
+
+### Features
+
+* Expand privacy policy content and UI with new sections and i18n entries. ([b46bab3](https://github.com/omrsfylmz/pool/commit/b46bab31aa0ea0c33a0938c34704ec2b392abb75))
+* Implement OTP verification flow for user signup, including UI, authentication logic, and localization. ([dabf333](https://github.com/omrsfylmz/pool/commit/dabf3339bc4e0688fa2d99ccc825af0c23a9bba2))
+
 # [1.5.0](https://github.com/omrsfylmz/pool/compare/1.3.0...1.5.0) (2026-02-22)
 
 
