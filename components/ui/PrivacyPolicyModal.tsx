@@ -2,12 +2,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, typography } from "../../constants/theme";
@@ -51,56 +51,116 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
         >
           <Text style={styles.lastUpdated}>{t('privacyPolicy.lastUpdated')}</Text>
 
+          {/* 1. Introduction */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.intro.title')}</Text>
-            <Text style={styles.paragraph}>
-              {t('privacyPolicy.sections.intro.text')}
-            </Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.intro.text')}</Text>
           </View>
 
+          {/* 2. Information We Collect */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.dataCollection.title')}</Text>
-            <Text style={styles.paragraph}>
-              {t('privacyPolicy.sections.dataCollection.text')}
-            </Text>
-            <View style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>{t('privacyPolicy.sections.dataCollection.bullets.identity')}</Text>
-            </View>
-            <View style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>{t('privacyPolicy.sections.dataCollection.bullets.contact')}</Text>
-            </View>
-            <View style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>{t('privacyPolicy.sections.dataCollection.bullets.usage')}</Text>
-            </View>
+            <Text style={styles.subTitle}>{t('privacyPolicy.sections.dataCollection.subtitle1')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.dataCollection.text')}</Text>
+            {['identity', 'contact', 'password'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.dataCollection.bullets.${key}`)}</Text>
+              </View>
+            ))}
+            <Text style={[styles.subTitle, { marginTop: 16 }]}>{t('privacyPolicy.sections.dataCollection.subtitle2')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.dataCollection.text2')}</Text>
+            {['pools', 'suggestions', 'device'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.dataCollection.bullets2.${key}`)}</Text>
+              </View>
+            ))}
           </View>
 
+          {/* 3. How We Use Your Data */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.usage.title')}</Text>
-            <Text style={styles.paragraph}>
-              {t('privacyPolicy.sections.usage.text')}
-            </Text>
-            <View style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>{t('privacyPolicy.sections.usage.bullets.register')}</Text>
-            </View>
-            <View style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>{t('privacyPolicy.sections.usage.bullets.manage')}</Text>
-            </View>
-            <View style={styles.bulletPoint}>
-              <Text style={styles.bulletDot}>•</Text>
-              <Text style={styles.bulletText}>{t('privacyPolicy.sections.usage.bullets.participate')}</Text>
-            </View>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.usage.text')}</Text>
+            {['register', 'manage', 'participate', 'improve', 'achievements'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.usage.bullets.${key}`)}</Text>
+              </View>
+            ))}
           </View>
 
+          {/* 4. Anonymity & Voting Privacy */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.anonymity.title')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.anonymity.text')}</Text>
+            {['noOne', 'avatar', 'voteData', 'afterPoll'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.anonymity.bullets.${key}`)}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* 5. Data Sharing & Third Parties */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.thirdParties.title')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.thirdParties.text')}</Text>
+            {['supabase', 'expo'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.thirdParties.bullets.${key}`)}</Text>
+              </View>
+            ))}
+            <Text style={[styles.paragraph, { marginTop: 8 }]}>{t('privacyPolicy.sections.thirdParties.footer')}</Text>
+          </View>
+
+          {/* 6. Data Security */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.security.title')}</Text>
-            <Text style={styles.paragraph}>
-              {t('privacyPolicy.sections.security.text')}
-            </Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.security.text')}</Text>
+            {['encryption', 'rls', 'passwords', 'tokens'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.security.bullets.${key}`)}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* 7. Data Retention */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.retention.title')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.retention.text')}</Text>
+            {['account', 'polls', 'deleted'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.retention.bullets.${key}`)}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* 8. Your Rights */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.rights.title')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.rights.text')}</Text>
+            {['access', 'update', 'delete', 'optout'].map((key) => (
+              <View key={key} style={styles.bulletPoint}>
+                <Text style={styles.bulletDot}>•</Text>
+                <Text style={styles.bulletText}>{t(`privacyPolicy.sections.rights.bullets.${key}`)}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* 9. Children's Privacy */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.children.title')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.children.text')}</Text>
+          </View>
+
+          {/* 10. Changes to This Policy */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('privacyPolicy.sections.changes.title')}</Text>
+            <Text style={styles.paragraph}>{t('privacyPolicy.sections.changes.text')}</Text>
           </View>
 
           <View style={styles.footer}>
@@ -160,6 +220,13 @@ const styles = StyleSheet.create({
     fontWeight: typography.weights.bold,
     color: colors.text.dark,
     marginBottom: 12,
+  },
+  subTitle: {
+    fontSize: typography.sizes.md,
+    fontWeight: typography.weights.bold,
+    color: colors.text.dark,
+    marginBottom: 8,
+    marginTop: 4,
   },
   paragraph: {
     fontSize: typography.sizes.md,

@@ -324,36 +324,98 @@
   },
   "privacyPolicy": {
     "title": "Privacy Policy",
-    "lastUpdated": "Last Updated: January 30, 2026",
+    "lastUpdated": "Last Updated: February 22, 2026",
     "sections": {
       "intro": {
         "title": "1. Introduction",
-        "text": "Welcome to FoodPool. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you as to how we look after your personal data when you visit our application and tell you about your privacy rights and how the law protects you."
+        "text": "FoodPool (\"we\", \"our\", or \"us\") is committed to protecting your privacy. This Privacy Policy explains how our mobile application (the \"App\") collects, uses, stores, and protects your information."
       },
       "dataCollection": {
-        "title": "2. Data We Collect",
-        "text": "We may collect, use, store and transfer different kinds of personal data about you which we have grouped together follows:",
+        "title": "2. Information We Collect",
+        "subtitle1": "Account Information",
+        "text": "When you create an account, we collect:",
         "bullets": {
-          "identity": "Identity Data: includes first name, last name, username or similar identifier.",
-          "contact": "Contact Data: includes email address.",
-          "usage": "Usage Data: includes information about how you use our app, pools created, and voting history."
+          "identity": "Your email address (used for authentication and account recovery)",
+          "contact": "Your full name (displayed only to you and as part of your profile)",
+          "password": "Password (stored securely as a hash — we never see your actual password)"
+        },
+        "subtitle2": "Usage Data",
+        "text2": "We also collect data related to your interactions:",
+        "bullets2": {
+          "pools": "Pools created, joined, and voting history",
+          "suggestions": "Food suggestions and options contributed",
+          "device": "Push notification tokens and device information"
         }
       },
       "usage": {
         "title": "3. How We Use Your Data",
-        "text": "We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:",
+        "text": "We use your information exclusively to:",
         "bullets": {
-          "register": "To register you as a new user.",
-          "manage": "To manage our relationship with you.",
-          "participate": "To enable you to participate in pools and voting."
+          "register": "Provide the service: Create and manage your account, enable pool creation and voting",
+          "manage": "Facilitate anonymous voting: Assign animal avatars for identity-hidden participation",
+          "participate": "Send notifications: Alert you about pool updates, voting deadlines, and results",
+          "improve": "Improve the App: Understand usage patterns to enhance features and fix issues",
+          "achievements": "Award achievements: Track and display earned badges and medals"
         }
       },
+      "anonymity": {
+        "title": "4. Anonymity & Voting Privacy",
+        "text": "Anonymity is central to FoodPool's design:",
+        "bullets": {
+          "noOne": "During active polls, no one — including pool creators — can see who voted for what",
+          "avatar": "Your real name is replaced by a random animal avatar in each pool",
+          "voteData": "Vote data is associated with your anonymous identity, not your real profile",
+          "afterPoll": "After a poll ends, participation is visible but individual vote choices remain anonymous"
+        }
+      },
+      "thirdParties": {
+        "title": "5. Data Sharing & Third Parties",
+        "text": "We do not sell, rent, or share your personal data with any third parties for marketing purposes. Your data may be processed by:",
+        "bullets": {
+          "supabase": "Supabase: Our backend infrastructure provider (database, authentication, real-time sync)",
+          "expo": "Expo / React Native: Our app development framework (for push notifications)"
+        },
+        "footer": "These service providers process data only as necessary to provide their services."
+      },
       "security": {
-        "title": "4. Data Security",
-        "text": "We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used or accessed in an unauthorized way, altered or disclosed. In addition, we limit access to your personal data to those employees, agents, contractors and other third parties who have a business need to know."
+        "title": "6. Data Security",
+        "text": "We implement industry-standard security measures to protect your information:",
+        "bullets": {
+          "encryption": "All data is encrypted in transit using TLS/SSL",
+          "rls": "Database access is protected by Row-Level Security (RLS) policies",
+          "passwords": "Passwords are hashed and salted — they are never stored in plain text",
+          "tokens": "Authentication tokens are securely stored on your device"
+        }
+      },
+      "retention": {
+        "title": "7. Data Retention",
+        "text": "We retain your data as follows:",
+        "bullets": {
+          "account": "Account data: Retained as long as your account is active",
+          "polls": "Poll data: Voting history and pool records are retained for your reference",
+          "deleted": "Deleted accounts: All associated data is permanently removed within 30 days"
+        }
+      },
+      "rights": {
+        "title": "8. Your Rights",
+        "text": "You have the right to:",
+        "bullets": {
+          "access": "Access: View all personal data we hold about you (available in your profile)",
+          "update": "Update: Modify your name, email, or profile information at any time",
+          "delete": "Delete: Permanently delete your account and all associated data from your profile settings",
+          "optout": "Opt-out: Disable push notifications at any time through your device settings"
+        }
+      },
+      "children": {
+        "title": "9. Children's Privacy",
+        "text": "FoodPool is not intended for children under the age of 13. We do not knowingly collect personal information from children. If we become aware that a child under 13 has provided us with personal information, we will take steps to delete such information."
+      },
+      "changes": {
+        "title": "10. Changes to This Policy",
+        "text": "We may update this Privacy Policy from time to time. When we make significant changes, we will notify you through the App or via email. The \"Last Updated\" date at the top of this page will always reflect the most recent revision."
       }
     },
-    "footer": "If you have any questions about this privacy policy, please contact us at privacy@foodpool.app"
+    "footer": "If you have any questions about this privacy policy, please contact us at omrsfylmz@gmail.com"
   },
   "notifications": {
     "lunch": {

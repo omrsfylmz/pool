@@ -324,36 +324,98 @@
   },
   "privacyPolicy": {
     "title": "Gizlilik Politikası",
-    "lastUpdated": "Son Güncelleme: 30 Ocak 2026",
+    "lastUpdated": "Son Güncelleme: 22 Şubat 2026",
     "sections": {
       "intro": {
         "title": "1. Giriş",
-        "text": "FoodPool'a hoş geldiniz. Gizliliğinize saygı duyuyoruz ve kişisel verilerinizi korumaya kararlıyız. Bu gizlilik politikası, uygulamamızı ziyaret ettiğinizde kişisel verilerinizi nasıl işlediğimiz konusunda sizi bilgilendirecek ve gizlilik haklarınız ile yasaların sizi nasıl koruduğu hakkında bilgi verecektir."
+        "text": "FoodPool (\"biz\" veya \"bizim\") gizliliğinizi korumaya kararlıdır. Bu Gizlilik Politikası, mobil uygulamamızın (\"Uygulama\") bilgilerinizi nasıl topladığını, kullandığını, sakladığını ve koruduğunu açıklar."
       },
       "dataCollection": {
-        "title": "2. Topladığımız Veriler",
-        "text": "Sizinle ilgili farklı türde kişisel verileri toplayabilir, kullanabilir, saklayabilir ve aktarabiliriz. Bunları aşağıdaki gibi gruplandırdık:",
+        "title": "2. Topladığımız Bilgiler",
+        "subtitle1": "Hesap Bilgileri",
+        "text": "Hesap oluşturduğunuzda şunları toplarız:",
         "bullets": {
-          "identity": "Kimlik Verileri: ad, soyad, kullanıcı adı veya benzer tanımlayıcıları içerir.",
-          "contact": "İletişim Verileri: e-posta adresini içerir.",
-          "usage": "Kullanım Verileri: uygulamamızı nasıl kullandığınız, oluşturulan oylamalar ve oy kullanma geçmişinizle ilgili bilgileri içerir."
+          "identity": "E-posta adresiniz (kimlik doğrulama ve hesap kurtarma için)",
+          "contact": "Adınız ve soyadınız (yalnızca size ve profilinizde görüntülenir)",
+          "password": "Şifreniz (güvenli olarak hash'lenmiş şekilde saklanır — gerçek şifrenizi asla görmeyiz)"
+        },
+        "subtitle2": "Kullanım Verileri",
+        "text2": "Etkileşimlerinizle ilgili verileri de toplarız:",
+        "bullets2": {
+          "pools": "Oluşturulan, katılınan oylamalar ve oy geçmişi",
+          "suggestions": "Yemek önerileri ve katkıda bulunulan seçenekler",
+          "device": "Push bildirim tokenları ve cihaz bilgileri"
         }
       },
       "usage": {
         "title": "3. Verilerinizi Nasıl Kullanıyoruz",
-        "text": "Kişisel verilerinizi yalnızca yasaların izin verdiği durumlarda kullanacağız. En yaygın olarak, kişisel verilerinizi aşağıdaki durumlarda kullanacağız:",
+        "text": "Bilgilerinizi yalnızca şu amaçlarla kullanırız:",
         "bullets": {
-          "register": "Sizi yeni bir kullanıcı olarak kaydetmek için.",
-          "manage": "Sizinle olan ilişkimizi yönetmek için.",
-          "participate": "Oylamalara katılmanızı ve oy kullanmanızı sağlamak için."
+          "register": "Hizmet sunmak: Hesabınızı oluşturmak, yönetmek, oylama oluşturma ve oy kullanmayı sağlamak",
+          "manage": "Anonim oylamayı kolaylaştırmak: Kimliğinizi gizleyen hayvan avatarları atamak",
+          "participate": "Bildirim göndermek: Oylama güncellemeleri, süre bitimi ve sonuçlar hakkında bilgilendirmek",
+          "improve": "Uygulamayı geliştirmek: Kullanım kalıplarını anlayarak özellikleri iyileştirmek",
+          "achievements": "Başarıları ödüllendirmek: Kazanılan rozet ve madalyaları takip etmek ve görüntülemek"
         }
       },
+      "anonymity": {
+        "title": "4. Anonimlik ve Oy Gizliliği",
+        "text": "Anonimlik FoodPool'un tasarımının merkezindedir:",
+        "bullets": {
+          "noOne": "Aktif oylamalarda, oylama oluşturucuları dahil hiç kimse kimin neye oy verdiğini göremez",
+          "avatar": "Gerçek adınız her oylamada rastgele bir hayvan avatarıyla değiştirilir",
+          "voteData": "Oy verileri gerçek profilinizle değil, anonim kimliğinizle ilişkilendirilir",
+          "afterPoll": "Oylama bittikten sonra katılım görünür ancak bireysel oy tercihleri anonim kalır"
+        }
+      },
+      "thirdParties": {
+        "title": "5. Veri Paylaşımı ve Üçüncü Taraflar",
+        "text": "Kişisel verilerinizi pazarlama amacıyla üçüncü taraflara satmaz, kiralamaz veya paylaşmayız. Verileriniz şu hizmet sağlayıcılar tarafından işlenebilir:",
+        "bullets": {
+          "supabase": "Supabase: Altyapı sağlayıcımız (veritabanı, kimlik doğrulama, gerçek zamanlı senkronizasyon)",
+          "expo": "Expo / React Native: Uygulama geliştirme çerçevemiz (push bildirimleri için)"
+        },
+        "footer": "Bu hizmet sağlayıcılar verileri yalnızca hizmetlerini sunmak için gerekli olduğu kadar işler."
+      },
       "security": {
-        "title": "4. Veri Güvenliği",
-        "text": "Kişisel verilerinizin kazara kaybolmasını, yetkisiz bir şekilde kullanılmasını veya erişilmesini, değiştirilmesini veya ifşa edilmesini önlemek için uygun güvenlik önlemleri aldık. Ayrıca, kişisel verilerinize erişimi, iş gereği bilmesi gereken çalışanlar, temsilciler, yükleniciler ve diğer üçüncü taraflarla sınırlandırıyoruz."
+        "title": "6. Veri Güvenliği",
+        "text": "Bilgilerinizi korumak için endüstri standardı güvenlik önlemleri uyguluyoruz:",
+        "bullets": {
+          "encryption": "Tüm veriler TLS/SSL kullanılarak aktarım sırasında şifrelenir",
+          "rls": "Veritabanı erişimi Satır Düzeyi Güvenlik (RLS) politikalarıyla korunur",
+          "passwords": "Şifreler hash'lenir ve tuzlanır — asla düz metin olarak saklanmaz",
+          "tokens": "Kimlik doğrulama tokenları cihazınızda güvenli bir şekilde saklanır"
+        }
+      },
+      "retention": {
+        "title": "7. Veri Saklama",
+        "text": "Verilerinizi şu şekilde saklarız:",
+        "bullets": {
+          "account": "Hesap verileri: Hesabınız aktif olduğu sürece saklanır",
+          "polls": "Oylama verileri: Oy geçmişi ve oylama kayıtları referansınız için saklanır",
+          "deleted": "Silinen hesaplar: Tüm ilişkili veriler 30 gün içinde kalıcı olarak kaldırılır"
+        }
+      },
+      "rights": {
+        "title": "8. Haklarınız",
+        "text": "Aşağıdaki haklara sahipsiniz:",
+        "bullets": {
+          "access": "Erişim: Hakkınızda tuttuğumuz tüm kişisel verileri görüntüleyin (profilinizde mevcuttur)",
+          "update": "Güncelleme: Adınızı, e-postanızı veya profil bilgilerinizi istediğiniz zaman değiştirin",
+          "delete": "Silme: Profil ayarlarınızdan hesabınızı ve tüm ilişkili verileri kalıcı olarak silin",
+          "optout": "Devre dışı bırakma: Cihaz ayarlarınızdan push bildirimlerini istediğiniz zaman kapatın"
+        }
+      },
+      "children": {
+        "title": "9. Çocukların Gizliliği",
+        "text": "FoodPool 13 yaşın altındaki çocuklara yönelik değildir. Çocuklardan bilerek kişisel bilgi toplamayız. 13 yaşın altındaki bir çocuğun bize kişisel bilgi sağladığını öğrenirsek, bu bilgileri silmek için adımlar atacağız."
+      },
+      "changes": {
+        "title": "10. Bu Politikadaki Değişiklikler",
+        "text": "Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Önemli değişiklikler yaptığımızda, Uygulama üzerinden veya e-posta yoluyla sizi bilgilendireceğiz. Bu sayfanın üst kısmındaki \"Son Güncelleme\" tarihi her zaman en son revizyonu yansıtacaktır."
       }
     },
-    "footer": "Bu gizlilik politikası hakkında herhangi bir sorunuz varsa, lütfen privacy@foodpool.app adresinden bizimle iletişime geçin."
+    "footer": "Bu gizlilik politikası hakkında herhangi bir sorunuz varsa, lütfen omrsfylmz@gmail.com adresinden bizimle iletişime geçin."
   },
   "notifications": {
     "lunch": {
