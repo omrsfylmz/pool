@@ -4,69 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support - FoodPool</title>
+  <title>Help Center — FoodPool</title>
+  <meta name="description" content="FoodPool Help Center — Find answers to frequently asked questions and get support.">
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <style>
-    /* Accordion Styles */
-    details {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      margin-bottom: var(--spacing-sm);
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    details:hover {
-      border-color: var(--accent-color);
-    }
-
-    details[open] {
-      border-color: var(--accent-color);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    summary {
-      padding: var(--spacing-md);
-      cursor: pointer;
-      font-weight: 600;
-      list-style: none;
-      /* Hide default triangle */
-      position: relative;
-      padding-right: 40px;
-    }
-
-    summary::-webkit-details-marker {
-      display: none;
-    }
-
-    summary::after {
-      content: '+';
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.5rem;
-      color: var(--accent-color);
-      transition: transform 0.3s ease;
-    }
-
-    details[open] summary::after {
-      transform: translateY(-50%) rotate(45deg);
-    }
-
-    .faq-content {
-      padding: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
-      color: var(--text-secondary);
-      border-top: 1px solid transparent;
-    }
-
-    details[open] .faq-content {
-      border-top-color: var(--border-color);
-      padding-top: var(--spacing-sm);
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
@@ -79,106 +21,136 @@
         <a href="index.html#how-it-works">How it Works</a>
         <a href="index.html#features">Features</a>
         <a href="support.html">Support</a>
-        <a href="privacy.html" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Privacy</a>
+        <a href="privacy.html" class="btn btn-outline">Privacy</a>
       </div>
+      <button class="mobile-menu-btn" aria-label="Menu">☰</button>
     </div>
   </nav>
 
   <!-- Main Content -->
-  <main class="container section" style="padding-top: 120px; max-width: 800px;">
+  <main class="container legal-page">
+    <span class="section-label fade-in">Support</span>
     <h1 class="fade-in">Help Center</h1>
-    <p class="fade-in delay-100" style="margin-bottom: var(--spacing-lg);">Having trouble? Find answers to commonly
-      asked questions.</p>
+    <p class="date fade-in delay-100" style="font-size: 1.05rem; color: var(--text-secondary);">Having trouble? Find
+      answers to commonly asked questions below.</p>
 
-    <section class="fade-in delay-200">
-      <h2 style="margin-bottom: var(--spacing-md);">Frequently Asked Questions</h2>
+    <section class="fade-in delay-200" style="margin-top: var(--space-xl);">
+      <h2 style="margin-bottom: var(--space-md);">Frequently Asked Questions</h2>
+
+      <details>
+        <summary>How do I create a lunch pool?</summary>
+        <div class="faq-content">
+          Tap the "+" button on the home screen, give your pool a title and optional description, select a voting
+          duration (from 30 seconds to several hours), and tap "Start Voting". Your pool will be created instantly with
+          a unique 6-digit join code.
+        </div>
+      </details>
 
       <details>
         <summary>How do I join a pool?</summary>
         <div class="faq-content">
-          Enter the unique code shared by the host on the home screen to join their room instantly. No account is
-          required for guests.
+          Tap "Join a Pool" on the home screen and enter the 6-digit code shared by the pool creator. You'll be added to
+          the pool instantly and can start suggesting food options and voting.
         </div>
       </details>
 
       <details>
         <summary>How is the winner decided?</summary>
         <div class="faq-content">
-          The restaurant or dish with the most votes at the end of the voting session wins. In case of a tie, the app
-          may prompt for a revote or choose randomly depending on your room settings.
+          The food option with the most votes when the timer expires wins. In case of a tie, the app uses a random
+          tiebreaker to determine the winner. The winning result and full vote breakdown are shown to all participants.
         </div>
       </details>
 
       <details>
         <summary>Can I change my vote?</summary>
         <div class="faq-content">
-          Yes, you can change your vote as long as the voting phase is still active. Once the timer runs out, votes are
-          locked.
+          Yes! You can change your vote as many times as you want while the voting timer is still active. Once the timer
+          runs out, all votes are locked in and the winner is revealed.
+        </div>
+      </details>
+
+      <details>
+        <summary>Is my vote really anonymous?</summary>
+        <div class="faq-content">
+          Absolutely. Each participant is assigned a random animal avatar (like "Owl" or "Panda") for each pool. No one
+          — not even the pool creator — can see who voted for what during or after the poll. Your real identity is
+          completely hidden.
+        </div>
+      </details>
+
+      <details>
+        <summary>How do I add food suggestions?</summary>
+        <div class="faq-content">
+          Once you've joined a pool, tap "+ Add Your Idea" to suggest a food option. You can add a name, choose an icon,
+          and write an optional note explaining why it's the best choice. All suggestions are anonymous.
         </div>
       </details>
 
       <details>
         <summary>How do I delete my account?</summary>
         <div class="faq-content">
-          Please contact our support team at <a href="mailto:omrsfylmz@gmail.com"
-            style="color: var(--accent-color);">omrsfylmz@gmail.com</a> to request account deletion.
+          Go to your Profile, scroll down, and tap "Delete Account". This will permanently remove your account and all
+          associated data. You can also contact us at <a href="mailto:omrsfylmz@gmail.com"
+            style="color: var(--accent);">omrsfylmz@gmail.com</a> to request account deletion.
         </div>
       </details>
 
+      <details>
+        <summary>Do I need an account to join a pool?</summary>
+        <div class="faq-content">
+          Yes, you need a free FoodPool account to create or join pools. This ensures every participant has a unique
+          anonymous identity and can access their voting history.
+        </div>
+      </details>
     </section>
 
-    <section class="fade-in delay-300" style="margin-top: var(--spacing-xl); text-align: center;">
-      <h2>Still need help?</h2>
-      <p>We are just an email away.</p>
-      <a href="mailto:omrsfylmz@gmail.com" class="btn btn-primary" style="margin-top: var(--spacing-sm);">Contact
-        Support</a>
+    <section class="fade-in" style="margin-top: var(--space-2xl); text-align: center;">
+      <h2>Still Need Help?</h2>
+      <p style="margin-bottom: var(--space-md);">We're just an email away. We typically respond within 24 hours.</p>
+      <a href="mailto:omrsfylmz@gmail.com" class="btn btn-primary">Contact Support</a>
     </section>
-
   </main>
 
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-content">
-        <div class="footer-col">
+      <div class="footer-grid">
+        <div class="footer-brand">
           <div class="logo">Food<span>Pool</span></div>
-          <p style="font-size: 0.9rem; margin-top: 1rem;">Making group dining decisions easy, democratic, and delicious.
-          </p>
+          <p>Making group dining decisions easy, democratic, and delicious.</p>
         </div>
         <div class="footer-col">
-          <h4>Links</h4>
+          <h4>Product</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
             <li><a href="index.html#how-it-works">How it Works</a></li>
             <li><a href="index.html#features">Features</a></li>
+            <li><a href="index.html#privacy">Privacy</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Legal & Support</h4>
           <ul>
             <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="support.html">Support Center</a></li>
+            <li><a href="support.html">Help Center</a></li>
+            <li><a href="mailto:omrsfylmz@gmail.com">Contact</a></li>
           </ul>
         </div>
       </div>
-      <div class="copyright">
-        &copy; 2024 FoodPool. All rights reserved.
+      <div class="footer-bottom">
+        <p>&copy; 2026 FoodPool. All rights reserved.</p>
+        <p>Made with 🍕 for hungry teams everywhere</p>
       </div>
     </div>
   </footer>
 
   <script>
-    document.querySelectorAll('.fade-in').forEach((el) => {
-      el.style.opacity = 0;
-      el.style.transform = 'translateY(20px)';
-      el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-
-      // Trigger animation after load
-      setTimeout(() => {
-        el.style.opacity = 1;
-        el.style.transform = 'translateY(0)';
-      }, 100);
-    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   </script>
 </body>
 
